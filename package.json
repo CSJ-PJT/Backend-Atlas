@@ -6,12 +6,14 @@
   "scripts": {
     "build": "node scripts/build-web.mjs",
     "test": "node scripts/smoke-test.mjs",
+    "quality:audit": "node scripts/content-quality-audit.mjs",
     "android:sync": "npm run build && cap sync android",
     "android:open": "cap open android",
     "android:apk": "npm run android:sync && cd android && gradlew.bat assembleDebug"
   },
   "dependencies": {
     "@capacitor/android": "^8.0.0",
+    "@capacitor/app": "^8.0.0",
     "@capacitor/core": "^8.0.0"
   },
   "devDependencies": {

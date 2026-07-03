@@ -1,0 +1,90 @@
+# Backend Atlas content quality report
+
+Generated: 2026-07-03T06:22:41.490Z
+
+- Questions: 5000
+- Concepts: 186
+- Errors: 0
+- Warnings: 79
+
+## Findings
+
+- **warning / short-content** `상속`: summary is shorter than 35 characters
+- **warning / short-content** `OOP와 객체 모델`: summary is shorter than 35 characters
+- **warning / short-content** `DDD와 Bounded Context`: summary is shorter than 35 characters
+- **warning / short-content** `Queue와 Deque`: summary is shorter than 35 characters
+- **warning / short-content** `Immutable Collection`: summary is shorter than 35 characters
+- **warning / short-content** `시간복잡도 비교`: summary is shorter than 35 characters
+- **warning / short-content** `Lambda`: summary is shorter than 35 characters
+- **warning / short-content** `Balanced Search Tree`: summary is shorter than 35 characters
+- **warning / short-content** `정렬 알고리즘 선택`: summary is shorter than 35 characters
+- **warning / short-content** `Dynamic Programming`: summary is shorter than 35 characters
+- **warning / short-content** `equals와 hashCode`: summary is shorter than 35 characters
+- **warning / short-content** `Primitive vs Wrapper`: summary is shorter than 35 characters
+- **warning / short-content** `Generic`: summary is shorter than 35 characters
+- **warning / short-content** `Stream`: summary is shorter than 35 characters
+- **warning / short-content** `Optional`: summary is shorter than 35 characters
+- **warning / short-content** `CompletableFuture`: summary is shorter than 35 characters
+- **warning / short-content** `Atomic과 CAS`: summary is shorter than 35 characters
+- **warning / short-content** `Thread Pool`: summary is shorter than 35 characters
+- **warning / short-content** `Future`: summary is shorter than 35 characters
+- **warning / short-content** `GC 기본 원리`: summary is shorter than 35 characters
+- **warning / short-content** `ClassLoader`: summary is shorter than 35 characters
+- **warning / short-content** `DI / IoC`: summary is shorter than 35 characters
+- **warning / short-content** `Bean Scope`: summary is shorter than 35 characters
+- **warning / short-content** `AOP`: summary is shorter than 35 characters
+- **warning / short-content** `@Transactional`: summary is shorter than 35 characters
+- **warning / short-content** `Transaction Propagation`: summary is shorter than 35 characters
+- **warning / short-content** `Validation`: summary is shorter than 35 characters
+- **warning / short-content** `JPA 영속성 컨텍스트`: summary is shorter than 35 characters
+- **warning / short-content** `N+1 문제`: summary is shorter than 35 characters
+- **warning / short-content** `Lazy vs Eager Loading`: summary is shorter than 35 characters
+- **warning / short-content** `Dirty Checking`: summary is shorter than 35 characters
+- **warning / short-content** `Profile`: summary is shorter than 35 characters
+- **warning / short-content** `Actuator`: summary is shorter than 35 characters
+- **warning / short-content** `Logging`: summary is shorter than 35 characters
+- **warning / short-content** `Exception Handling`: summary is shorter than 35 characters
+- **warning / short-content** `Spring Batch`: summary is shorter than 35 characters
+- **warning / mobile-overflow-token** `DispatcherServlet`: HandlerMapping→HandlerAdapter→Controller→MessageConverter/ExceptionResolver
+- **warning / short-content** `DTO / VO / Entity`: summary is shorter than 35 characters
+- **warning / short-content** `Scale Up vs Scale Out`: summary is shorter than 35 characters
+- **warning / short-content** `Deadlock`: summary is shorter than 35 characters
+- **warning / short-content** `Lock / CAS`: summary is shorter than 35 characters
+- **warning / short-content** `TCP/IP`: summary is shorter than 35 characters
+- **warning / short-content** `HTTP`: summary is shorter than 35 characters
+- **warning / short-content** `DNS`: summary is shorter than 35 characters
+- **warning / short-content** `TLS`: summary is shorter than 35 characters
+- **warning / short-content** `Load Balancing`: summary is shorter than 35 characters
+- **warning / short-content** `Index`: summary is shorter than 35 characters
+- **warning / short-content** `B-Tree`: summary is shorter than 35 characters
+- **warning / short-content** `SQL Tuning`: summary is shorter than 35 characters
+- **warning / short-content** `PostgreSQL`: summary is shorter than 35 characters
+- **warning / short-content** `pgvector`: summary is shorter than 35 characters
+- **warning / short-content** `Transaction`: summary is shorter than 35 characters
+- **warning / short-content** `Lock`: summary is shorter than 35 characters
+- **warning / short-content** `MVCC`: summary is shorter than 35 characters
+- **warning / short-content** `JPA`: summary is shorter than 35 characters
+- **warning / short-content** `PWA`: summary is shorter than 35 characters
+- **warning / short-content** `WebView`: summary is shorter than 35 characters
+- **warning / short-content** `Mobile UX`: summary is shorter than 35 characters
+- **warning / short-content** `State`: summary is shorter than 35 characters
+- **warning / short-content** `Props`: summary is shorter than 35 characters
+- **warning / short-content** `React Key`: summary is shorter than 35 characters
+- **warning / short-content** `Layer`: summary is shorter than 35 characters
+- **warning / short-content** `Volume`: summary is shorter than 35 characters
+- **warning / short-content** `Network`: summary is shorter than 35 characters
+- **warning / short-content** `CI/CD`: summary is shorter than 35 characters
+- **warning / duplicate-concept** `Logging`: also in Java & Spring
+- **warning / short-content** `Logging`: summary is shorter than 35 characters
+- **warning / short-content** `Monitoring`: summary is shorter than 35 characters
+- **warning / short-content** `OpenTelemetry`: summary is shorter than 35 characters
+- **warning / short-content** `Kubernetes 기초`: summary is shorter than 35 characters
+- **warning / short-content** `배포 / 롤백`: summary is shorter than 35 characters
+- **warning / short-content** `RAG`: summary is shorter than 35 characters
+- **warning / duplicate-concept** `pgvector`: also in Database
+- **warning / short-content** `HNSW`: summary is shorter than 35 characters
+- **warning / short-content** `MCP`: summary is shorter than 35 characters
+- **warning / short-content** `Agent`: summary is shorter than 35 characters
+- **warning / short-content** `Workflow`: summary is shorter than 35 characters
+- **warning / short-content** `Spring AI`: summary is shorter than 35 characters
+- **warning / answer-length-bias** `question-bank`: correct answer is longest in 96.0%

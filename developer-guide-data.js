@@ -34,6 +34,7 @@
 
   const projects={
     'Backend Atlas':{
+      github:'https://github.com/CSJ-PJT/Backend-Atlas',
       badge:'Learning Platform',purpose:'AX·Backend 엔지니어가 개념을 연결하고 선택 근거를 설명하도록 돕는 로컬 우선 학습 플랫폼.',
       stack:['HTML5','CSS3','Vanilla JavaScript','JSDOM','Capacitor 8','Android Gradle'],
       directories:[['/','화면·퀴즈·검색 실행 코드'],['assets','브랜드 아이콘'],['scripts','웹 빌드와 JSDOM smoke test'],['android','Capacitor 네이티브 Android shell'],['www','생성되는 WebView bundle(Git 제외)']],
@@ -50,6 +51,7 @@
       technologies:['Capacitor','LocalStorage','Knowledge Graph','JSDOM','PWA']
     },
     'Archive Nexus':{
+      github:'https://github.com/CSJ-PJT/Archive-Nexus',
       badge:'Manufacturing AX',purpose:'ArchiveOS 위에서 제조 시뮬레이션과 생산·품질·정비·재고·물류 Agent를 실행하는 산업 애플리케이션.',
       stack:['Java 21','Spring Boot 3.5','Spring AI 1.1','Spring Data JPA','PostgreSQL','Flyway','React 19','Vite','Prometheus','Grafana','Docker Compose'],
       directories:[['backend/ai','Orchestrator·Intent Router·전문 Agent'],['backend/archiveos','ArchiveOS status/workflow adapter'],['backend/task','RPA/Task 상태와 실행'],['backend/persistence','시뮬레이터·aggregate 저장'],['frontend/src','운영 dashboard와 AI panel'],['monitoring','Prometheus/Grafana provisioning'],['docs','계약·schema·운영 문서']],
@@ -62,8 +64,10 @@
       diagram:['Simulator','Domain Services','Manufacturing Orchestrator','Specialist Agents','ArchiveOS Approval','RPA'],
       sequence:['Nexus Event','ArchiveOS Workflow','PM Approval','Nexus Action','Result Callback','ArchiveOS History'],
       technologies:['Spring AI','Multi Agent','PostgreSQL','Prometheus','Grafana','RPA','Workflow']
+      ,observability:'Spring Actuator와 Micrometer가 제조·Agent 지표를 노출하고 Prometheus가 수집하며 Grafana provisioned dashboard가 시각화한다.',limitations:'ArchiveOS 원격 실행이 아니라 Nexus 내부 Agent 실행 후 workflow·interaction contract를 기록하는 단계다. 외부 장애는 DEGRADED/UNAVAILABLE로 격리한다.'
     },
     'Archive OS':{
+      github:'https://github.com/CSJ-PJT/ArchiveOS',
       badge:'Enterprise AI Runtime',purpose:'Agent·RAG·Batch·Workflow·RPA·승인을 통합 관제하는 공통 AX 실행 플랫폼.',
       stack:['React 18','TypeScript','Vite','Node.js','Express','Java 21','Spring Boot 3.3','Spring AI','Spring Batch','Spring Security','PostgreSQL','pgvector','Docker Compose'],
       directories:[['src/pages','Operator Console'],['backend/src','Node compatibility API·queue·historian'],['archiveos-ai','Spring AI·Batch·RAG runtime'],['supabase','PostgreSQL/pgvector schema'],['docs/contracts','Nexus workflow 계약'],['docs/architecture','RAG·Batch·Approval 설계'],['tools/runtime','통합 실행·검증 script']],
@@ -77,6 +81,7 @@
       diagram:['React Console','Node API :4000','Spring AI :4100','PostgreSQL + pgvector','Obsidian/LLM/Slack'],
       sequence:['Markdown 변경','증분 Sync','Embedding 저장','Vector Search','Grounded Answer','Reference 반환'],
       technologies:['RAG','pgvector','Spring AI','MCP','Spring Batch','Human Approval','OpenTelemetry']
+      ,observability:'Node compatibility API와 Java runtime의 health, workflow history, execution evidence를 분리해 관측한다.',limitations:'Node 호환 API와 Java runtime의 점진 분리 단계이며 실제 LLM·embedding 자격증명이 없으면 RAG 기능은 명시적으로 disabled 상태가 된다.'
     }
   };
   window.ATLAS_PROJECTS=projects;

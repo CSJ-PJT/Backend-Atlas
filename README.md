@@ -18,6 +18,11 @@ AX·Backend 엔지니어가 기술을 외우는 데서 그치지 않고 원리�
 - 모든 핵심 개념의 비교표와 Oracle·Spring·PostgreSQL 등 공식 문서 링크
 - Backend Atlas·Archive Nexus·ArchiveOS 실제 구현 기반 Developer Guide
 - 브라우저 history와 Android WebView에서 동일하게 동작하는 직전 화면 복귀
+- 선택 즉시 저장되는 퀴즈 세션과 중단 세션 이어 풀기·보관
+- 학습 요약 저장·복습 등록·완료일·3일 후 복습 예정일 관리
+- 5개 탭(요약·원리·비교·실무·면접) 기반의 집중 학습 화면
+- 반응형 인터랙티브 시스템 구성도와 노드별 역할·입력·출력·구현 파일 안내
+- 콘텐츠 중복·출처·내부 동작·선택지 편향을 검사하는 품질 감사 보고서
 - JVM memory, HashMap, ArrayList/LinkedList, B-Tree, Web request, Spring MVC, RAG, Container 구조 SVG 학습 도식
 
 학습 내용은 Oracle·Spring·PostgreSQL 등 공식 문서와 공개 기술 면접 자료의 주제 범위를 참고해 독자적으로 재구성했습니다. 원문 문장을 복제하지 않으며 앱 안에서 원본과 공식 문서 링크를 함께 제공합니다.
@@ -55,9 +60,12 @@ Backend-Atlas/
 ```powershell
 npm install
 npm test
+npm run quality:audit
 npm run build
 npx serve . -l 4173
 ```
+
+품질 감사 결과는 `reports/content-quality-report.md`와 JSON 파일로 생성됩니다. 경고는 콘텐츠 개선 backlog이며 오류는 출처·내부 동작·비교표·중복 데이터의 구조적 결함을 의미합니다.
 
 현재 원격 주소: `https://donation-contest-handlebar.ngrok-free.dev`
 

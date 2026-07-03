@@ -2,6 +2,10 @@ const $ = id => document.getElementById(id);
 const bank = window.QUESTION_BANK;
 const state = { session: [], index: 0, score: 0, answers: [], mode: 'all', count: 10 };
 const saved = Object.assign({solved:0,correct:0,wrong:[],last:'',streak:0,daily:{},categoryStats:{},reviewSchedule:{}}, JSON.parse(localStorage.getItem('interviewDeck') || '{}'));
+const SESSION_KEY='backendAtlasQuizSession';
+const HISTORY_KEY='backendAtlasQuizHistory';
+const LEARNING_KEY='backendAtlasLearningState';
+const learning=Object.assign({saved:[],review:[],completed:{},ui:{}},JSON.parse(localStorage.getItem(LEARNING_KEY)||'{}'));
 const icons = {'OS & Network':'⌘','Database':'▦','Java & Spring':'◆','Web & React':'◌','DevOps':'△','AI & Design':'✦','AX Scenario':'◎'};
 
 function save(){ localStorage.setItem('interviewDeck', JSON.stringify(saved)); renderStats(); }
@@ -26,7 +30,12 @@ function explainPoint(text, q){
   return q.pointDetails?.[text] || q.explanations?.[text] || `${text}는 ${q.category}에서 실제 설계와 운영 판단의 기준이 됩니다. ${q.whyExplanation}`;
 }
 function shuffle(a){ return [...a].sort(() => Math.random() - 0.5); }
-function pushNavigation(state){ history.pushState(state,'',`#${state.route}${state.category?`/${encodeURIComponent(state.category)}`:''}${state.project?`/${encodeURIComponent(state.project)}`:''}`); }
+function persistLearning(){localStorage.setItem(LEARNING_KEY,JSON.stringify(learning));}
+function currentSnapshot(){return {scrollY:window.scrollY||0,tab:document.querySelector('.concept-tab[aria-selected="true"]')?.dataset.tab||'',accordion:document.querySelector('details[open]')?.dataset.panel||'',search:$('knowledgeSearchInput')?.value||'',categoryFilter:$('categoryFilter')?.value||'',difficultyFilter:$('difficultyFilter')?.value||'',tagFilter:$('tagFilter')?.value||''};}
+function replaceCurrentSnapshot(){if(history.state)history.replaceState({...history.state,ui:currentSnapshot()},'',location.href);}
+function pushNavigation(state){replaceCurrentSnapshot();history.pushState(state,'',`#${state.route}${state.category?`/${encodeURIComponent(state.category)}`:''}${state.project?`/${encodeURIComponent(state.project)}`:''}`);}
+function restoreUi(ui={}){(window.requestAnimationFrame||setTimeout)(()=>{if(ui.tab)document.querySelector(`[data-tab="${ui.tab}"]`)?.click();if(ui.accordion)document.querySelector(`details[data-panel="${ui.accordion}"]`)?.setAttribute('open','');if($('categoryFilter'))$('categoryFilter').value=ui.categoryFilter||'';if($('difficultyFilter'))$('difficultyFilter').value=ui.difficultyFilter||'';if($('tagFilter'))$('tagFilter').value=ui.tagFilter||'';window.scrollTo(0,ui.scrollY||0);});}
+function safeBack(fallback){replaceCurrentSnapshot();if(history.length>1)history.back();else fallback();}
 function show(name, record=true){
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   $(name).classList.add('active');
@@ -130,7 +139,7 @@ function renderAtlasStudy(){
 
 function conceptTable(data){
   if(!data) return '';
-  return `<div class="comparison-table-wrap"><table class="comparison-table"><thead><tr>${data.headers.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${data.rows.map(row=>`<tr>${row.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  return `<div class="comparison-table-wrap"><table class="comparison-table"><thead><tr>${data.headers.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${data.rows.map(row=>`<tr>${row.map((x,i)=>`<td data-label="${data.headers[i]||''}">${x}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
 
 function renderStudyHome(){
@@ -158,10 +167,26 @@ function renderConceptDetail(category,sectionIndex,conceptIndex,record=true){
   if(record) pushNavigation({route:'concept',category,sectionIndex,conceptIndex});
   const c=window.ATLAS_CURRICULUM[category], section=c.sections[sectionIndex], x=section.concepts[conceptIndex];
   $('studyShortcuts').innerHTML=`<button class="mini-chip" id="conceptBack">← ${section.title}</button><span class="study-current">${category}</span>`;
-  const references=window.ATLAS_REFERENCES?.[category]||[];
-  $('studyOverview').innerHTML=`<article class="concept-detail"><header style="--chapter:${c.color}"><p class="eyebrow">${section.title}</p><h2>${x.title}</h2><p>${x.summary}</p></header><div class="concept-keywords">${x.related.map(t=>`<button data-topic="${t}">${t}</button>`).join('')}</div>${[['한 줄 정의',x.definition],['왜 필요한가',x.why],['내부 동작',x.internals],['장점',x.pros],['단점',x.cons],['실무 사용 예',x.practice],['장애 사례',x.incident],['면접 답변 예시',x.interview]].map(([h,p],i)=>`<details class="concept-accordion" ${i<2?'open':''}><summary>${h}<span>＋</span></summary><p>${p}</p></details>`).join('')}${x.comparison?`<section class="concept-comparison"><h3>비교표</h3>${conceptTable(x.comparison)}</section>`:''}<section class="tail-card"><h3>꼬리 개념</h3>${x.tails.map(t=>`<button data-topic="${t}">${t}</button>`).join('')}</section><details class="concept-accordion sources-card"><summary>공식 학습 근거<span>＋</span></summary>${references.map(r=>`<a href="${r.url}" target="_blank" rel="noreferrer">${r.title} ↗</a>`).join('')}</details><div class="concept-actions"><button class="secondary" id="relatedSearch">관련 문제 보기</button><button class="primary" id="conceptQuiz">문제 풀기</button></div></article>`;
-  document.querySelector('.concept-detail>header')?.insertAdjacentHTML('afterend',window.renderLearningVisual?.(x.title,category)||'');
-  $('conceptBack').onclick=()=>renderStudyCategory(category); $('relatedSearch').onclick=()=>openStudy(x.title); $('conceptQuiz').onclick=()=>start(category);
+  const references=[...(x.sources||[]),...(window.ATLAS_REFERENCES?.[category]||[])];
+  const id=`${category}:${sectionIndex}:${conceptIndex}`,next=section.concepts[conceptIndex+1]||c.sections[sectionIndex+1]?.concepts[0];
+  const due=learning.completed[id]?.reviewAt||'완료 후 3일 뒤';
+  const panels={
+    summary:`<section class="summary-card"><h3>학습 요약</h3><p>${x.summary}</p><h4>반드시 기억할 5가지</h4><ul>${[x.definition,x.why,x.internals,x.practice,x.incident].map(v=>`<li>${v}</li>`).join('')}</ul><h4>30초 면접 답변</h4><p>${x.interview}</p><div class="summary-note"><strong>자주 틀리는 포인트</strong><span>${x.cons}</span></div><small>복습 예정: ${due}</small></section>`,
+    principle:`${window.renderLearningVisual?.(x.title,category)||''}${[['왜 필요한가',x.why],['내부 동작',x.internals],['장점과 단점',`${x.pros} ${x.cons}`]].map(([h,p],i)=>`<details class="concept-accordion" data-panel="principle-${i}"><summary>${h}<span>＋</span></summary><p>${p}</p></details>`).join('')}`,
+    compare:`<section class="concept-comparison"><h3>비교표</h3>${conceptTable(x.comparison)}</section>`,
+    practice:`${[['구체적 사용 예',x.practice],['장애·오용 사례',x.incident]].map(([h,p],i)=>`<details class="concept-accordion" data-panel="practice-${i}"><summary>${h}<span>＋</span></summary><p>${p}</p></details>`).join('')}`,
+    interview:`<section class="summary-card"><h3>면접 답변</h3><p>${x.interview}</p></section><section class="tail-card"><h3>꼬리 질문</h3>${x.tails.map(t=>`<button data-topic="${t}">${t}</button>`).join('')}</section><details class="concept-accordion sources-card" data-panel="sources"><summary>출처<span>＋</span></summary>${references.map(r=>`<a href="${r.url}" target="_blank" rel="noreferrer">${r.title}${r.checkedAt?` · 확인 ${r.checkedAt}`:''} ↗</a>`).join('')}</details>`
+  };
+  $('studyOverview').innerHTML=`<article class="concept-detail"><header style="--chapter:${c.color}"><p class="eyebrow">${section.title}</p><h2>${x.title}</h2><p class="concept-definition">${x.definition}</p><p>${x.summary}</p><div class="concept-meta"><span>${x.difficulty||'면접'}</span><span>${x.estimatedMinutes||8}분</span><span>중요도 ${x.importance||'높음'}</span></div></header><div class="concept-keywords">${x.related.map(t=>`<button data-topic="${t}">${t}</button>`).join('')}</div><nav class="concept-tabs" aria-label="학습 섹션">${[['summary','요약'],['principle','원리'],['compare','비교'],['practice','실무'],['interview','면접']].map(([key,label],i)=>`<button class="concept-tab" data-tab="${key}" aria-selected="${i===0}">${label}</button>`).join('')}</nav><div id="conceptPanel" class="concept-panel">${panels.summary}</div><div class="summary-actions"><button class="secondary" id="saveConcept">저장</button><button class="secondary" id="reviewConcept">복습 추가</button><button class="secondary" id="copySummary">복사</button><button class="primary" id="completeConcept">완료</button></div><div class="concept-actions"><button class="secondary" id="relatedSearch">관련 문제 5개</button><button class="primary" id="conceptQuiz">문제 풀기</button>${next?'<button class="secondary" id="nextConcept">다음 개념</button>':''}</div></article>`;
+  document.querySelectorAll('.concept-tab').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.concept-tab').forEach(b=>b.setAttribute('aria-selected',String(b===btn)));$('conceptPanel').innerHTML=panels[btn.dataset.tab];bindSingleAccordion();learning.ui[id]={tab:btn.dataset.tab};persistLearning();});
+  const bindSingleAccordion=()=>document.querySelectorAll('#conceptPanel details').forEach(d=>d.ontoggle=()=>{if(d.open)document.querySelectorAll('#conceptPanel details[open]').forEach(other=>{if(other!==d)other.open=false;});});bindSingleAccordion();
+  $('conceptBack').onclick=()=>safeBack(()=>renderStudyCategory(category)); $('relatedSearch').onclick=()=>openStudy(x.title); $('conceptQuiz').onclick=()=>start(category);
+  $('saveConcept').onclick=()=>{if(!learning.saved.includes(id))learning.saved.push(id);persistLearning();$('saveConcept').textContent='저장됨';};
+  $('reviewConcept').onclick=()=>{if(!learning.review.includes(id))learning.review.push(id);persistLearning();$('reviewConcept').textContent='복습 등록됨';};
+  $('copySummary').onclick=async()=>{await navigator.clipboard?.writeText(`${x.title}\n${x.summary}\n${x.interview}`);$('copySummary').textContent='복사됨';};
+  $('completeConcept').onclick=()=>{const done=new Date(),review=new Date(done.getTime()+3*86400000);learning.completed[id]={completedAt:done.toISOString(),reviewAt:review.toISOString()};persistLearning();$('completeConcept').textContent='학습 완료';};
+  if(next)$('nextConcept').onclick=()=>{const loc=c.sections.flatMap((s,si)=>s.concepts.map((v,ci)=>({v,si,ci}))).find(v=>v.v===next);renderConceptDetail(category,loc.si,loc.ci);};
+  if(learning.ui[id]?.tab)document.querySelector(`[data-tab="${learning.ui[id].tab}"]`)?.click();
   document.querySelectorAll('#studyOverview [data-topic]').forEach(btn=>btn.onclick=()=>openStudy(btn.dataset.topic));
 }
 
@@ -171,25 +196,34 @@ function renderArchitectureHome(record=false){
   document.querySelectorAll('[data-project]').forEach(btn=>btn.onclick=()=>renderProjectGuide(btn.dataset.project));
 }
 
-function guideFlow(items,label){return window.renderSystemFlow?.(label,items)||`<section class="guide-diagram"><small>${label}</small><div>${items.join(' → ')}</div></section>`;}
+function guideFlow(items,label){return `<section class="guide-diagram"><h3>${label}</h3><div class="guide-flow">${items.map((item,i)=>`<button class="guide-node" data-node="${label}:${i}"><small>STEP ${i+1}</small><strong>${typeof item==='string'?item:item.name}</strong><span>${typeof item==='string'?'역할·입출력 보기':item.role}</span></button>`).join('')}</div><aside class="node-detail" data-node-detail hidden></aside></section>`;}
 function renderProjectGuide(name,record=true){
   show('architectureView',false); if(record) pushNavigation({route:'project',project:name});
   const p=window.ATLAS_PROJECTS[name];
-  $('architectureContent').innerHTML=`<article class="project-guide-detail"><button class="text-btn" id="projectsBack">← 프로젝트 목록</button><header><small>${p.badge}</small><h2>${name}</h2><p>${p.purpose}</p><div class="guide-techs">${p.technologies.map(t=>`<button data-tech="${t}">${t}</button>`).join('')}</div></header>${guideFlow(p.diagram,'ARCHITECTURE')}${guideFlow(p.sequence,'SEQUENCE')}<div class="guide-facts"><section><h3>기술 스택</h3><p>${p.stack.join(' · ')}</p></section><section><h3>설계 이유</h3><ul>${p.design.map(x=>`<li>${x}</li>`).join('')}</ul></section></div><details class="guide-section" open><summary>디렉터리 구조</summary><div class="directory-list">${p.directories.map(([path,role])=>`<div><code>${path}</code><span>${role}</span></div>`).join('')}</div></details>${[['데이터 흐름',p.flow.join(' → ')],['API 구조',p.api],['검색 구조',p.search],['문제·데이터 생성 구조',p.generation],['RAG 구조',p.rag],['Android / Capacitor',p.android],['UI 구조',p.ui],['Git 전략',p.git]].map(([h,v])=>`<details class="guide-section"><summary>${h}</summary><p>${v}</p></details>`).join('')}<section class="guide-roadmap"><h3>향후 확장</h3>${p.roadmap.map(x=>`<span>${x}</span>`).join('')}</section></article>`;
-  $('projectsBack').onclick=()=>history.back(); document.querySelectorAll('[data-tech]').forEach(btn=>btn.onclick=()=>openStudy(btn.dataset.tech));
+  $('architectureContent').innerHTML=`<article class="project-guide-detail"><button class="text-btn" id="projectsBack">← 프로젝트 목록</button><header><small>${p.badge}</small><h2>${name}</h2><p>${p.purpose}</p><div class="project-header-actions"><a class="primary" href="${p.github||'#'}" target="_blank" rel="noreferrer">GitHub 저장소</a><button class="secondary" data-tech="${p.technologies[0]}">관련 기술 학습</button></div></header><section class="guide-stack"><h3>핵심 기술 스택</h3><div class="guide-techs">${p.technologies.map(t=>`<button data-tech="${t}">${t}</button>`).join('')}</div></section>${guideFlow(p.diagram,'시스템 구성도')}${guideFlow(p.sequence,'요청 · 이벤트 시퀀스')}<details class="guide-section" open><summary>주요 디렉터리와 구현</summary><div class="directory-list">${p.directories.map(([path,role])=>`<div><code>${path}</code><span>${role}</span></div>`).join('')}</div></details><div class="guide-facts"><section><h3>실제 구현 방법</h3><p>${p.api}</p></section><section><h3>설계 의사결정</h3><ul>${p.design.map(x=>`<li>${x}</li>`).join('')}</ul></section></div>${[['데이터·이벤트 흐름',p.flow.join(' → ')],['검색 / RAG',`${p.search} ${p.rag}`],['문제·데이터 생성',p.generation],['관측·배포',p.observability||`${p.stack.includes('Prometheus')?'Prometheus와 Grafana로 지표를 관측한다. ':''}Docker 기반으로 동일 실행 환경을 구성한다.`],['Android / Capacitor 연계',p.android],['UI 구조',p.ui],['Git 전략',p.git],['장애·한계',p.limitations||'운영 환경별 인증·권한·성능 기준은 배포 전 별도 검증이 필요하다.']].map(([h,v],i)=>`<details class="guide-section" data-panel="guide-${i}"><summary>${h}</summary><p>${v}</p></details>`).join('')}<section class="guide-roadmap"><h3>다음 버전 계획</h3>${p.roadmap.map(x=>`<span>${x}</span>`).join('')}</section></article>`;
+  $('projectsBack').onclick=()=>safeBack(()=>renderArchitectureHome(false)); document.querySelectorAll('[data-tech]').forEach(btn=>btn.onclick=()=>openStudy(btn.dataset.tech));
+  document.querySelectorAll('.guide-node').forEach(btn=>btn.onclick=()=>{const group=btn.closest('.guide-diagram'),index=Number(btn.dataset.node.split(':').pop()),source=btn.dataset.node.startsWith('시스템')?p.diagram:p.sequence,item=source[index],detail=group.querySelector('[data-node-detail]');detail.hidden=false;detail.innerHTML=`<strong>${typeof item==='string'?item:item.name}</strong><p>${typeof item==='string'?`${item} 단계의 입력을 검증하고 다음 단계가 사용할 출력 또는 상태를 만든다.`:item.role}</p><dl><dt>입력</dt><dd>${item.input||'이전 단계의 요청·상태'}</dd><dt>출력</dt><dd>${item.output||'검증된 결과·이벤트'}</dd><dt>관련 구현</dt><dd>${item.files?.join(', ')||p.directories[Math.min(index,p.directories.length-1)]?.[0]||'프로젝트 문서 참조'}</dd></dl>`;});
 }
 
 window.addEventListener('popstate',event=>{
+  persistQuizSession();
   const state=event.state||{route:'view',name:'homeView'};
-  if(state.route==='study-category') return renderStudyCategory(state.category,false);
-  if(state.route==='concept') return renderConceptDetail(state.category,state.sectionIndex,state.conceptIndex,false);
-  if(state.route==='architecture') return renderArchitectureHome(false);
-  if(state.route==='project') return renderProjectGuide(state.project,false);
-  if(state.route==='search'){ show('knowledgeView',false); $('knowledgeSearchInput').value=state.query||''; window.renderKnowledgeSearch?.(state.query||''); return; }
+  if(state.route==='study-category'){renderStudyCategory(state.category,false);return restoreUi(state.ui);}
+  if(state.route==='concept'){renderConceptDetail(state.category,state.sectionIndex,state.conceptIndex,false);return restoreUi(state.ui);}
+  if(state.route==='architecture'){renderArchitectureHome(false);return restoreUi(state.ui);}
+  if(state.route==='project'){renderProjectGuide(state.project,false);return restoreUi(state.ui);}
+  if(state.route==='search'){ show('knowledgeView',false); $('knowledgeSearchInput').value=state.query||state.ui?.search||''; window.renderKnowledgeSearch?.(state.query||state.ui?.search||'');return restoreUi(state.ui); }
   show(state.name||'homeView',false);
   if(state.name==='studyView') renderStudyHome();
   if(state.name==='architectureView') renderArchitectureHome(false);
 });
+
+function sessionPayload(completed=false){return {quizSessionId:state.quizSessionId||crypto.randomUUID?.()||`quiz-${Date.now()}`,quizMode:state.mode,category:state.category||'',difficulty:state.difficulty||'',questionIds:state.session.map(q=>q.id),currentQuestionIndex:state.index,selectedAnswers:state.selectedAnswers||{},answerResults:state.answerResults||{},startedAt:state.startedAt||new Date().toISOString(),lastSavedAt:new Date().toISOString(),elapsedMs:(state.elapsedMs||0)+(state.startedTick?Date.now()-state.startedTick:0),completed};}
+function persistQuizSession(completed=false){if(!state.session.length)return;const payload=sessionPayload(completed);state.quizSessionId=payload.quizSessionId;localStorage.setItem(SESSION_KEY,JSON.stringify(payload));}
+function archiveQuizSession(reason='interrupted'){const raw=localStorage.getItem(SESSION_KEY);if(!raw)return;const list=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');list.unshift({...JSON.parse(raw),reason,archivedAt:new Date().toISOString()});localStorage.setItem(HISTORY_KEY,JSON.stringify(list.slice(0,50)));localStorage.removeItem(SESSION_KEY);}
+function resumeQuizSession(session){const questions=session.questionIds.map(id=>bank.find(q=>q.id===id)).filter(Boolean);if(!questions.length)return false;const answers=questions.filter(q=>session.answerResults?.[q.id]!==undefined).map(q=>({q,correct:session.answerResults[q.id]}));Object.assign(state,{session:questions,index:Math.min(session.currentQuestionIndex,questions.length-1),score:answers.filter(a=>a.correct).length,answers,mode:session.quizMode,category:session.category,difficulty:session.difficulty,selectedAnswers:session.selectedAnswers||{},answerResults:session.answerResults||{},quizSessionId:session.quizSessionId,startedAt:session.startedAt,elapsedMs:session.elapsedMs||0,startedTick:Date.now()});show('quizView');renderQuestion();return true;}
+function pendingQuiz(){try{const s=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');return s&&!s.completed&&s.questionIds?.length?s:null;}catch{return null;}}
+function offerResume(onFresh){const pending=pendingQuiz();if(!pending)return onFresh();const modal=document.createElement('div');modal.className='resume-overlay';modal.innerHTML=`<section class="resume-dialog" role="dialog" aria-modal="true"><small>중단된 학습</small><h2>이전에 풀던 문제 ${pending.currentQuestionIndex+1}/${pending.questionIds.length}이 있습니다.</h2><p>답안과 순서, 풀이 시간은 이 기기에 저장되어 있습니다.</p><button class="primary" data-resume>이어 풀기</button><button class="secondary" data-restart>처음부터</button><button class="text-btn" data-archive>기록만 저장하고 종료</button></section>`;document.body.append(modal);modal.querySelector('[data-resume]').onclick=()=>{modal.remove();resumeQuizSession(pending);};modal.querySelector('[data-restart]').onclick=()=>{if(confirm('기존 미완료 기록을 보관하고 새로 시작할까요?')){archiveQuizSession('restarted');modal.remove();onFresh();}};modal.querySelector('[data-archive]').onclick=()=>{archiveQuizSession('user-exit');modal.remove();show('homeView');};}
 
 function updateStreak(){
   const today = new Date().toISOString().slice(0,10);
@@ -200,6 +234,9 @@ function updateStreak(){
 }
 
 function start(category, onlyWrong = false, count = 10, difficulty = ''){
+  return offerResume(()=>startFresh(category,onlyWrong,count,difficulty));
+}
+function startFresh(category, onlyWrong = false, count = 10, difficulty = ''){
   let pool = onlyWrong ? bank.filter(q => saved.wrong.includes(q.id)) : category ? bank.filter(q => q.category === category) : bank;
   if(difficulty) pool=pool.filter(q=>q.difficulty===difficulty||q.level===difficulty);
   if (!pool.length) { alert('복습할 오답이 없습니다.'); return; }
@@ -211,7 +248,9 @@ function start(category, onlyWrong = false, count = 10, difficulty = ''){
   state.score = 0;
   state.answers = [];
   state.mode = category || 'all';
+  Object.assign(state,{category:category||'',difficulty,selectedAnswers:{},answerResults:{},quizSessionId:crypto.randomUUID?.()||`quiz-${Date.now()}`,startedAt:new Date().toISOString(),startedTick:Date.now(),elapsedMs:0});
   show('quizView');
+  persistQuizSession();
   renderQuestion();
 }
 
@@ -232,28 +271,29 @@ function renderQuestion(){
   $('keyPoints').innerHTML = (q.points || []).map(p => `<li><button type="button" class="detail-pill" data-detail="${p}">${p}</button><div class="detail-body" data-detail-body="${p}" hidden>${explainPoint(p, q)}</div></li>`).join('');
   $('followUp').innerHTML = (q.followUpQuestions || []).map((f,i) => `<button type="button" class="followup-pill" data-follow="${i}">${f}</button><div class="detail-body" data-follow-body="${i}" hidden>${f}는 ${q.interviewPoint || q.whyExplanation}</div>`).join('');
   document.querySelectorAll('.option').forEach(b => b.onclick = () => answer(Number(b.dataset.index)));
+  const prior=state.selectedAnswers?.[q.id];if(Number.isInteger(prior))answer(prior,true);
 }
 
-function answer(selected){
+function answer(selected,restoring=false){
   const q = state.session[state.index];
+  if(state.selectedAnswers?.[q.id]!==undefined&&!restoring)return;
   window.currentQuestion = q;
   const correct = selected === q.answer;
-  state.answers.push({ q, correct });
-  if (correct) state.score++;
-  saved.solved++;
+  if(!restoring)state.answers.push({ q, correct });
+  state.selectedAnswers=state.selectedAnswers||{};state.answerResults=state.answerResults||{};state.selectedAnswers[q.id]=selected;state.answerResults[q.id]=correct;
+  if (correct&&!restoring) state.score++;
+  if(!restoring)saved.solved++;
   const today = new Date().toISOString().slice(0,10);
-  saved.daily[today] = (saved.daily[today] || 0) + 1;
+  if(!restoring)saved.daily[today] = (saved.daily[today] || 0) + 1;
   saved.categoryStats[q.category] = saved.categoryStats[q.category] || {solved:0,correct:0};
-  saved.categoryStats[q.category].solved++;
+  if(!restoring)saved.categoryStats[q.category].solved++;
   if (correct) {
-    saved.correct++;
-    saved.categoryStats[q.category].correct++;
+    if(!restoring){saved.correct++;saved.categoryStats[q.category].correct++;}
     saved.wrong = saved.wrong.filter(id => id !== q.id);
   } else if (!saved.wrong.includes(q.id)) {
     saved.wrong.push(q.id);
   }
-  updateStreak();
-  save();
+  if(!restoring){updateStreak();save();persistQuizSession();}
   document.querySelectorAll('.option').forEach((b,i) => {
     b.disabled = true;
     if (i === q.answer) b.classList.add('correct');
@@ -291,9 +331,10 @@ function answer(selected){
   }, 0);
 }
 
-function next(){ if (++state.index < state.session.length) renderQuestion(); else results(); }
+function next(){ if (++state.index < state.session.length){persistQuizSession();renderQuestion();} else results(); }
 
 function results(){
+  persistQuizSession(true);archiveQuizSession('completed');
   show('resultView');
   $('finalScore').textContent = state.score;
   $('resultMessage').textContent = state.score >= 8 ? '핵심 개념이 안정적입니다. 꼬리질문 답변을 소리 내어 연습하세요.' : state.score >= 5 ? '기본기는 좋습니다. 오답의 핵심 문장을 다시 설명해보세요.' : '오답 복습부터 시작해 답변 구조를 짧게 만드는 것이 좋습니다.';
@@ -319,7 +360,7 @@ $('startBtn').onclick = () => start();
 $('bulkBtn').onclick = () => start(null, false, 30);
 $('allBtn').onclick = () => start();
 $('wrongBtn').onclick = () => start(null, true);
-$('quitBtn').onclick = () => history.back();
+$('quitBtn').onclick = () => {persistQuizSession();safeBack(()=>show('homeView'));};
 $('nextBtn').onclick = next;
 $('homeBtn').onclick = () => show('homeView');
 $('studyOpenBtn').onclick = () => { show('studyView'); renderAtlasStudy(); };
@@ -353,4 +394,7 @@ renderChapterPreview();
 renderStats();
 history.replaceState({route:'view',name:'homeView'},'','#home');
 if (typeof window.renderStudyOverview === 'function') renderStudy();
+document.addEventListener('visibilitychange',()=>{if(document.hidden)persistQuizSession();});
+window.addEventListener('beforeunload',()=>{persistQuizSession();replaceCurrentSnapshot();});
+if(window.Capacitor?.isNativePlatform?.())window.Capacitor.Plugins?.App?.addListener('backButton',()=>{persistQuizSession();if(history.state?.route==='view'&&history.state?.name==='homeView')window.Capacitor.Plugins.App.exitApp();else safeBack(()=>show('homeView'));});
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');

@@ -155,6 +155,78 @@
     const depth=domainDepth[category]; if(!depth) return;
     Object.entries(depth).forEach(([key,value])=>concept[key]=`${concept.title}: ${value}`);
   })));
+  const java=curriculum['Java & Spring'];
+  const existing=new Set(java.sections.flatMap(s=>s.concepts).map(c=>c.title.toLowerCase()));
+  const add=(section,title,summary,internals,related=[])=>{if(!existing.has(title.toLowerCase())){section.concepts.push(j(title,summary,internals,`작은 재현 코드와 metric·log로 ${title}의 동작과 비용을 검증합니다.`,related));existing.add(title.toLowerCase());}};
+  const language={title:'Java Language',summary:'값·객체·타입 시스템의 기본 계약',concepts:[]};
+  [
+    ['변수와 자료형','변수는 타입이 정한 값의 표현 범위와 연산 계약을 가진 저장 위치다.','primitive 값과 reference를 구분하고 scope·lifetime·numeric promotion 순서로 실행을 추적한다.',['Scope','Type Conversion']],
+    ['값 전달 방식','Java method 호출은 언제나 값을 복사해 전달하며 object에서는 reference 값이 복사된다.','callee가 reference가 가리키는 객체는 바꿀 수 있지만 caller 변수 자체를 다른 객체로 재지정할 수는 없다.',['Pass by Value','Reference']],
+    ['final','변수 재할당, method override 또는 class 상속을 제한하는 문맥별 제약이다.','final reference는 재할당만 막고 가리키는 mutable object의 내부 변경까지 막지는 않는다.',['Immutability','Constant']],
+    ['static','instance가 아니라 class 단위로 공유되는 member를 선언한다.','class initialization 시점과 classloader 범위에 연결되며 mutable static state는 전역 동시성 문제가 된다.',['ClassLoader','Global State']],
+    ['접근제어자','public·protected·package-private·private로 compile-time 접근 경계를 만든다.','package와 상속 관계를 기준으로 member 접근을 검증해 encapsulation을 보호한다.',['Encapsulation','Module']],
+    ['상속','상위 타입의 계약과 구현을 하위 타입이 확장하는 관계다.','dynamic dispatch로 실제 객체의 override method가 호출되며 LSP를 깨면 다형성이 실패한다.',['LSP','Composition']],
+    ['다형성','같은 상위 타입 호출이 실제 객체에 따라 다른 동작을 선택하는 성질이다.','runtime dispatch가 receiver의 실제 class에 맞는 override 구현을 선택한다.',['Dynamic Dispatch','Interface']],
+    ['예외 처리','정상 반환과 실패 흐름을 분리해 호출자가 복구·변환·전파를 결정하게 한다.','stack unwinding 중 가장 가까운 matching catch를 찾고 finally 또는 resource close를 수행한다.',['Try With Resources','Exception Translation']],
+    ['Annotation','코드에 도구와 runtime이 해석할 구조화 metadata를 붙인다.','retention과 target에 따라 compiler, bytecode 또는 reflection 단계에서 읽힌다.',['Retention','Reflection']],
+    ['Reflection','runtime에 type·member metadata를 조사하고 제한적으로 호출하는 API다.','Class metadata에서 constructor·field·method를 조회하며 encapsulation·성능·native image 제약을 고려한다.',['Class','Proxy']]
+  ].forEach(v=>add(language,...v));
+  java.sections.unshift(language);
+  const collections={title:'Java Collections',summary:'순서·중복·탐색·동시성에 따른 자료구조 선택',concepts:[]};
+  [
+    ['List / Set / Map','List는 순서, Set은 유일성, Map은 key-value 조회 계약을 제공한다.','interface 계약과 구현의 정렬·hash·동시성 특성을 분리해 선택한다.',['Collection Framework']],
+    ['TreeMap','정렬된 key를 red-black tree로 유지하는 Map 구현이다.','비교 기준으로 탐색·삽입·삭제가 O(log n)이며 comparator가 equals와 불일치하면 주의한다.',['Red-Black Tree','Comparator']],
+    ['HashSet','HashMap key 영역을 사용해 중복 없는 원소 집합을 구현한다.','hashCode로 bucket을 찾고 equals로 동일성을 판정하므로 mutable key가 계약을 깨뜨린다.',['HashMap','equals/hashCode']],
+    ['Queue와 Deque','한쪽 또는 양쪽 끝에서 원소를 처리하는 대기열 계약이다.','ArrayDeque의 circular array가 stack과 queue 연산을 모두 상각 O(1)로 제공한다.',['ArrayDeque','FIFO']],
+    ['Stack 사용 시 주의점','legacy Stack보다 Deque를 LIFO stack으로 사용하는 것이 권장된다.','Stack은 Vector 상속과 불필요한 동기화·API 노출을 가지지만 ArrayDeque는 명확한 양끝 연산을 제공한다.',['Deque','LIFO']],
+    ['Iterator와 fail-fast','Iterator는 순회 상태를 캡슐화하고 구조 변경을 빠르게 감지할 수 있다.','modCount 불일치를 best-effort로 확인해 ConcurrentModificationException을 던지며 동시성 보장은 아니다.',['ConcurrentModificationException']],
+    ['Immutable Collection','생성 뒤 구조 변경을 허용하지 않는 collection이다.','List.of 등의 factory는 unmodifiable instance를 만들며 내부 원소 객체의 깊은 불변성은 별개다.',['Defensive Copy','Immutability']],
+    ['시간복잡도 비교','자료구조 연산 비용을 입력 크기에 따른 증가율로 비교한다.','평균·최악·상각 비용과 cache locality·memory overhead를 실제 workload와 함께 본다.',['Big-O','Cache Locality']]
+  ].forEach(v=>add(collections,...v));java.sections.splice(2,0,collections);
+  const modern={title:'Modern Java',summary:'함수형·비동기·간결한 데이터 모델과 경량 동시성',concepts:[]};
+  [
+    ['Lambda','행동을 값처럼 전달하는 함수형 표현이다.','invokedynamic과 functional interface target typing으로 실행 객체가 연결되며 captured local은 effectively final이어야 한다.',['Functional Interface']],
+    ['Functional Interface','추상 method 하나를 가진 lambda target contract다.','SAM signature가 lambda parameter와 return type을 결정한다.',['Lambda','Predicate']],
+    ['Method Reference','기존 method를 lambda 본문 대신 참조하는 축약 표현이다.','target functional interface에 맞춰 static·bound·unbound·constructor reference를 연결한다.',['Lambda']],
+    ['Record','data carrier의 state·accessor·equals·hashCode·toString을 간결히 선언한다.','component가 final field와 canonical constructor로 변환되지만 component object의 깊은 불변성은 보장하지 않는다.',['Value Object']],
+    ['Sealed Class','상속 또는 구현 가능한 subtype 집합을 명시적으로 제한한다.','permits와 module/package 규칙이 폐쇄된 hierarchy를 만들고 exhaustive pattern 판단을 돕는다.',['Pattern Matching']],
+    ['Virtual Thread','blocking I/O 작업을 적은 platform thread 위에서 대규모로 실행하는 경량 Thread다.','JVM scheduler가 continuation을 mount/unmount하며 CPU-bound 병렬성이나 downstream 용량을 늘리지는 않는다.',['Project Loom','Structured Concurrency']]
+  ].forEach(v=>add(modern,...v));java.sections.splice(3,0,modern);
+  const jvm=java.sections.find(s=>s.title==='JVM');
+  [
+    ['객체 생성 과정','new는 class 초기화 확인, memory 할당, zeroing, header 설정, constructor 실행을 거친다.','TLAB bump allocation이 일반적이며 escape analysis 결과에 따라 allocation이 제거될 수 있다.',['TLAB','Object Header']],
+    ['GC 종류','Serial·Parallel·G1·ZGC 등 collector는 pause·throughput·heap 크기 목표가 다르다.','공통 도달성 분석 위에 region·concurrent marking·compaction 전략을 다르게 적용한다.',['G1','ZGC']],
+    ['Escape Analysis','object가 method 또는 thread 밖으로 탈출하는지 JIT가 분석한다.','탈출하지 않는 allocation은 scalar replacement와 lock elision 후보가 될 수 있으나 stack allocation을 보장하는 명세는 아니다.',['JIT','Scalar Replacement']],
+    ['Memory Leak과 OOM 분석','도달 가능하지만 더는 필요 없는 객체 누적도 Java memory leak이다.','GC log→heap usage→heap dump dominator/retained size→allocation path 순으로 증거를 좁힌다.',['Heap Dump','Dominator Tree']],
+    ['Thread Dump와 Heap Dump','thread dump는 실행·lock 상태, heap dump는 객체 graph snapshot이다.','장애 종류에 맞춰 여러 시점 thread dump와 제한된 heap dump를 수집하고 민감정보·pause 비용을 고려한다.',['jcmd','Deadlock']]
+  ].forEach(v=>add(jvm,...v));
+  const concurrency=java.sections.find(s=>s.title==='Java Concurrency');
+  [
+    ['synchronized','monitor 기반 mutual exclusion과 happens-before를 제공한다.','entry/exit가 lock ownership과 memory visibility를 묶으며 critical section이 길면 contention이 커진다.',['Monitor','Happens-Before']],
+    ['volatile','단일 변수 read/write의 visibility와 ordering을 제공한다.','read/write에 happens-before를 형성하지만 count++ 같은 복합 연산의 atomicity는 보장하지 않는다.',['Memory Model','Atomic']],
+    ['Atomic과 CAS','lock 없이 조건부 원자 갱신을 시도하는 연산이다.','expected 값과 현재 값이 같을 때만 update하며 retry·contention·ABA 문제를 고려한다.',['Compare And Set','ABA']],
+    ['Lock과 Deadlock','명시적 lock은 유연한 획득 정책을 주지만 순환 대기는 deadlock을 만든다.','일관된 lock order, timeout, tryLock과 thread dump wait-for graph로 예방·진단한다.',['ReentrantLock','Lock Order']],
+    ['Thread Pool','제한된 worker와 queue로 task 실행량을 제어한다.','arrival rate·service time·queue capacity·rejection policy가 latency와 overload behavior를 결정한다.',['Backpressure','Little’s Law']],
+    ['Future','비동기 계산의 완료·결과·취소 handle이다.','get은 호출 thread를 block하며 timeout·cancel propagation을 명시해야 한다.',['CompletableFuture','Cancellation']]
+  ].forEach(v=>add(concurrency,...v));
+  const spring=java.sections.find(s=>s.title==='Spring Core'),data=java.sections.find(s=>s.title==='Spring Data'),ops=java.sections.find(s=>s.title==='Spring Boot 운영');
+  [['Bean Lifecycle','definition 등록부터 생성·주입·후처리·초기화·소멸까지의 생명주기다.','BeanPostProcessor가 initialization 전후를 가로채며 proxy도 이 과정에서 만들어질 수 있다.',['BeanPostProcessor']],['Component Scan','classpath의 stereotype candidate를 찾아 BeanDefinition으로 등록한다.','base package와 filter로 scan 범위를 정하며 넓은 scan은 의도치 않은 bean 충돌을 만든다.',['BeanDefinition']],['Proxy','target 호출을 감싸 advice·transaction·security 같은 정책을 적용한다.','JDK dynamic proxy 또는 class-based proxy가 method boundary를 가로채며 self-invocation은 우회한다.',['AOP']],['Validation','외부 입력 제약을 선언적으로 검증하고 일관된 오류로 변환한다.','Bean Validation provider가 constraint metadata를 읽고 controller method argument 단계에서 검사한다.',['Bean Validation']],['Transaction Isolation','동시 transaction이 서로의 변경을 관찰하는 범위를 정한다.','database isolation과 MVCC/lock 구현이 dirty·non-repeatable·phantom read를 제어한다.',['MVCC']]].forEach(v=>add(spring,...v));
+  [['Entity 상태','transient·managed·detached·removed로 persistence context 참여 상태를 구분한다.','persist·find·detach·remove와 transaction boundary가 상태 전이를 만든다.',['EntityManager']],['Fetch Join','조회 query에서 필요한 association을 한 SQL로 함께 가져온다.','JPQL join fetch가 fetch plan을 override하지만 collection pagination과 Cartesian expansion을 주의한다.',['N+1']],['JPA Lock','optimistic version 또는 pessimistic DB lock으로 concurrent update를 조정한다.','충돌 빈도와 retry 비용에 따라 @Version과 SELECT FOR UPDATE 계열을 선택한다.',['Optimistic Lock']]].forEach(v=>add(data,...v));
+  [['Spring Security','filter chain과 authentication/authorization context로 요청 접근을 통제한다.','SecurityFilterChain이 credential 처리와 decision을 연결하며 method security가 service boundary를 보완한다.',['Authentication','Authorization']],['Spring Test','unit·slice·integration test로 책임과 wiring을 다른 범위에서 검증한다.','test context cache와 transactional test behavior를 이해해 격리와 실행 시간을 관리한다.',['JUnit','Testcontainers']]].forEach(v=>add(ops,...v));
+
+  const sourceCatalog={
+    'Java & Spring':[{title:'Oracle Java SE 21 Documentation',url:'https://docs.oracle.com/en/java/javase/21/docs/api/',checkedAt:'2026-07-03',version:'Java 21'},{title:'Spring Framework Reference',url:'https://docs.spring.io/spring-framework/reference/',checkedAt:'2026-07-03',version:'Spring Framework 6'}],
+    'OS & Network':[{title:'MDN HTTP',url:'https://developer.mozilla.org/en-US/docs/Web/HTTP',checkedAt:'2026-07-03'},{title:'Oracle Java Concurrency',url:'https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html',checkedAt:'2026-07-03',version:'Java 21'}],
+    'Database':[{title:'PostgreSQL Documentation',url:'https://www.postgresql.org/docs/current/',checkedAt:'2026-07-03',version:'PostgreSQL current'}],
+    'Web & React':[{title:'MDN Web Docs',url:'https://developer.mozilla.org/en-US/docs/Web',checkedAt:'2026-07-03'},{title:'React Documentation',url:'https://react.dev/learn',checkedAt:'2026-07-03'}],
+    'DevOps':[{title:'Docker Documentation',url:'https://docs.docker.com/',checkedAt:'2026-07-03'},{title:'Kubernetes Documentation',url:'https://kubernetes.io/docs/',checkedAt:'2026-07-03'}],
+    'AI & Design':[{title:'Spring AI Reference',url:'https://docs.spring.io/spring-ai/reference/',checkedAt:'2026-07-03'},{title:'OpenAI Cookbook',url:'https://cookbook.openai.com/',checkedAt:'2026-07-03'}],
+    'AX Scenario':[{title:'Google SRE Books',url:'https://sre.google/books/',checkedAt:'2026-07-03'},{title:'OpenTelemetry Documentation',url:'https://opentelemetry.io/docs/',checkedAt:'2026-07-03'}]
+  };
+  Object.entries(curriculum).forEach(([category,chapter])=>chapter.sections.forEach(section=>section.concepts.forEach((concept,index)=>{
+    concept.difficulty=concept.difficulty||['기초','면접','실무'][index%3];concept.estimatedMinutes=concept.estimatedMinutes||8;concept.importance=concept.importance||'높음';
+    concept.sources=concept.sources||sourceCatalog[category];
+  })));
   Object.values(curriculum).forEach(chapter=>chapter.sections.forEach(section=>section.concepts.forEach((concept,index)=>{
     if(concept.comparison) return;
     const peer=section.concepts[(index+1)%section.concepts.length];

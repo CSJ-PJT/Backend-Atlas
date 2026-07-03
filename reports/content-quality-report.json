@@ -1,0 +1,498 @@
+{
+  "generatedAt": "2026-07-03T06:22:41.490Z",
+  "counts": {
+    "questions": 5000,
+    "concepts": 186,
+    "errors": 0,
+    "warnings": 79
+  },
+  "checks": [
+    "template repetition",
+    "short concepts",
+    "internal operation",
+    "source metadata",
+    "URL syntax",
+    "duplicate questions/options",
+    "answer length bias",
+    "distractor reasons",
+    "category tags",
+    "comparison shape",
+    "mobile overflow tokens"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "상속",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "OOP와 객체 모델",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "DDD와 Bounded Context",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Queue와 Deque",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Immutable Collection",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "시간복잡도 비교",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Lambda",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Balanced Search Tree",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "정렬 알고리즘 선택",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Dynamic Programming",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "equals와 hashCode",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Primitive vs Wrapper",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Generic",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Stream",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Optional",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "CompletableFuture",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Atomic과 CAS",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Thread Pool",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Future",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "GC 기본 원리",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "ClassLoader",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "DI / IoC",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Bean Scope",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "AOP",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "@Transactional",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Transaction Propagation",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Validation",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "JPA 영속성 컨텍스트",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "N+1 문제",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Lazy vs Eager Loading",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Dirty Checking",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Profile",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Actuator",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Logging",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Exception Handling",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Spring Batch",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "mobile-overflow-token",
+      "id": "DispatcherServlet",
+      "message": "HandlerMapping→HandlerAdapter→Controller→MessageConverter/ExceptionResolver"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "DTO / VO / Entity",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Scale Up vs Scale Out",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Deadlock",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Lock / CAS",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "TCP/IP",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "HTTP",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "DNS",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "TLS",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Load Balancing",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Index",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "B-Tree",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "SQL Tuning",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "PostgreSQL",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "pgvector",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Transaction",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Lock",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "MVCC",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "JPA",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "PWA",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "WebView",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Mobile UX",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "State",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Props",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "React Key",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Layer",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Volume",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Network",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "CI/CD",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "duplicate-concept",
+      "id": "Logging",
+      "message": "also in Java & Spring"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Logging",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Monitoring",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "OpenTelemetry",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Kubernetes 기초",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "배포 / 롤백",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "RAG",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "duplicate-concept",
+      "id": "pgvector",
+      "message": "also in Database"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "HNSW",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "MCP",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Agent",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Workflow",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "short-content",
+      "id": "Spring AI",
+      "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "answer-length-bias",
+      "id": "question-bank",
+      "message": "correct answer is longest in 96.0%"
+    }
+  ]
+}
