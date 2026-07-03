@@ -1,0 +1,9 @@
+{
+  "appId": "com.danchon.techreview",
+  "appName": "Backend Atlas",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "backgroundColor": "#07152f"
+  }
+}

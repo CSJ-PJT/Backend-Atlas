@@ -1,0 +1,29 @@
+# JavaScript dependencies and generated web bundles
+node_modules/
+www/
+dist/
+build/
+
+# Android and Gradle build output
+.gradle/
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+*.apk
+*.aab
+
+# Environment and local configuration
+.env
+.env.*
+!.env.example
+*.local
+
+# Logs, caches, IDE and OS files
+*.log
+.cache/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
