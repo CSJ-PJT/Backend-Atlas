@@ -92,11 +92,16 @@
           <div id="options" class="options"></div>
           <div id="answerPanel" class="answer-panel" hidden>
             <p id="resultLabel" class="result-label"></p>
-            <h3>핵심 답변</h3><p id="explanation"></p>
+            <h3>정답</h3><p id="correctAnswer"></p>
+            <h3>왜 정답인가</h3><p id="explanation"></p>
+            <h3>왜 나머지는 오답인가</h3><div id="optionReasons" class="option-reasons"></div>
+            <h3>실무에서는 어떻게 쓰는가</h3><p id="practicalUse"></p>
+            <h3>면접 답변으로 말하기</h3><p id="interviewAnswer"></p>
             <h3>핵심 기술 포인트</h3><ul id="keyPoints"></ul>
             <div class="follow-up"><strong>꼬리질문</strong><p id="followUp"></p></div>
             <button id="whyBtn" class="secondary why-button" type="button">Why? 더 깊게 보기</button>
             <div id="whyPanel" class="why-panel" hidden></div>
+            <h3>비슷한 문제 추천</h3><div id="similarQuestions" class="similar-questions"></div>
           </div>
           <button id="nextBtn" class="primary wide" hidden>다음 문제</button>
         </article>
@@ -126,12 +131,23 @@
         <div id="resultBreakdown" class="result-breakdown"></div>
         <div class="result-actions"><button id="retryWrongBtn" class="primary">틀린 문제 복습</button><button id="homeBtn" class="secondary">홈으로</button></div>
       </section>
+
+      <section id="architectureView" class="view architecture-view">
+        <nav class="quiz-nav"><button id="architectureBackBtn" class="icon-btn" aria-label="직전 화면으로">←</button><strong>Developer Guide</strong></nav>
+        <div class="architecture-hero">
+          <p class="eyebrow">PORTFOLIO AS A TEXTBOOK</p>
+          <h1>만든 시스템을<br>학습 교재로.</h1>
+          <p>세 프로젝트의 실제 구조와 설계 결정을 살펴보고, 사용 기술을 곧바로 학습 페이지에서 이어서 탐색합니다.</p>
+        </div>
+        <div id="architectureContent"></div>
+      </section>
     </main>
     <nav class="bottom-nav" aria-label="학습 탐색">
       <button id="navHomeBtn" class="bottom-nav-item active" type="button">홈</button>
       <button id="navStudyBtn" class="bottom-nav-item" type="button">학습</button>
       <button id="navQuizBtn" class="bottom-nav-item" type="button">문제</button>
       <button id="navSearchBtn" class="bottom-nav-item" type="button">검색</button>
+      <button id="navArchitectureBtn" class="bottom-nav-item" type="button">설계</button>
     </nav>
   </div>
   <script src="questions.js"></script>
@@ -139,6 +155,9 @@
   <script src="ax-question-extension.js"></script>
   <script src="learning-os-data.js"></script>
   <script src="atlas-content.js"></script>
+  <script src="curriculum-data.js"></script>
+  <script src="developer-guide-data.js"></script>
+  <script src="learning-visuals.js"></script>
   <script src="app.js"></script>
   <script src="learning-os.js"></script>
 </body>

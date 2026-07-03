@@ -5,7 +5,7 @@ const root = resolve(import.meta.dirname, '..');
 const out = resolve(root, 'www');
 const assets = [
   'index.html', 'styles.css', 'learning-os.css', 'questions.js', 'question-expander.js',
-  'ax-question-extension.js', 'learning-os-data.js', 'atlas-content.js', 'app.js', 'learning-os.js',
+  'ax-question-extension.js', 'learning-os-data.js', 'atlas-content.js', 'curriculum-data.js', 'developer-guide-data.js', 'learning-visuals.js', 'app.js', 'learning-os.js',
   'manifest.webmanifest', 'sw.js', 'assets/backend-atlas-icon.png'
 ];
 

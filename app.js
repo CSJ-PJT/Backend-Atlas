@@ -26,13 +26,15 @@ function explainPoint(text, q){
   return q.pointDetails?.[text] || q.explanations?.[text] || `${text}는 ${q.category}에서 실제 설계와 운영 판단의 기준이 됩니다. ${q.whyExplanation}`;
 }
 function shuffle(a){ return [...a].sort(() => Math.random() - 0.5); }
-function show(name){
+function pushNavigation(state){ history.pushState(state,'',`#${state.route}${state.category?`/${encodeURIComponent(state.category)}`:''}${state.project?`/${encodeURIComponent(state.project)}`:''}`); }
+function show(name, record=true){
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   $(name).classList.add('active');
   document.querySelectorAll('.bottom-nav-item').forEach(b => b.classList.remove('active'));
-  const navMap = { homeView:'navHomeBtn', studyView:'navStudyBtn', quizView:'navQuizBtn', knowledgeView:'navSearchBtn' };
+  const navMap = { homeView:'navHomeBtn', studyView:'navStudyBtn', quizView:'navQuizBtn', knowledgeView:'navSearchBtn', architectureView:'navArchitectureBtn' };
   const navId = navMap[name];
   if (navId && $(navId)) $(navId).classList.add('active');
+  if(record) pushNavigation({route:'view',name});
   scrollTo(0,0);
 }
 
@@ -45,7 +47,7 @@ function renderCategories(){
       <h3>${c}</h3>
       <p>${categoryDesc(c)}</p>
     </button>`).join('');
-  document.querySelectorAll('.category-card').forEach(b => b.onclick = () => start(b.dataset.category));
+  document.querySelectorAll('.category-card').forEach(b => b.onclick = () => renderStudyCategory(b.dataset.category));
 }
 
 function renderChapterPreview(){
@@ -111,6 +113,8 @@ function renderStudy(){
 }
 
 function renderAtlasStudy(){
+  renderStudyHome();
+  return;
   const chapters=window.ATLAS_CHAPTERS||{};
   const cats=Object.keys(chapters);
   $('studyShortcuts').innerHTML=cats.map(c=>`<button class="mini-chip" data-study="${c}">${c}</button>`).join('');
@@ -124,6 +128,69 @@ function renderAtlasStudy(){
   document.querySelectorAll('#studyOverview [data-topic]').forEach(btn=>btn.onclick=()=>openStudy(btn.dataset.topic));
 }
 
+function conceptTable(data){
+  if(!data) return '';
+  return `<div class="comparison-table-wrap"><table class="comparison-table"><thead><tr>${data.headers.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${data.rows.map(row=>`<tr>${row.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+
+function renderStudyHome(){
+  const curriculum=window.ATLAS_CURRICULUM||{};
+  $('studyShortcuts').innerHTML=Object.entries(curriculum).map(([name,c])=>`<button class="mini-chip" data-curriculum="${name}">${c.icon} ${name}</button>`).join('');
+  $('studyOverview').innerHTML=`<div class="curriculum-grid">${Object.entries(curriculum).map(([name,c])=>`<button class="curriculum-card" data-curriculum="${name}" style="--chapter:${c.color}"><span class="curriculum-icon">${c.icon}</span><span><strong>${name}</strong><small>${c.summary}</small><em>${c.sections.length}개 챕터 · ${c.sections.reduce((n,s)=>n+s.concepts.length,0)}개 핵심 개념</em></span><b>›</b></button>`).join('')}</div>`;
+  document.querySelectorAll('[data-curriculum]').forEach(btn=>btn.onclick=()=>renderStudyCategory(btn.dataset.curriculum));
+}
+
+function renderStudyCategory(category,record=true){
+  show('studyView',false);
+  if(record) pushNavigation({route:'study-category',category});
+  const c=window.ATLAS_CURRICULUM?.[category]; if(!c) return renderStudyHome();
+  $('studyShortcuts').innerHTML=`<button class="mini-chip" data-study-home>← 전체 분야</button><span class="study-current">${c.icon} ${category}</span>`;
+  $('studyOverview').innerHTML=`<section class="category-study-head" style="--chapter:${c.color}"><span class="curriculum-icon">${c.icon}</span><div><p class="eyebrow">LEARNING MAP</p><h2>${category}</h2><p>${c.summary}</p></div></section><div class="difficulty-row"><button data-level="easy">기초</button><button data-level="medium">면접</button><button data-level="hard">실무·심화</button></div><div class="section-card-list">${c.sections.map((section,index)=>`<article class="section-card"><button class="section-card-head" data-toggle-section="${index}"><span><small>CHAPTER ${String(index+1).padStart(2,'0')}</small><strong>${section.title}</strong><em>${section.summary}</em></span><b>${section.concepts.length}</b></button><div class="concept-list" data-section="${index}" ${index?'hidden':''}>${section.concepts.map((concept,ci)=>`<button class="concept-row" data-concept="${index}:${ci}"><span><strong>${concept.title}</strong><small>${concept.summary}</small></span><b>›</b></button>`).join('')}<button class="chapter-quiz" data-chapter-quiz="${category}">이 챕터 문제 풀기</button></div></article>`).join('')}</div>`;
+  document.querySelector('[data-study-home]')?.addEventListener('click',renderStudyHome);
+  document.querySelectorAll('[data-toggle-section]').forEach(btn=>btn.onclick=()=>{const body=document.querySelector(`[data-section="${btn.dataset.toggleSection}"]`);body.hidden=!body.hidden;});
+  document.querySelectorAll('[data-concept]').forEach(btn=>{const [si,ci]=btn.dataset.concept.split(':').map(Number);btn.onclick=()=>renderConceptDetail(category,si,ci);});
+  document.querySelectorAll('[data-chapter-quiz]').forEach(btn=>btn.onclick=()=>start(btn.dataset.chapterQuiz));
+  document.querySelectorAll('[data-level]').forEach(btn=>btn.onclick=()=>start(category,false,10,btn.dataset.level));
+}
+
+function renderConceptDetail(category,sectionIndex,conceptIndex,record=true){
+  show('studyView',false);
+  if(record) pushNavigation({route:'concept',category,sectionIndex,conceptIndex});
+  const c=window.ATLAS_CURRICULUM[category], section=c.sections[sectionIndex], x=section.concepts[conceptIndex];
+  $('studyShortcuts').innerHTML=`<button class="mini-chip" id="conceptBack">← ${section.title}</button><span class="study-current">${category}</span>`;
+  const references=window.ATLAS_REFERENCES?.[category]||[];
+  $('studyOverview').innerHTML=`<article class="concept-detail"><header style="--chapter:${c.color}"><p class="eyebrow">${section.title}</p><h2>${x.title}</h2><p>${x.summary}</p></header><div class="concept-keywords">${x.related.map(t=>`<button data-topic="${t}">${t}</button>`).join('')}</div>${[['한 줄 정의',x.definition],['왜 필요한가',x.why],['내부 동작',x.internals],['장점',x.pros],['단점',x.cons],['실무 사용 예',x.practice],['장애 사례',x.incident],['면접 답변 예시',x.interview]].map(([h,p],i)=>`<details class="concept-accordion" ${i<2?'open':''}><summary>${h}<span>＋</span></summary><p>${p}</p></details>`).join('')}${x.comparison?`<section class="concept-comparison"><h3>비교표</h3>${conceptTable(x.comparison)}</section>`:''}<section class="tail-card"><h3>꼬리 개념</h3>${x.tails.map(t=>`<button data-topic="${t}">${t}</button>`).join('')}</section><details class="concept-accordion sources-card"><summary>공식 학습 근거<span>＋</span></summary>${references.map(r=>`<a href="${r.url}" target="_blank" rel="noreferrer">${r.title} ↗</a>`).join('')}</details><div class="concept-actions"><button class="secondary" id="relatedSearch">관련 문제 보기</button><button class="primary" id="conceptQuiz">문제 풀기</button></div></article>`;
+  document.querySelector('.concept-detail>header')?.insertAdjacentHTML('afterend',window.renderLearningVisual?.(x.title,category)||'');
+  $('conceptBack').onclick=()=>renderStudyCategory(category); $('relatedSearch').onclick=()=>openStudy(x.title); $('conceptQuiz').onclick=()=>start(category);
+  document.querySelectorAll('#studyOverview [data-topic]').forEach(btn=>btn.onclick=()=>openStudy(btn.dataset.topic));
+}
+
+function renderArchitectureHome(record=false){
+  show('architectureView',false); if(record) pushNavigation({route:'architecture'});
+  $('architectureContent').innerHTML=`<div class="project-guide-grid">${Object.entries(window.ATLAS_PROJECTS||{}).map(([name,p])=>`<button class="project-guide-card" data-project="${name}"><small>${p.badge}</small><strong>${name}</strong><span>${p.purpose}</span><em>${p.stack.slice(0,4).join(' · ')}</em><b>구조 살펴보기 →</b></button>`).join('')}</div>`;
+  document.querySelectorAll('[data-project]').forEach(btn=>btn.onclick=()=>renderProjectGuide(btn.dataset.project));
+}
+
+function guideFlow(items,label){return window.renderSystemFlow?.(label,items)||`<section class="guide-diagram"><small>${label}</small><div>${items.join(' → ')}</div></section>`;}
+function renderProjectGuide(name,record=true){
+  show('architectureView',false); if(record) pushNavigation({route:'project',project:name});
+  const p=window.ATLAS_PROJECTS[name];
+  $('architectureContent').innerHTML=`<article class="project-guide-detail"><button class="text-btn" id="projectsBack">← 프로젝트 목록</button><header><small>${p.badge}</small><h2>${name}</h2><p>${p.purpose}</p><div class="guide-techs">${p.technologies.map(t=>`<button data-tech="${t}">${t}</button>`).join('')}</div></header>${guideFlow(p.diagram,'ARCHITECTURE')}${guideFlow(p.sequence,'SEQUENCE')}<div class="guide-facts"><section><h3>기술 스택</h3><p>${p.stack.join(' · ')}</p></section><section><h3>설계 이유</h3><ul>${p.design.map(x=>`<li>${x}</li>`).join('')}</ul></section></div><details class="guide-section" open><summary>디렉터리 구조</summary><div class="directory-list">${p.directories.map(([path,role])=>`<div><code>${path}</code><span>${role}</span></div>`).join('')}</div></details>${[['데이터 흐름',p.flow.join(' → ')],['API 구조',p.api],['검색 구조',p.search],['문제·데이터 생성 구조',p.generation],['RAG 구조',p.rag],['Android / Capacitor',p.android],['UI 구조',p.ui],['Git 전략',p.git]].map(([h,v])=>`<details class="guide-section"><summary>${h}</summary><p>${v}</p></details>`).join('')}<section class="guide-roadmap"><h3>향후 확장</h3>${p.roadmap.map(x=>`<span>${x}</span>`).join('')}</section></article>`;
+  $('projectsBack').onclick=()=>history.back(); document.querySelectorAll('[data-tech]').forEach(btn=>btn.onclick=()=>openStudy(btn.dataset.tech));
+}
+
+window.addEventListener('popstate',event=>{
+  const state=event.state||{route:'view',name:'homeView'};
+  if(state.route==='study-category') return renderStudyCategory(state.category,false);
+  if(state.route==='concept') return renderConceptDetail(state.category,state.sectionIndex,state.conceptIndex,false);
+  if(state.route==='architecture') return renderArchitectureHome(false);
+  if(state.route==='project') return renderProjectGuide(state.project,false);
+  if(state.route==='search'){ show('knowledgeView',false); $('knowledgeSearchInput').value=state.query||''; window.renderKnowledgeSearch?.(state.query||''); return; }
+  show(state.name||'homeView',false);
+  if(state.name==='studyView') renderStudyHome();
+  if(state.name==='architectureView') renderArchitectureHome(false);
+});
+
 function updateStreak(){
   const today = new Date().toISOString().slice(0,10);
   if (saved.last === today) return;
@@ -132,11 +199,14 @@ function updateStreak(){
   saved.last = today;
 }
 
-function start(category, onlyWrong = false, count = 10){
+function start(category, onlyWrong = false, count = 10, difficulty = ''){
   let pool = onlyWrong ? bank.filter(q => saved.wrong.includes(q.id)) : category ? bank.filter(q => q.category === category) : bank;
+  if(difficulty) pool=pool.filter(q=>q.difficulty===difficulty||q.level===difficulty);
   if (!pool.length) { alert('복습할 오답이 없습니다.'); return; }
   state.count = count;
-  state.session = shuffle(pool).slice(0, count);
+  const featured=shuffle(pool.filter(q=>String(q.id).startsWith('quality-')||String(q.id).startsWith('curriculum-')));
+  const regular=shuffle(pool.filter(q=>!String(q.id).startsWith('quality-')&&!String(q.id).startsWith('curriculum-')));
+  state.session = [...featured.slice(0,Math.min(3,featured.length)),...regular].slice(0, count);
   state.index = 0;
   state.score = 0;
   state.answers = [];
@@ -150,7 +220,7 @@ function renderQuestion(){
   $('counter').textContent = `${state.index + 1} / ${state.session.length}`;
   $('progressBar').style.width = `${state.index / state.session.length * 100}%`;
   $('questionCategory').textContent = q.category;
-  $('questionLevel').textContent = q.level;
+  $('questionLevel').textContent = `${q.level} · ${q.type}`;
   $('questionText').textContent = q.q;
   $('questionHint').textContent = q.hint;
   $('options').innerHTML = q.options.map((o,i) => `<button class="option" data-index="${i}"><b>${String.fromCharCode(65+i)}.</b> ${o}</button>`).join('');
@@ -192,6 +262,11 @@ function answer(selected){
   $('resultLabel').textContent = correct ? '정답입니다.' : '아쉽습니다. 답변 구조를 확인하세요.';
   $('resultLabel').className = 'result-label ' + (correct ? 'good' : 'bad');
   $('explanation').textContent = q.explanation;
+  $('correctAnswer').textContent = `${String.fromCharCode(65+q.answer)}. ${q.options[q.answer]}`;
+  $('optionReasons').innerHTML = q.optionReasons.map((reason,i)=>`<div class="option-reason ${i===q.answer?'is-correct':''}"><b>${String.fromCharCode(65+i)}</b><span>${reason}</span></div>`).join('');
+  $('practicalUse').textContent = q.practicalUse;
+  $('interviewAnswer').textContent = q.interviewAnswer;
+  $('similarQuestions').innerHTML = bank.filter(x=>x.id!==q.id&&x.category===q.category&&(x.tags||[]).some(t=>(q.tags||[]).includes(t))).slice(0,3).map(x=>`<button data-similar="${x.id}">${x.question}</button>`).join('') || '<span>관련 문제를 준비 중입니다.</span>';
   $('keyPoints').innerHTML = (q.points || []).map(p => `<li><button type="button" class="detail-pill" data-detail="${p}">${p}</button><div class="detail-body" data-detail-body="${p}" hidden>${explainPoint(p, q)}</div></li>`).join('');
   $('followUp').innerHTML = (q.followUpQuestions || []).map((f,i) => `<button type="button" class="followup-pill" data-follow="${i}">${f}</button><div class="detail-body" data-follow-body="${i}" hidden>${f}는 ${q.interviewPoint || q.whyExplanation}</div>`).join('');
   $('answerPanel').hidden = false;
@@ -208,6 +283,10 @@ function answer(selected){
       const body = document.querySelector(`[data-follow-body="${CSS.escape(btn.dataset.follow)}"]`);
       if (!body) return;
       body.hidden = !body.hidden;
+    });
+    document.querySelectorAll('[data-similar]').forEach(btn=>btn.onclick=()=>{
+      const target=bank.find(x=>x.id===btn.dataset.similar); if(!target) return;
+      state.session=[target];state.index=0;state.score=0;state.answers=[];renderQuestion();
     });
   }, 0);
 }
@@ -226,28 +305,32 @@ function results(){
   $('retryWrongBtn').disabled = !state.answers.some(a => !a.correct);
 }
 
-function openStudy(query){
-  show('knowledgeView');
+function openStudy(query,record=true){
+  show('knowledgeView',false);
+  if(record) pushNavigation({route:'search',query});
   $('knowledgeSearchInput').value = query;
   if (typeof window.renderKnowledgeSearch === 'function') {
     window.renderKnowledgeSearch(query);
   }
 }
+window.openAtlasSearch=openStudy;
 
 $('startBtn').onclick = () => start();
 $('bulkBtn').onclick = () => start(null, false, 30);
 $('allBtn').onclick = () => start();
 $('wrongBtn').onclick = () => start(null, true);
-$('quitBtn').onclick = () => show('homeView');
+$('quitBtn').onclick = () => history.back();
 $('nextBtn').onclick = next;
 $('homeBtn').onclick = () => show('homeView');
 $('studyOpenBtn').onclick = () => { show('studyView'); renderAtlasStudy(); };
-$('studyBackBtn').onclick = () => show('homeView');
-$('knowledgeBackBtn').onclick = () => show('homeView');
+$('studyBackBtn').onclick = () => history.back();
+$('knowledgeBackBtn').onclick = () => history.back();
 $('navHomeBtn').onclick = () => show('homeView');
 $('navStudyBtn').onclick = () => { show('studyView'); renderAtlasStudy(); };
-$('navQuizBtn').onclick = () => show('quizView');
+$('navQuizBtn').onclick = () => start();
 $('navSearchBtn').onclick = () => show('knowledgeView');
+$('navArchitectureBtn').onclick = () => { show('architectureView'); renderArchitectureHome(false); };
+$('architectureBackBtn').onclick = () => history.back();
 $('retryWrongBtn').onclick = () => {
   const wrong = state.answers.filter(a => !a.correct).map(a => a.q);
   if (!wrong.length) return;
@@ -268,5 +351,6 @@ $('resetBtn').onclick = () => {
 renderCategories();
 renderChapterPreview();
 renderStats();
+history.replaceState({route:'view',name:'homeView'},'','#home');
 if (typeof window.renderStudyOverview === 'function') renderStudy();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');

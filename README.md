@@ -12,6 +12,15 @@ AX·Backend 엔지니어가 기술을 외우는 데서 그치지 않고 원리�
 - 오늘 목표, 연속 학습, 약점 분석, 오답 우선 복습
 - 로컬 저장소 기반 학습 기록 유지
 - Capacitor Android 앱
+- 분야 카드 → 챕터 → 개념 상세로 이어지는 모바일 중심 학습 UX
+- Java Core/JVM/Spring Core/Spring Data/Spring Boot 운영 커리큘럼
+- 선택지별 정답·오답 근거와 실무·면접 답변 해설
+- 모든 핵심 개념의 비교표와 Oracle·Spring·PostgreSQL 등 공식 문서 링크
+- Backend Atlas·Archive Nexus·ArchiveOS 실제 구현 기반 Developer Guide
+- 브라우저 history와 Android WebView에서 동일하게 동작하는 직전 화면 복귀
+- JVM memory, HashMap, ArrayList/LinkedList, B-Tree, Web request, Spring MVC, RAG, Container 구조 SVG 학습 도식
+
+학습 내용은 Oracle·Spring·PostgreSQL 등 공식 문서와 공개 기술 면접 자료의 주제 범위를 참고해 독자적으로 재구성했습니다. 원문 문장을 복제하지 않으며 앱 안에서 원본과 공식 문서 링크를 함께 제공합니다.
 
 ## 기술 스택
 
@@ -29,6 +38,8 @@ Backend-Atlas/
 ├─ app.js                     # 퀴즈·진행률·약점 분석
 ├─ learning-os.js             # 검색·Why·지식 그래프 UI
 ├─ atlas-content.js           # 심층 챕터·TOP20·강화 메타데이터
+├─ curriculum-data.js        # 공식 문서 기반 커리큘럼·비교·품질 문제
+├─ developer-guide-data.js   # 세 프로젝트 architecture와 기술 딥링크
 ├─ questions.js               # 기본 문제 데이터
 ├─ question-expander.js       # 문제 확장
 ├─ ax-question-extension.js   # AX·실무 시나리오 확장
