@@ -7,6 +7,15 @@ const HISTORY_KEY='backendAtlasQuizHistory';
 const LEARNING_KEY='backendAtlasLearningState';
 const learning=Object.assign({saved:[],review:[],completed:{},ui:{}},JSON.parse(localStorage.getItem(LEARNING_KEY)||'{}'));
 const icons = {'OS & Network':'⌘','Database':'▦','Java & Spring':'◆','Web & React':'◌','DevOps':'△','AI & Design':'✦','AX Scenario':'◎'};
+const learningLanes=[
+  {label:'Backend 기본',category:'OS & Network',desc:'OS, Network, HTTP, 동시성'},
+  {label:'Spring / JPA',category:'Java & Spring',desc:'Spring, JPA, Transaction'},
+  {label:'DB / Transactions',category:'Database',desc:'SQL, MVCC, Lock, Index'},
+  {label:'System Design',category:'AI & Design',desc:'RAG, Agent, workflow 설계'},
+  {label:'운영 / 장애',category:'DevOps',desc:'배포, 관측성, 장애 대응'},
+  {label:'AI / AX Backend',category:'AX Scenario',desc:'AX 운영 시나리오와 보안'}
+];
+const axTopics=['LLM API','RAG','Vector DB','Agent','자동화','보안 / 운영'];
 
 function save(){ localStorage.setItem('interviewDeck', JSON.stringify(saved)); renderStats(); }
 function renderStats(){
@@ -17,14 +26,65 @@ function renderStats(){
   const today = new Date().toISOString().slice(0,10);
   const todayCount = saved.daily?.[today] || 0;
   $('todayGoal').textContent = `${Math.min(todayCount,20)} / 20`;
+  $('todaySolvedStat').textContent = `${todayCount}문제`;
   $('goalBar').style.width = `${Math.min(100,todayCount/20*100)}%`;
   $('reviewDue').textContent = `${saved.wrong.length}문제`;
   const ranked = Object.entries(saved.categoryStats||{}).filter(([,v])=>v.solved).sort((a,b)=>(a[1].correct/a[1].solved)-(b[1].correct/b[1].solved));
   $('weakArea').textContent = ranked[0]?.[0] || '학습 시작';
   $('recommendation').textContent = ranked[0] ? `정답률 ${Math.round(ranked[0][1].correct/ranked[0][1].solved*100)}% · 오답부터 복습` : '첫 진단을 시작하세요';
+  renderHomeLearningWidgets(ranked);
 }
 function categoryDesc(c){
   return {'OS & Network':'동시성, TCP/IP, HTTP','Database':'SQL, JPA, PostgreSQL','Java & Spring':'JVM, AOP, 트랜잭션','Web & React':'상태, 브라우저, 모바일','DevOps':'Docker, 관측성, 배포','AI & Design':'RAG, Agent, Workflow','AX Scenario':'장애 분석, 복구, 운영 판단'}[c] || '';
+}
+function questionTitle(q){return q.question||q.q||'질문 준비 중';}
+function questionDifficulty(q){return q.difficulty||q.level||'기본';}
+function categoryCorrectRate(category){
+  const stat=saved.categoryStats?.[category];
+  return stat?.solved?Math.round(stat.correct/stat.solved*100):null;
+}
+function conceptById(id){
+  const [category,sectionIndex,conceptIndex]=String(id).split(':');
+  return window.ATLAS_CURRICULUM?.[category]?.sections?.[Number(sectionIndex)]?.concepts?.[Number(conceptIndex)];
+}
+function readQuizHistory(){
+  try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');}catch{return [];}
+}
+function weakCategory(){
+  return Object.entries(saved.categoryStats||{}).filter(([,v])=>v.solved).sort((a,b)=>(a[1].correct/a[1].solved)-(b[1].correct/b[1].solved))[0]?.[0]||'';
+}
+function renderConceptFromId(id){
+  const [category,sectionIndex,conceptIndex]=String(id).split(':');
+  if(!window.ATLAS_CURRICULUM?.[category]) return false;
+  renderConceptDetail(category,Number(sectionIndex),Number(conceptIndex));
+  return true;
+}
+function renderHomeLearningWidgets(){
+  const wrongQuestions=(saved.wrong||[]).map(id=>bank.find(q=>q.id===id)).filter(Boolean);
+  const weakTopics=[...new Set(wrongQuestions.flatMap(q=>[...(q.relatedTopics||[]),...(q.tags||[])]))].slice(0,8);
+  const dueConcepts=Object.entries(learning.completed||{}).filter(([,v])=>v.reviewAt&&new Date(v.reviewAt)<=new Date()).map(([id])=>conceptById(id)?.title).filter(Boolean);
+  const reviewCount=wrongQuestions.length+dueConcepts.length+(learning.review||[]).length;
+  $('reviewTodayCount').textContent=reviewCount;
+  $('weakTopicCount').textContent=weakTopics.length;
+
+  $('learningLanes').innerHTML=learningLanes.map(lane=>`<button class="lane-card" type="button" data-lane-category="${lane.category}"><strong>${lane.label}</strong><span>${lane.desc}</span><em>${bank.filter(q=>q.category===lane.category).length}문제</em></button>`).join('');
+  document.querySelectorAll('[data-lane-category]').forEach(btn=>btn.onclick=()=>renderStudyCategory(btn.dataset.laneCategory));
+
+  $('axTopicList').innerHTML=axTopics.map(topic=>`<button type="button" data-ax-topic="${topic}">${topic}</button>`).join('');
+  document.querySelectorAll('[data-ax-topic]').forEach(btn=>btn.onclick=()=>openStudy(btn.dataset.axTopic));
+
+  const history=readQuizHistory().slice(0,4).map(item=>({title:item.quizMode==='interview'?'면접 모드':item.category||item.quizMode||'랜덤 문제',meta:`${item.questionIds?.length||0}문제 · ${new Date(item.archivedAt||item.lastSavedAt).toLocaleDateString('ko-KR')}`}));
+  const completed=Object.entries(learning.completed||{}).slice(-4).reverse().map(([id,v])=>({title:conceptById(id)?.title||'개념 학습',meta:`복습 예정 ${new Date(v.reviewAt).toLocaleDateString('ko-KR')}`}));
+  const logs=[...history,...completed].slice(0,5);
+  $('recentLearningList').innerHTML=logs.length?logs.map(item=>`<button class="learning-log" type="button" data-recent-topic="${item.title}"><strong>${item.title}</strong><span>${item.meta}</span></button>`).join(''):'<p class="empty-state">아직 기록이 없습니다. 오늘의 퀴즈를 시작하면 여기에 쌓입니다.</p>';
+  document.querySelectorAll('[data-recent-topic]').forEach(btn=>btn.onclick=()=>openStudy(btn.dataset.recentTopic));
+
+  $('weakTopicList').innerHTML=weakTopics.length?weakTopics.map(topic=>`<button type="button" data-weak-topic="${topic}">${topic}</button>`).join(''):'<p class="empty-state">오답이 쌓이면 약점 토픽을 자동으로 보여줍니다.</p>';
+  document.querySelectorAll('[data-weak-topic]').forEach(btn=>btn.onclick=()=>openStudy(btn.dataset.weakTopic));
+
+  const samples=bank.filter(q=>q.interviewAnswer||q.interviewPoint||(q.followUpQuestions||[]).length).slice(0,2);
+  $('interviewPreview').innerHTML=samples.map(q=>`<button type="button" data-preview-question="${q.id}"><strong>${questionTitle(q)}</strong><span>${(q.points||q.tags||[]).slice(0,3).join(' · ')}</span></button>`).join('');
+  document.querySelectorAll('[data-preview-question]').forEach(btn=>btn.onclick=()=>startSpecificQuestion(btn.dataset.previewQuestion));
 }
 function explainPoint(text, q){
   return q.pointDetails?.[text] || q.explanations?.[text] || `${text}는 ${q.category}에서 실제 설계와 운영 판단의 기준이 됩니다. ${q.whyExplanation}`;
@@ -236,32 +296,66 @@ function updateStreak(){
 function start(category, onlyWrong = false, count = 10, difficulty = ''){
   return offerResume(()=>startFresh(category,onlyWrong,count,difficulty));
 }
-function startFresh(category, onlyWrong = false, count = 10, difficulty = ''){
-  let pool = onlyWrong ? bank.filter(q => saved.wrong.includes(q.id)) : category ? bank.filter(q => q.category === category) : bank;
-  if(difficulty) pool=pool.filter(q=>q.difficulty===difficulty||q.level===difficulty);
-  if (!pool.length) { alert('복습할 오답이 없습니다.'); return; }
+function startQuestionSet(questions,{mode='all',category='',difficulty='',count=questions.length}={}){
+  if(!questions.length){ alert('시작할 문제가 없습니다.'); return; }
   state.count = count;
-  const featured=shuffle(pool.filter(q=>String(q.id).startsWith('quality-')||String(q.id).startsWith('curriculum-')));
-  const regular=shuffle(pool.filter(q=>!String(q.id).startsWith('quality-')&&!String(q.id).startsWith('curriculum-')));
-  state.session = [...featured.slice(0,Math.min(3,featured.length)),...regular].slice(0, count);
+  state.session = questions.slice(0,count);
   state.index = 0;
   state.score = 0;
   state.answers = [];
-  state.mode = category || 'all';
-  Object.assign(state,{category:category||'',difficulty,selectedAnswers:{},answerResults:{},quizSessionId:crypto.randomUUID?.()||`quiz-${Date.now()}`,startedAt:new Date().toISOString(),startedTick:Date.now(),elapsedMs:0});
+  state.mode = mode;
+  Object.assign(state,{category,difficulty,selectedAnswers:{},answerResults:{},quizSessionId:crypto.randomUUID?.()||`quiz-${Date.now()}`,startedAt:new Date().toISOString(),startedTick:Date.now(),elapsedMs:0});
   show('quizView');
   persistQuizSession();
   renderQuestion();
 }
+function startFresh(category, onlyWrong = false, count = 10, difficulty = ''){
+  let pool = onlyWrong ? bank.filter(q => saved.wrong.includes(q.id)) : category ? bank.filter(q => q.category === category) : bank;
+  if(difficulty) pool=pool.filter(q=>q.difficulty===difficulty||q.level===difficulty);
+  if (!pool.length) { alert('복습할 오답이 없습니다.'); return; }
+  const featured=shuffle(pool.filter(q=>String(q.id).startsWith('quality-')||String(q.id).startsWith('curriculum-')));
+  const regular=shuffle(pool.filter(q=>!String(q.id).startsWith('quality-')&&!String(q.id).startsWith('curriculum-')));
+  startQuestionSet([...featured.slice(0,Math.min(3,featured.length)),...regular],{mode:category||'all',category:category||'',difficulty,count});
+}
+function startSpecificQuestion(questionId){
+  return offerResume(()=>{
+    const question=bank.find(q=>q.id===questionId);
+    if(!question){ alert('문제를 찾을 수 없습니다.'); return; }
+    startQuestionSet([question],{mode:'single-question',category:question.category,difficulty:questionDifficulty(question),count:1});
+  });
+}
+function startInterviewMode(){
+  return offerResume(()=>{
+    const pool=bank.filter(q=>q.interviewAnswer||q.interviewPoint||(q.followUpQuestions||[]).length||q.follow);
+    startQuestionSet(shuffle(pool),{mode:'interview',category:'면접 모드',difficulty:'',count:10});
+  });
+}
+function startWeakReview(){
+  const category=weakCategory();
+  if(category) return start(category,false,10);
+  return start(null,true,Math.min(10,(saved.wrong||[]).length||10));
+}
+function startTodayReview(){
+  if((saved.wrong||[]).length) return start(null,true,Math.min(10,saved.wrong.length));
+  const now=new Date();
+  const reviewId=(learning.review||[])[0]||Object.entries(learning.completed||{}).find(([,v])=>v.reviewAt&&new Date(v.reviewAt)<=now)?.[0];
+  if(reviewId&&renderConceptFromId(reviewId)) return;
+  start();
+}
+function openAxMode(){
+  show('studyView');
+  renderStudyCategory(window.ATLAS_CURRICULUM?.['AI & Design']?'AI & Design':'AX Scenario');
+}
+window.startBackendAtlasQuestion=startSpecificQuestion;
 
 function renderQuestion(){
   const q = state.session[state.index];
   $('counter').textContent = `${state.index + 1} / ${state.session.length}`;
   $('progressBar').style.width = `${state.index / state.session.length * 100}%`;
   $('questionCategory').textContent = q.category;
-  $('questionLevel').textContent = `${q.level} · ${q.type}`;
-  $('questionText').textContent = q.q;
-  $('questionHint').textContent = q.hint;
+  $('questionLevel').textContent = `${questionDifficulty(q)} · ${q.type||'concept'}`;
+  $('questionText').textContent = questionTitle(q);
+  $('questionHint').textContent = q.hint || '답변 구조와 trade-off를 먼저 떠올려보세요.';
   $('options').innerHTML = q.options.map((o,i) => `<button class="option" data-index="${i}"><b>${String.fromCharCode(65+i)}.</b> ${o}</button>`).join('');
   $('answerPanel').hidden = true;
   $('whyPanel').hidden = true;
@@ -360,6 +454,10 @@ $('startBtn').onclick = () => start();
 $('bulkBtn').onclick = () => start(null, false, 30);
 $('allBtn').onclick = () => start();
 $('wrongBtn').onclick = () => start(null, true);
+$('reviewTodayBtn').onclick = startTodayReview;
+$('weakTopicBtn').onclick = startWeakReview;
+$('interviewModeBtn').onclick = startInterviewMode;
+$('axModeBtn').onclick = openAxMode;
 $('quitBtn').onclick = () => {persistQuizSession();safeBack(()=>show('homeView'));};
 $('nextBtn').onclick = next;
 $('homeBtn').onclick = () => show('homeView');
