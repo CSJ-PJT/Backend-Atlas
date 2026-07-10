@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/brand/backend-atlas-lockup.svg" width="900" alt="Backend Atlas" />
+</p>
+
 # Backend Atlas
 
 AX·Backend 엔지니어가 기술을 외우는 데서 그치지 않고 원리를 설명하고 설계를 방어할 수 있도록 만든 로컬 우선 학습 플랫폼입니다.
