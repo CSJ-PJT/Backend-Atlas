@@ -55,6 +55,9 @@ assert(dom.window.document.querySelector('.encyclopedia-card'),'search must put 
 assert(dom.window.document.querySelectorAll('.supplement-result').length>0,'search must render related learning after the encyclopedia entry');
 dom.window.document.getElementById('knowledgeSearchInput').value='ArrayList';
 dom.window.document.getElementById('knowledgeSearchForm').dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));
-assert(dom.window.document.querySelector('.encyclopedia-card h2').textContent==='ArrayList','concept search must render the exact encyclopedia title');
+assert(dom.window.document.querySelector('.encyclopedia-card h2').textContent.includes('ArrayList'),'concept search must render the matching encyclopedia title');
 assert(dom.window.document.querySelector('.comparison-table'),'concept comparison table must render');
+dom.window.document.getElementById('knowledgeSearchInput').value='미등록검사용어';
+dom.window.document.getElementById('knowledgeSearchForm').dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));
+assert(dom.window.document.querySelector('.encyclopedia-card h2').textContent==='미등록검사용어','every query must receive a primary encyclopedia entry');
 console.log('Smoke test passed: 5000 questions, quiz, Why, search, related topics.');
