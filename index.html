@@ -161,18 +161,22 @@
       <section id="knowledgeView" class="view knowledge-view">
         <nav class="quiz-nav"><button id="knowledgeBackBtn" class="icon-btn" aria-label="홈으로">←</button><strong>지식 검색</strong></nav>
         <div class="search-hero">
-          <p class="eyebrow">LOCAL KNOWLEDGE INDEX</p>
-          <h1>개념을 따라<br>깊게 탐색합니다.</h1>
-          <form id="knowledgeSearchForm"><input id="knowledgeSearchInput" type="search" placeholder="검색어를 입력하세요" autocomplete="off"><button class="primary">검색</button></form>
-          <div class="filters">
-            <select id="categoryFilter"><option value="">전체 카테고리</option></select>
-            <select id="difficultyFilter"><option value="">전체 난이도</option><option>easy</option><option>medium</option><option>hard</option></select>
-            <input id="tagFilter" placeholder="태그 필터">
-            <label><input id="scenarioFilter" type="checkbox"> 실무 시나리오</label>
-            <label><input id="wrongFilter" type="checkbox"> 오답만</label>
-          </div>
+          <p class="eyebrow">BACKEND ENCYCLOPEDIA</p>
+          <h1>개념을 먼저,<br>자료는 그다음.</h1>
+          <p class="search-intro">검색한 모든 용어를 한 장의 핵심 개념으로 먼저 정리하고, 필요한 학습 자료만 이어서 보여드립니다.</p>
+          <form id="knowledgeSearchForm"><input id="knowledgeSearchInput" type="search" placeholder="예: 트랜잭션, Redis, RAG" autocomplete="off" aria-label="백엔드 개념 검색"><button class="primary">검색</button></form>
+          <details class="search-advanced">
+            <summary>상세 필터</summary>
+            <div class="filters">
+              <select id="categoryFilter"><option value="">전체 카테고리</option></select>
+              <select id="difficultyFilter"><option value="">전체 난이도</option><option>easy</option><option>medium</option><option>hard</option></select>
+              <input id="tagFilter" placeholder="태그 필터">
+              <label><input id="scenarioFilter" type="checkbox"> 실무 시나리오</label>
+              <label><input id="wrongFilter" type="checkbox"> 오답만</label>
+            </div>
+          </details>
         </div>
-        <div id="knowledgeSummary"></div><div id="learningPath"></div><div id="interviewSection"></div><div id="knowledgeResults"></div>
+        <div id="knowledgeSummary"></div><div id="knowledgeResults"></div><div id="learningPath"></div><div id="interviewSection"></div>
       </section>
 
       <section id="resultView" class="view result-view">

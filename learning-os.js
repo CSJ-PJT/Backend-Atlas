@@ -125,6 +125,62 @@
       </article>`;
   }
 
+  const oneLine = (value, fallback = '연결된 학습 자료를 통해 정의, 동작 원리와 선택 기준을 확인할 수 있습니다.') => {
+    const text = String(value || fallback).replace(/\s+/g, ' ').trim();
+    return text.length > 220 ? `${text.slice(0, 217)}…` : text;
+  };
+
+  function getEncyclopediaEntry(query, results){
+    const cleanQuery = String(query || '').trim();
+    const top = results[0]?.question;
+    const concept = cleanQuery ? window.findCurriculumConcept?.(cleanQuery) : null;
+    const title = cleanQuery || concept?.title || '백엔드 지식 백과';
+    const definition = concept?.definition || top?.explanation || (cleanQuery
+      ? `“${cleanQuery}”와(과) 관련된 백엔드 학습 자료를 정리했습니다. 아래 자료에서 정의와 사용 맥락을 확인하세요.`
+      : '궁금한 백엔드 용어를 검색하면 핵심 정의, 동작 원리와 관련 학습 자료를 순서대로 보여드립니다.');
+    const principle = concept?.internals || top?.whyExplanation || top?.interviewPoint ||
+      (cleanQuery ? `${title}은(는) 요구사항, 성능, 일관성 및 운영 비용을 함께 고려해 선택합니다.` : '학습 자료는 개념의 정의보다 실제 동작과 선택 기준을 함께 이해하도록 구성되어 있습니다.');
+    const practice = concept?.practice || top?.practicalUse || top?.practicalScenario || top?.interviewAnswer ||
+      '실무에서는 적용 전후의 지표와 실패 조건을 먼저 정하고, 인접한 대안과 trade-off를 비교합니다.';
+    const related = [...new Set([
+      ...(concept?.related || []),
+      ...(top?.tags || []),
+      ...(top?.relatedTopics || []),
+      ...results.slice(0, 8).flatMap(({ question }) => question.relatedTopics || question.tags || [])
+    ])].filter(item => norm(item) !== norm(title)).slice(0, 8);
+    return { title, definition, principle, practice, related, concept, top };
+  }
+
+  function renderEncyclopediaEntry(entry, resultCount){
+    return `
+      <article class="encyclopedia-card" aria-label="${esc(entry.title)} 핵심 개념">
+        <header class="encyclopedia-heading">
+          <p class="eyebrow">BACKEND ENCYCLOPEDIA</p>
+          <div><h2>${esc(entry.title)}</h2><span>핵심 개념</span></div>
+          <p class="encyclopedia-definition">${esc(oneLine(entry.definition))}</p>
+        </header>
+        <dl class="encyclopedia-facts">
+          <div><dt>핵심 원리</dt><dd>${esc(oneLine(entry.principle))}</dd></div>
+          <div><dt>실무 맥락</dt><dd>${esc(oneLine(entry.practice))}</dd></div>
+        </dl>
+        ${entry.related.length ? `<div class="encyclopedia-related"><strong>함께 보면 좋은 개념</strong>${chips(entry.related)}</div>` : ''}
+        <p class="encyclopedia-count">${resultCount ? `연결된 학습 자료 ${resultCount}개` : '검색어를 입력하면 연결된 학습 자료를 함께 보여드립니다.'}</p>
+      </article>`;
+  }
+
+  function renderSupplementCard(q, wrong){
+    const summary = q.whyExplanation || q.explanation || q.practicalScenario || '관련 학습 자료를 열어 핵심 내용을 확인하세요.';
+    return `
+      <article class="supplement-result">
+        <div>
+          <p>${esc(q.category || 'Backend')} · ${esc(questionDifficulty(q))}${wrong ? ' · 최근 틀림' : ''}</p>
+          <h3>${esc(questionTitle(q))}</h3>
+          <span>${esc(oneLine(summary, '관련 학습 자료를 열어 핵심 내용을 확인하세요.'))}</span>
+        </div>
+        <button class="secondary" type="button" data-question-id="${esc(q.id)}">문제 풀기</button>
+      </article>`;
+  }
+
 	  function openSearch(query){
     if(window.openAtlasSearch){ window.openAtlasSearch(query); return; }
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -136,60 +192,33 @@
 
 	  function renderKnowledgeSearch(query){
 	    const results = window.searchKnowledge(query, filters());
-    const store = saved();
-	    const top = results[0]?.question;
-    const concept = window.findCurriculumConcept?.(query);
-    const related = [...new Set(results.slice(0,30).flatMap(x => x.question.relatedTopics))].slice(0,12);
-    const path = window.getLearningPath(query || top?.relatedTopics?.[0] || 'default');
+    const entry = getEncyclopediaEntry(query, results);
+    const path = window.getLearningPath(query || entry.top?.relatedTopics?.[0] || 'default');
     const interviews = window.getInterviewQuestions(query || 'default');
-    const graphKey = Object.keys(window.ATLAS_GRAPH||{}).find(k => norm(k)===norm(query)) || top?.relatedTopics?.[0];
-    const graphNodes = window.ATLAS_GRAPH?.[graphKey] || related.slice(0,10);
+    const concept = entry.concept;
 
-    document.getElementById('knowledgeSummary').innerHTML = `
-      <section class="knowledge-card">
-        <p class="eyebrow">KNOWLEDGE SUMMARY</p>
-        <h2>${esc(query || '전체 지식')}</h2>
-        <p>${concept ? esc(concept.summary) : `${results.length.toLocaleString()}개 관련 문제를 찾았습니다. 문제·해설·태그·메타데이터를 통합 검색했습니다.`}</p>
-        ${concept ? `<div class="concept-search-summary"><strong>핵심 정의</strong><p>${esc(concept.definition)}</p><strong>내부 동작</strong><p>${esc(concept.internals)}</p></div>` : ''}
-        ${chips(concept ? concept.related : related)}
-        <div class="knowledge-graph" aria-label="지식 그래프"><button data-topic="${esc(graphKey||query)}">${esc(graphKey||query||'START')}</button>${graphNodes.map(x=>`<span>→</span><button data-topic="${esc(x)}">${esc(x)}</button>`).join('')}</div>
-      </section>`;
+    document.getElementById('knowledgeSummary').innerHTML = renderEncyclopediaEntry(entry, results.length);
+    document.getElementById('knowledgeResults').innerHTML = results.length ? `
+      <section class="knowledge-card secondary-materials">
+        <div class="section-title"><div><p class="eyebrow">RELATED LEARNING</p><h2>관련 학습 자료</h2></div><span>상위 ${Math.min(results.length, 8)}개</span></div>
+        <p class="section-description">핵심 개념을 확인한 뒤, 필요한 문제를 선택해 학습하세요.</p>
+        <div class="supplement-results">${results.slice(0, 8).map(({question:q,wrong}) => renderSupplementCard(q, wrong)).join('')}</div>
+      </section>` : (String(query || '').trim() ? '<section class="knowledge-card empty-state">일치하는 자료가 없습니다. 다른 표현으로 검색하거나 상세 필터를 확인하세요.</section>' : '');
 
+    const comparison = concept?.comparison ? `<div class="comparison-table-wrap"><table class="comparison-table"><thead><tr>${concept.comparison.headers.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>${concept.comparison.rows.map(row=>`<tr>${row.map(x=>`<td>${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : '';
     document.getElementById('learningPath').innerHTML = `
-      <section class="knowledge-card">
-        <p class="eyebrow">LEARNING PATH</p>
-        <h2>학습 경로</h2>
-        <div class="path-grid">
-          ${[['먼저 알아야 하는 것',path.prerequisites],['핵심 개념',path.core],['심화',path.advanced],['실무',path.practical]].map(([t,a]) => `<div><strong>${t}</strong>${chips(a)}</div>`).join('')}
+      <details class="supplement-section"><summary>학습 경로와 비교 보기</summary>
+        <div class="supplement-section-body">
+          <div class="path-grid">${[['먼저 알아야 하는 것',path.prerequisites],['핵심 개념',path.core],['심화',path.advanced],['실무',path.practical]].map(([t,a]) => `<div><strong>${t}</strong>${chips(a || [])}</div>`).join('')}</div>
+          ${comparison}
         </div>
-      </section>`;
-    if(concept?.comparison){
-      const table=`<div class="comparison-table-wrap"><table class="comparison-table"><thead><tr>${concept.comparison.headers.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>${concept.comparison.rows.map(row=>`<tr>${row.map(x=>`<td>${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
-      document.getElementById('learningPath').innerHTML += `<section class="knowledge-card"><p class="eyebrow">COMPARISON</p><h2>${esc(concept.title)} 비교표</h2>${table}</section>`;
-    }
+      </details>`;
 
+    const interviewItems = concept ? `<details open><summary>30초 답변</summary><p>${esc(concept.interview || entry.definition)}</p></details>${(concept.tails || []).map(item=>`<details><summary>${esc(item)}</summary><p><b>답변 방향</b> · 내부 원리, 선택 기준, trade-off와 실무 지표를 연결하세요.</p></details>`).join('')}` : interviews.map(([item,keywords]) => `<details><summary>${esc(item)}</summary><p><b>답변 키워드</b> · ${(keywords || []).map(esc).join(' · ')}</p></details>`).join('');
     document.getElementById('interviewSection').innerHTML = `
-      <section class="knowledge-card">
-        <p class="eyebrow">PRACTICAL QUESTIONS</p>
-        <h2>면접 질문 보기</h2>
-        <div class="interview-list">
-          ${concept ? `<details open><summary>30초 답변</summary><p>${esc(concept.interview)}</p></details>${concept.tails.map(q=>`<details><summary>${esc(q)}</summary><p><b>답변 방향</b> · 내부 원리, 선택 기준, trade-off와 실무 지표를 연결하세요.</p></details>`).join('')}` : interviews.map(([q,k]) => `<details><summary>${esc(q)}</summary><p><b>답변 키워드</b> · ${k.map(esc).join(' · ')}</p></details>`).join('')}
-        </div>
-      </section>`;
-
-    document.getElementById('knowledgeResults').innerHTML = `
-      <section class="knowledge-card">
-        <div class="section-title">
-          <div>
-            <p class="eyebrow">RELATED QUESTIONS</p>
-            <h2>관련 문제</h2>
-          </div>
-          <span>${Math.min(results.length,60)} / ${results.length}</span>
-        </div>
-	        <div class="search-results">
-	          ${results.slice(0,60).map(({question:q,wrong}) => renderProblemCard(q,wrong,store)).join('') || '<div class="empty-state">조건에 맞는 결과가 없습니다.</div>'}
-	        </div>
-	      </section>`;
+      <details class="supplement-section"><summary>면접·실무 질문 보기</summary>
+        <div class="supplement-section-body interview-list">${interviewItems}</div>
+      </details>`;
 
     bind(document.getElementById('knowledgeView'));
 	    document.querySelectorAll('[data-why]').forEach(btn => btn.onclick = () => {

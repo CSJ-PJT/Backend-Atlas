@@ -51,9 +51,10 @@ assert(!dom.window.document.getElementById('whyPanel').hidden,'Why panel must op
 dom.window.document.getElementById('homeSearchInput').value='Prompt Injection';
 dom.window.document.getElementById('homeSearchForm').dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));
 assert(dom.window.document.getElementById('knowledgeView').classList.contains('active'),'search view must open');
-assert(dom.window.document.querySelectorAll('.result-item').length>0,'search results must render');
+assert(dom.window.document.querySelector('.encyclopedia-card'),'search must put an encyclopedia entry first');
+assert(dom.window.document.querySelectorAll('.supplement-result').length>0,'search must render related learning after the encyclopedia entry');
 dom.window.document.getElementById('knowledgeSearchInput').value='ArrayList';
 dom.window.document.getElementById('knowledgeSearchForm').dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));
-assert(dom.window.document.querySelector('.concept-search-summary'),'concept search summary must render');
+assert(dom.window.document.querySelector('.encyclopedia-card h2').textContent==='ArrayList','concept search must render the exact encyclopedia title');
 assert(dom.window.document.querySelector('.comparison-table'),'concept comparison table must render');
 console.log('Smoke test passed: 5000 questions, quiz, Why, search, related topics.');
