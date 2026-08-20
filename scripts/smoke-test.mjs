@@ -9,6 +9,12 @@ dom.window.scrollTo=()=>{};
 dom.window.HTMLElement.prototype.scrollIntoView=()=>{};
 for(const file of ['questions.js','question-expander.js','ax-question-extension.js','learning-os-data.js','atlas-content.js','curriculum-data.js','developer-guide-data.js','learning-visuals.js','app.js','learning-os.js']) dom.window.eval(await readFile(resolve(root,file),'utf8'));
 const assert=(condition,message)=>{if(!condition)throw new Error(message)};
+const versionedAssets=[...dom.window.document.querySelectorAll('script[src],link[href],img[src]')]
+  .map(node=>node.getAttribute('src')||node.getAttribute('href'))
+  .filter(value=>value&&!value.startsWith('#'));
+assert(versionedAssets.every(value=>value.includes('?v=backend-atlas-v8')),'every release asset reference must be cache-busted');
+const serviceWorker=await readFile(resolve(root,'sw.js'),'utf8');
+assert(!serviceWorker.includes('caches.match'),'service worker must not hide stable-filename release assets');
 assert(dom.window.QUESTION_BANK.length===5000,'question count must be 5000');
 assert(dom.window.document.getElementById('totalStat').textContent==='5000','home total must display 5000');
 assert(dom.window.searchKnowledge('RAG').length>0,'RAG search must return results');

@@ -495,4 +495,4 @@ if (typeof window.renderStudyOverview === 'function') renderStudy();
 document.addEventListener('visibilitychange',()=>{if(document.hidden)persistQuizSession();});
 window.addEventListener('beforeunload',()=>{persistQuizSession();replaceCurrentSnapshot();});
 if(window.Capacitor?.isNativePlatform?.())window.Capacitor.Plugins?.App?.addListener('backButton',()=>{persistQuizSession();if(history.state?.route==='view'&&history.state?.name==='homeView')window.Capacitor.Plugins.App.exitApp();else safeBack(()=>show('homeView'));});
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js?v=backend-atlas-v8');
