@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 
 const root=resolve(import.meta.dirname,'..');
 const html=await readFile(resolve(root,'index.html'),'utf8');
-const dom=new JSDOM(html,{url:'https://tech-review.local/',runScripts:'outside-only'});
+const dom=new JSDOM(html,{url:'https://tech-review.local/learn/?job=qa-job-42&topic=LocalStorage',runScripts:'outside-only'});
 dom.window.scrollTo=()=>{};
 dom.window.HTMLElement.prototype.scrollIntoView=()=>{};
 for(const file of ['questions.js','question-expander.js','ax-question-extension.js','learning-os-data.js','atlas-content.js','curriculum-data.js','developer-guide-data.js','learning-visuals.js','app.js','learning-os.js']) dom.window.eval(await readFile(resolve(root,file),'utf8'));
@@ -19,6 +19,15 @@ assert(dom.window.ATLAS_CHAPTERS['AI & Design'].interviews.length===20,'each cha
 assert(dom.window.QUESTION_BANK.every(q=>q.metadata.company&&q.prerequisites&&q.nextTopics),'enhanced metadata must exist');
 assert(dom.window.QUESTION_BANK.every(q=>q.type&&q.optionReasons?.length===4),'question type and option reasons required');
 assert(dom.window.findCurriculumConcept('ArrayList'),'Java fundamentals must be searchable');
+assert(dom.window.findCurriculumConcept('LocalStorage')?.title==='Web Storage API','LocalStorage alias must resolve to Web Storage API');
+assert(dom.window.findCurriculumConcept('RAG latency')?.title==='RAG','token-boundary prefix search must resolve RAG phrases');
+assert(!String(dom.window.findCurriculumConcept('LocalStorage')?.definition).includes('RAG'),'LocalStorage must not false-match the RAG substring');
+assert(dom.window.document.getElementById('knowledgeView').classList.contains('active'),'Incruit handoff must open the knowledge view');
+assert(dom.window.document.getElementById('knowledgeSearchInput').value==='LocalStorage','Incruit topic must populate the search input');
+assert(dom.window.document.querySelector('[data-testid="incruit-handoff-context"]'),'Incruit handoff context must be visible');
+assert(dom.window.document.querySelector('.encyclopedia-card h2').textContent==='LocalStorage','handoff must render the requested topic');
+assert(dom.window.document.querySelector('.encyclopedia-definition').textContent.includes('브라우저 origin별'),'LocalStorage handoff must show Web Storage content');
+dom.window.document.getElementById('navHomeBtn').click();
 assert(dom.window.ATLAS_CURRICULUM['Java & Spring'].sections.length>=6,'Java curriculum must cover core, concurrency, JVM and Spring');
 assert(dom.window.QUESTION_BANK.filter(q=>q.category==='Java & Spring'&&String(q.id).startsWith('curriculum-')).length>=20,'Java fundamentals need dedicated quality questions');
 assert(Object.values(dom.window.ATLAS_CURRICULUM).flatMap(c=>c.sections).flatMap(s=>s.concepts).every(c=>c.comparison),'every curriculum concept needs a comparison table');

@@ -22,6 +22,8 @@ AX·Backend 엔지니어가 기술을 외우는 데서 그치지 않고 원리�
 - 모든 핵심 개념의 비교표와 Oracle·Spring·PostgreSQL 등 공식 문서 링크
 - Backend Atlas·Archive Nexus·ArchiveOS 실제 구현 기반 Developer Guide
 - 브라우저 history와 Android WebView에서 동일하게 동작하는 직전 화면 복귀
+- `/learn/?job=<id>&topic=<title>` Incruit Atlas 딥링크를 검색·학습·면접 화면으로 연결
+- 단어 경계와 alias를 기준으로 개념을 찾는 검색(LocalStorage → Web Storage API)
 - 선택 즉시 저장되는 퀴즈 세션과 중단 세션 이어 풀기·보관
 - 학습 요약 저장·복습 등록·완료일·3일 후 복습 예정일 관리
 - 5개 탭(요약·원리·비교·실무·면접) 기반의 집중 학습 화면

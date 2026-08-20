@@ -1,9 +1,9 @@
 # Backend Atlas content quality report
 
-Generated: 2026-07-03T06:22:41.490Z
+Generated: 2026-08-20T03:33:46.454Z
 
 - Questions: 5000
-- Concepts: 186
+- Concepts: 187
 - Errors: 0
 - Warnings: 79
 

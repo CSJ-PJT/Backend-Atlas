@@ -168,6 +168,12 @@
       </article>`;
   }
 
+  function renderIncruitHandoff(query){
+    const context=window.ATLAS_INCRUIT_CONTEXT;
+    if(!context?.job||norm(context.topic)!==norm(query)) return '';
+    return `<aside class="knowledge-card incruit-handoff-context" data-testid="incruit-handoff-context"><p class="eyebrow">INCRUIT ATLAS HANDOFF</p><h2>선택한 공고의 면접 준비</h2><p>${esc(context.topic)} 주제를 검색·학습·면접 질문에 연결했습니다.</p></aside>`;
+  }
+
   function renderSupplementCard(q, wrong){
     const summary = q.whyExplanation || q.explanation || q.practicalScenario || '관련 학습 자료를 열어 핵심 내용을 확인하세요.';
     return `
@@ -197,7 +203,7 @@
     const interviews = window.getInterviewQuestions(query || 'default');
     const concept = entry.concept;
 
-    document.getElementById('knowledgeSummary').innerHTML = renderEncyclopediaEntry(entry, results.length);
+    document.getElementById('knowledgeSummary').innerHTML = `${renderIncruitHandoff(query)}${renderEncyclopediaEntry(entry, results.length)}`;
     document.getElementById('knowledgeResults').innerHTML = results.length ? `
       <section class="knowledge-card secondary-materials">
         <div class="section-title"><div><p class="eyebrow">RELATED LEARNING</p><h2>관련 학습 자료</h2></div><span>상위 ${Math.min(results.length, 8)}개</span></div>
@@ -278,4 +284,13 @@
       panel.querySelectorAll('.why-link').forEach(btn => btn.onclick = () => openSearch(btn.dataset.topic));
     }
   };
+
+  const handoffParams=new URLSearchParams(window.location.search);
+  const handoffTopic=handoffParams.get('topic')?.trim();
+  const handoffJob=handoffParams.get('job')?.trim();
+  if(handoffTopic){
+    window.ATLAS_INCRUIT_CONTEXT={job:handoffJob||'',topic:handoffTopic};
+    window.openAtlasSearch?.(handoffTopic,false);
+    history.replaceState({route:'search',query:handoffTopic,job:handoffJob||'',source:'incruit'},'',`${location.pathname}${location.search}#search`);
+  }
 })();

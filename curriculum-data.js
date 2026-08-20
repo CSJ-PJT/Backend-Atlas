@@ -9,7 +9,7 @@
     practice:detail.practice||'실무에서는 요구사항을 먼저 수치화하고 대안과 비교한 뒤 지표로 효과를 검증합니다.',
     incident:detail.incident||`${title}의 용량·시간·동시성 경계를 측정하지 않으면 정상적인 부분 실패가 전체 지연이나 데이터 오류로 전파될 수 있습니다.`,
     interview:detail.interview||`${title}의 정의보다 해결하는 문제, 내부 원리, trade-off와 실제 적용 결과 순서로 답합니다.`,
-    related:detail.related||[], comparison:detail.comparison||null,
+    related:detail.related||[], aliases:detail.aliases||[], comparison:detail.comparison||null,
     tails:detail.tails||[`왜 ${title}이(가) 필요한가?`,`${title}의 대표적인 trade-off는?`,`${title} 적용 여부를 어떤 지표로 검증할까?`]
   });
   const j=(title,summary,internals,practice,related,comparison)=>make(title,summary,{internals,practice,related,comparison,why:'Java/Spring 코드의 정확성·성능·테스트 가능성을 설계 단계에서 판단하기 위해 필요합니다.',interview:`“${summary}”라고 정의한 뒤 내부 동작과 선택 기준, 실무에서 겪은 주의점을 30초 안에 설명합니다.`});
@@ -66,7 +66,18 @@
       {title:'Storage & Query',summary:'인덱스와 실행 계획',concepts:['Index','B-Tree','SQL Tuning','PostgreSQL','pgvector'].map(x=>make(x,`${x}의 저장 구조와 성능 특성을 설명한다.`,{related:['Query Planner','Cardinality','EXPLAIN']}))},
       {title:'Concurrency',summary:'동시 요청과 데이터 정합성',concepts:['Transaction','Isolation Level','Lock','MVCC','JPA'].map(x=>make(x,`${x}의 정합성 경계와 동시성 비용을 이해한다.`,{related:['Deadlock','WAL','Rollback']}))}]},
     'Web & React':{icon:'◉',color:'#e05b73',summary:'브라우저와 상태 기반 UI',sections:[
-      {title:'Browser',summary:'렌더링과 비동기 실행',concepts:['Browser Rendering','Event Loop','PWA','WebView','Mobile UX'].map(x=>make(x,`${x}의 사용자 체감 성능과 실행 경로를 이해한다.`,{related:['DOM','Service Worker','Accessibility']}))},
+      {title:'Browser',summary:'렌더링과 비동기 실행',concepts:[
+        ...['Browser Rendering','Event Loop','PWA','WebView','Mobile UX'].map(x=>make(x,`${x}의 사용자 체감 성능과 실행 경로를 이해한다.`,{related:['DOM','Service Worker','Accessibility']})),
+        make('Web Storage API','브라우저 origin별로 문자열 key-value 데이터를 저장하는 동기식 API다.',{
+          aliases:['LocalStorage','localStorage','SessionStorage','sessionStorage','Web Storage'],
+          why:'페이지 이동이나 새로고침 뒤에도 작은 사용자 상태를 유지하되, 서버 데이터나 보안 자격 증명과 저장 책임을 분리하기 위해 필요합니다.',
+          internals:'localStorage는 같은 origin의 Storage 영역에 명시적으로 지울 때까지 값을 유지하고, sessionStorage는 탭 세션 단위로 유지합니다. 두 API 모두 main thread에서 동기식으로 동작합니다.',
+          practice:'작은 UI 선호·학습 진도처럼 유실을 허용할 수 있는 상태에 사용하고, JSON 파싱 실패·quota 초과·다중 탭 변경을 처리합니다. token이나 민감 정보는 저장하지 않습니다.',
+          incident:'큰 JSON을 반복 직렬화해 main thread가 멈추거나, 오래된 schema를 그대로 읽어 화면 초기화가 실패하는 문제를 versioned key와 복구 가능한 parser로 방지합니다.',
+          interview:'LocalStorage는 같은 origin에서 지속되는 동기식 문자열 저장소입니다. SessionStorage와 수명 범위를 구분하고, 용량·동기 실행·보안 제약 때문에 서버 상태나 민감 정보 저장소로 사용하지 않는다고 설명합니다.',
+          related:['Same-Origin Policy','IndexedDB','Cookie','Storage Event']
+        })
+      ]},
       {title:'React',summary:'예측 가능한 컴포넌트 상태',concepts:['State','Props','React Key','Component Lifecycle'].map(x=>make(x,`${x}의 상태 흐름과 렌더링 영향을 설명한다.`,{related:['Reconciliation','Memoization','Server State']}))}]},
     'DevOps':{icon:'△',color:'#e38a20',summary:'배포·관측·복구 자동화',sections:[
       {title:'Container',summary:'재현 가능한 실행 환경',concepts:['Docker Image vs Container','Layer','Volume','Network'].map(x=>make(x,`${x}의 격리와 영속성 경계를 이해한다.`,{related:['Registry','Compose','Security']}))},
@@ -253,11 +264,25 @@
   });
   window.QUESTION_BANK=normalized;
   window.ATLAS_CURRICULUM=curriculum;
+  const normalizeSearchTerm=value=>String(value||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();
+  const tokenizeSearchTerm=value=>normalizeSearchTerm(value).match(/[\p{L}\p{N}+#.@/-]+/gu)||[];
+  const containsTokenSequence=(source,target)=>target.length>0&&source.some((_,index)=>target.every((token,offset)=>source[index+offset]===token));
+  const matchRank=(query,term)=>{
+    const normalizedQuery=normalizeSearchTerm(query), normalizedTerm=normalizeSearchTerm(term);
+    if(!normalizedQuery||!normalizedTerm) return 0;
+    if(normalizedQuery===normalizedTerm) return 4;
+    const queryTokens=tokenizeSearchTerm(normalizedQuery), termTokens=tokenizeSearchTerm(normalizedTerm);
+    if(containsTokenSequence(queryTokens,termTokens)) return 3;
+    if(containsTokenSequence(termTokens,queryTokens)) return 2;
+    if(queryTokens.length===termTokens.length&&queryTokens.every((token,index)=>token.length>=3&&termTokens[index].startsWith(token))) return 1;
+    return 0;
+  };
   window.findCurriculumConcept=query=>{
-    const needle=String(query||'').toLowerCase();
+    let best=null;
     for(const [category,chapter] of Object.entries(curriculum)) for(const section of chapter.sections) for(const concept of section.concepts){
-      if(concept.title.toLowerCase().includes(needle)||needle.includes(concept.title.toLowerCase())) return {category,section:section.title,...concept};
+      const rank=Math.max(matchRank(query,concept.title),...(concept.aliases||[]).map(alias=>matchRank(query,alias)));
+      if(rank>(best?.rank||0)) best={rank,value:{category,section:section.title,...concept}};
     }
-    return null;
+    return best?.value||null;
   };
 })();
