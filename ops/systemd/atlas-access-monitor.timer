@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Atlas pseudonymized access monitoring daily
+
+[Timer]
+OnCalendar=*-*-* 00:10:00 Asia/Seoul
+Persistent=true
+AccuracySec=1s
+Unit=atlas-access-monitor.service
+
+[Install]
+WantedBy=timers.target

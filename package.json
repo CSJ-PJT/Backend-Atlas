@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node scripts/build-web.mjs",
     "build:release": "node scripts/build-web.mjs --release",
-    "test": "node scripts/smoke-test.mjs && node scripts/test-education-quality-contract.mjs && node scripts/test-learning-runtime.mjs && node scripts/test-learning-visuals.mjs",
+    "test": "node scripts/smoke-test.mjs && node scripts/test-education-quality-contract.mjs && node scripts/test-learning-runtime.mjs && node scripts/test-learning-visuals.mjs && node scripts/test-atlas-access-monitor.mjs",
     "test:release": "npm run test && npm run quality:audit && node scripts/test-content-quality-audit.mjs && npm run build:release && node scripts/test-build-provenance.mjs --release",
     "quality:audit": "node scripts/content-quality-audit.mjs",
     "android:sync": "npm run build && cap sync android",
