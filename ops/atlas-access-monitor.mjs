@@ -40,11 +40,18 @@ function parseNginxTime(value) {
 }
 
 export function parseNginxLine(line) {
-  const match = /^(\S+) \S+ \S+ \[([^\]]+)] "(\S+) ([^" ]+)(?: HTTP\/[^" ]+)?" (\d{3}) (\S+)/.exec(line);
+  const match = /^(\S+) \S+ \S+ \[([^\]]+)] "([^"]*)" (\d{3}) (\S+)/.exec(line);
   if (!match) return null;
   const timestamp = parseNginxTime(match[2]);
   if (!Number.isFinite(timestamp)) return null;
-  return { ip: match[1], timestamp, method: match[3], path: match[4], status: Number(match[5]) };
+  const request = match[3].trim().split(/\s+/);
+  return {
+    ip: match[1],
+    timestamp,
+    method: request[0] || 'UNKNOWN',
+    path: request[1]?.startsWith('/') ? request[1] : '/__unparsed-request__',
+    status: Number(match[4]),
+  };
 }
 
 function mappedIpv4(ip) {

@@ -12,6 +12,9 @@ const parsed = [
 ].map(parseNginxLine);
 
 assert(parsed.every(Boolean), 'combined Nginx lines must parse');
+const malformedRequest = parseNginxLine('203.0.113.40 - - [25/Aug/2026:15:04:00 +0000] "\\x16\\x03" 400 150 "-" "-"');
+assert.equal(malformedRequest.path, '/__unparsed-request__');
+assert.equal(malformedRequest.status, 400);
 assert.equal(new Date(parsed[1].timestamp).toISOString(), '2026-08-25T15:00:01.000Z');
 assert.equal(isPublicAddress('198.51.100.10'), true);
 assert.equal(isPublicAddress('127.0.0.1'), false);
