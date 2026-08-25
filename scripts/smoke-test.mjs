@@ -68,6 +68,11 @@ assert(!dom.window.document.getElementById('answerPanel').hidden,'answer panel m
 assert(dom.window.document.querySelectorAll('.option-reason').length===4,'answer must explain every option');
 dom.window.document.getElementById('whyBtn').click();
 assert(!dom.window.document.getElementById('whyPanel').hidden,'Why panel must open');
+const whyPanelText=dom.window.document.getElementById('whyPanel').textContent;
+const currentQuestion=dom.window.currentQuestion;
+const reviewedMisconception=currentQuestion.optionReasons.find((_,index)=>index!==currentQuestion.answer);
+assert(whyPanelText.includes('어떤 오해를 피해야 하는가')&&whyPanelText.includes(reviewedMisconception),'Why panel must explain a question-specific reviewed misconception');
+assert(!whyPanelText.includes('관성적으로 적용하면 안 됩니다'),'Why panel must not fall back to a generic avoidance template');
 dom.window.document.getElementById('homeSearchInput').value='B-Tree';
 dom.window.document.getElementById('homeSearchForm').dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));
 assert(dom.window.document.getElementById('knowledgeView').classList.contains('active'),'search view must open');

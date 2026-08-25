@@ -117,7 +117,8 @@
 
 	  function renderAtlasWhy(question){
 	    const w=question.whyDetails||{};
-	    const rows=[['왜 이런 개념이 생겼는가',w.origin||question.whyExplanation],['왜 다른 방식보다 좋은가',w.better||question.interviewPoint],['언제 쓰는가',w.when||question.practicalScenario||question.interviewPoint],['언제 쓰면 안 되는가',w.avoid||'요구사항과 비용을 측정하지 않은 채 관성적으로 적용하면 안 됩니다.'],['실무에서는 어떻게 사용하는가',w.practice||question.practicalScenario||question.interviewPoint],['면접에서는 어떻게 설명하는가',w.interview||question.interviewPoint]];
+	    const misconception=(question.optionReasons||[]).filter((_,index)=>index!==question.answer).slice(0,2).join(' ');
+	    const rows=[['왜 이런 개념이 생겼는가',w.origin||question.whyExplanation],['왜 다른 방식보다 좋은가',w.better||question.interviewPoint],['언제 쓰는가',w.when||question.practicalScenario||question.interviewPoint],['어떤 오해를 피해야 하는가',w.avoid||misconception||question.whyExplanation],['실무에서는 어떻게 사용하는가',w.practice||question.practicalScenario||question.interviewPoint],['면접에서는 어떻게 설명하는가',w.interview||question.interviewPoint]];
 	    const topics=[...(question.prerequisites||[]),...(question.relatedTopics||[]),...(question.nextTopics||[])];
 	    return `<div class="why-block">${rows.map(([h,p],i)=>`<details class="study-detail" ${i===0?'open':''}><summary>${h}</summary><p>${esc(p)}</p></details>`).join('')}<h4>연결해서 학습하기</h4>${chips([...new Set(topics)])}<details class="study-detail"><summary>꼬리 질문</summary>${(question.followUpQuestions||[]).map((item,index)=>`<section class="tail-answer"><strong>${esc(item)}</strong><p>${esc(question.followUpAnswers?.[index]||question.interviewAnswer||question.whyExplanation)}</p></section>`).join('')}</details></div>`;
 	  }
