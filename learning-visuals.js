@@ -1,9 +1,10 @@
 (function buildLearningVisuals(){
   const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const palette={navy:'#07152f',blue:'#3957ff',cyan:'#28d7e5',paper:'#f7f9fc',line:'#cbd5e1',text:'#344054',green:'#12a071',pink:'#d34d9a'};
-  const shell=(title,body)=>`<figure class="learning-visual"><figcaption>${esc(title)} 구조도</figcaption><svg viewBox="0 0 720 280" role="img" aria-label="${esc(title)} 구조도"><defs><marker id="atlasArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="${palette.blue}"/></marker></defs><rect x="1" y="1" width="718" height="278" rx="22" fill="${palette.paper}" stroke="${palette.line}"/>${body}</svg></figure>`;
+  const shell=(title,body,description='')=>`<figure class="learning-visual"><figcaption>${esc(title)} 구조도</figcaption><svg viewBox="0 0 720 280" role="img" aria-label="${esc(description||`${title} 구조도`)}"><desc>${esc(description||`${title}의 핵심 구성과 흐름`)}</desc><defs><marker id="atlasArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="${palette.blue}"/></marker><marker id="atlasRangeArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="${palette.green}"/></marker></defs><rect x="1" y="1" width="718" height="278" rx="22" fill="${palette.paper}" stroke="${palette.line}"/>${body}</svg></figure>`;
   const box=(x,y,w,h,label,color=palette.blue,sub='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="13" fill="white" stroke="${color}" stroke-width="2"/><text x="${x+w/2}" y="${y+h/2-(sub?6:0)}" text-anchor="middle" font-size="14" font-weight="700" fill="${palette.navy}">${esc(label)}</text>${sub?`<text x="${x+w/2}" y="${y+h/2+15}" text-anchor="middle" font-size="10" fill="${palette.text}">${esc(sub)}</text>`:''}`;
   const arrow=(x1,y1,x2,y2)=>`<path d="M${x1} ${y1} L${x2} ${y2}" fill="none" stroke="${palette.blue}" stroke-width="2" marker-end="url(#atlasArrow)"/>`;
+  const rangeArrow=(x1,y1,x2,y2)=>`<path d="M${x1} ${y1} L${x2} ${y2}" fill="none" stroke="${palette.green}" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#atlasRangeArrow)"/>`;
   const flow=(title,items)=>{
     const count=Math.min(items.length,6),gap=14,w=(650-gap*(count-1))/count,y=105;
     let body='';items.slice(0,count).forEach((item,i)=>{const x=35+i*(w+gap);body+=box(x,y,w,68,item,i%2?palette.cyan:palette.blue);if(i<count-1)body+=arrow(x+w,y+34,x+w+gap-3,y+34)});return shell(title,body);
@@ -13,27 +14,28 @@
     process:()=>shell('Process & Thread',`${box(35,28,650,220,'Process',palette.blue,'isolated address space')}${box(70,75,155,120,'Thread A',palette.cyan,'private stack')}${box(282,75,155,120,'Thread B',palette.cyan,'private stack')}${box(494,75,155,120,'Shared',palette.green,'code · heap · files')}${arrow(225,135,280,135)}${arrow(437,135,492,135)}<text x="360" y="224" text-anchor="middle" font-size="12" fill="${palette.text}">scheduler switches register + stack context</text>`),
     hashmap:()=>shell('HashMap',`${box(28,100,125,68,'Key',palette.blue)}${arrow(153,134,205,134)}${box(208,100,130,68,'hash spread',palette.cyan)}${arrow(338,134,390,134)}${box(393,100,130,68,'bucket index',palette.blue)}${arrow(523,134,575,134)}${box(578,60,108,60,'equals',palette.green)}${box(578,150,108,60,'collision',palette.pink)}<text x="632" y="234" text-anchor="middle" font-size="11" fill="${palette.text}">list → tree bin</text>`),
     list:()=>shell('ArrayList vs LinkedList',`${box(35,42,150,48,'ArrayList',palette.blue)}${[0,1,2,3].map((_,i)=>box(220+i*105,38,78,56,`[${i}]`,palette.cyan)).join('')}${box(35,174,150,48,'LinkedList',palette.green)}${[0,1,2,3].map((_,i)=>box(220+i*105,170,78,56,`Node ${i+1}`,palette.green)+(i<3?arrow(298+i*105,198,322+i*105,198):'')).join('')}<text x="448" y="118" text-anchor="middle" font-size="11" fill="${palette.text}">index O(1) · node traversal O(n)</text>`),
-    btree:()=>shell('B-Tree Index',`${box(286,28,148,54,'Root Page',palette.blue)}${arrow(320,82,160,128)}${arrow(360,82,360,128)}${arrow(400,82,560,128)}${box(90,130,140,52,'Branch',palette.cyan)}${box(290,130,140,52,'Branch',palette.cyan)}${box(490,130,140,52,'Branch',palette.cyan)}${arrow(160,182,160,220)}${arrow(360,182,360,220)}${arrow(560,182,560,220)}${box(90,222,140,38,'Leaf / Row Ref',palette.green)}${box(290,222,140,38,'Leaf / Row Ref',palette.green)}${box(490,222,140,38,'Leaf / Row Ref',palette.green)}`),
+    btree:()=>shell('B-Tree / B+Tree Index',`${box(265,20,190,50,'Internal page',palette.blue,'separator keys: 17 | 42')}${arrow(303,70,145,105)}${arrow(360,70,360,105)}${arrow(417,70,575,105)}${box(46,106,198,58,'Leaf page',palette.green,'3→row · 8→row · 12→row')}${box(261,106,198,58,'Leaf page',palette.green,'17→row · 23→row · 31→row')}${box(476,106,198,58,'Leaf page',palette.green,'42→row · 55→row · 71→row')}${rangeArrow(244,135,259,135)}${rangeArrow(459,135,474,135)}<text x="360" y="188" text-anchor="middle" font-size="11" font-weight="700" fill="${palette.green}">leaf sibling links support an ordered range scan</text>${box(72,210,150,42,'Heap row / TID',palette.cyan)}${box(285,210,150,42,'Heap row / TID',palette.cyan)}${box(498,210,150,42,'Heap row / TID',palette.cyan)}${arrow(145,164,145,208)}${arrow(360,164,360,208)}${arrow(575,164,575,208)}`,'내부 페이지의 정렬된 separator key가 탐색 범위를 나누고, leaf의 key가 row reference를 가리키며, leaf sibling 링크가 range scan을 잇는 데이터베이스 B-Tree 또는 B+Tree 인덱스'),
     web:()=>flow('Web Request',['URL','DNS','TCP / TLS','HTTP','Application','Render']),
-    mvc:()=>flow('Spring MVC',['Client','Filter','DispatcherServlet','Controller','Service','Response']),
+    servlet:()=>shell('Servlet Request Lifecycle',`${box(24,36,104,54,'HTTP client',palette.blue)}${arrow(128,63,158,63)}${box(160,36,118,54,'Connector',palette.cyan,'accept + parse')}${arrow(278,63,308,63)}${box(310,36,120,54,'Worker',palette.green,'thread pool')}${arrow(430,63,460,63)}${box(462,36,112,54,'Filter chain',palette.cyan)}${arrow(574,63,604,63)}${box(606,36,90,54,'Servlet',palette.blue,'service()')}<path d="M651 90 L651 120 L78 120 L78 153" fill="none" stroke="${palette.blue}" stroke-width="2" marker-end="url(#atlasArrow)"/>${box(24,154,108,52,'HTTP response',palette.green)}${box(174,151,522,76,'Container responsibilities',palette.pink,'mapping · init/destroy · network · worker lifecycle')}<text x="435" y="253" text-anchor="middle" font-size="11" fill="${palette.text}">request state stays local to the worker; shared servlet fields must remain thread-safe</text>`,'컨테이너가 연결을 받고 worker thread를 배정한 뒤 filter chain과 Servlet service 메서드를 호출하고 응답을 반환하는 요청 생명주기'),
+    springMvc:()=>shell('Spring MVC DispatcherServlet Flow',`${box(14,52,82,56,'Client',palette.blue,'HTTP request')}${arrow(96,80,105,80)}${box(107,52,100,56,'Filter chain',palette.cyan)}${arrow(207,80,216,80)}${box(218,52,140,56,'DispatcherServlet',palette.blue,'front controller')}${arrow(358,80,367,80)}${box(369,52,110,56,'HandlerMapping',palette.green,'find handler')}${arrow(479,80,488,80)}${box(490,52,110,56,'HandlerAdapter',palette.cyan,'invoke')}${arrow(600,80,609,80)}${box(611,52,95,56,'Controller',palette.green)}<path d="M658 108 L658 150 L600 150" fill="none" stroke="${palette.green}" stroke-width="2.5" marker-end="url(#atlasRangeArrow)"/>${box(480,136,120,52,'Return value',palette.green,'model/view · body')}<path d="M480 162 L430 162" fill="none" stroke="${palette.green}" stroke-width="2.5" marker-end="url(#atlasRangeArrow)"/>${box(205,132,225,60,'Response rendering',palette.pink,'ViewResolver · MessageConverter')}<path d="M205 162 L166 162" fill="none" stroke="${palette.green}" stroke-width="2.5" marker-end="url(#atlasRangeArrow)"/>${box(24,136,142,52,'HTTP response',palette.green,'through filters')}<text x="360" y="230" text-anchor="middle" font-size="11" fill="${palette.text}">HandlerMapping selects a handler; HandlerAdapter invokes it; DispatcherServlet renders a view or writes the response body.</text>`,'Spring MVC에서 DispatcherServlet이 HandlerMapping으로 handler를 찾고 HandlerAdapter로 controller를 호출한 뒤 ViewResolver 또는 HttpMessageConverter를 통해 응답을 만드는 흐름'),
     rag:()=>flow('RAG Pipeline',['Question','Embedding','Vector Search','Rerank','LLM','Evidence']),
     container:()=>shell('Container Platform',`${box(35,42,150,70,'Image',palette.blue,'immutable layers')}${arrow(185,77,260,77)}${box(265,42,150,70,'Container',palette.cyan,'running process')}${arrow(415,77,490,77)}${box(495,42,185,70,'Kubernetes Pod',palette.green,'desired state')}${box(80,168,180,70,'Volume',palette.pink,'persistent data')}${box(300,168,180,70,'Network',palette.cyan,'service discovery')}${box(520,168,120,70,'Signals',palette.blue,'M · L · T')}`)
   };
-  window.renderLearningVisual=(title,category)=>{
-    const value=String(title).toLowerCase();
-    if(value.includes('jvm')||value.includes('memory')||value.includes('gc')||value.includes('메모리'))return diagrams.memory();
-    if(value.includes('process')||value.includes('thread')||value.includes('프로세스'))return diagrams.process();
-    if(value.includes('hash'))return diagrams.hashmap();
-    if(value.includes('arraylist')||value.includes('linkedlist'))return diagrams.list();
-    if(value.includes('index')||value.includes('b-tree')||value.includes('btree'))return diagrams.btree();
-    if(value.includes('rag')||value.includes('embedding')||value.includes('vector')||value.includes('agent'))return diagrams.rag();
-    if(value.includes('spring')||value.includes('servlet')||value.includes('mvc')||value.includes('dispatcher'))return diagrams.mvc();
-    if(value.includes('docker')||value.includes('container')||value.includes('kubernetes'))return diagrams.container();
-    if(category==='OS & Network'||category==='Web & React')return diagrams.web();
-    if(category==='AI & Design'||category==='AX Scenario')return diagrams.rag();
-    if(category==='Database')return diagrams.btree();
-    if(category==='DevOps')return diagrams.container();
-    return diagrams.mvc();
+  const normalizeTitle=value=>String(value||'').toLowerCase().replace(/[‐‑‒–—]/g,'-').replace(/\s+/g,' ').trim();
+  const matches=(value,aliases)=>aliases.includes(value);
+  window.renderLearningVisual=title=>{
+    const value=normalizeTitle(title);
+    if(matches(value,['jvm memory','jvm 메모리','jvm 메모리 구조','garbage collection']))return diagrams.memory();
+    if(matches(value,['process & thread','process / thread','process and thread','프로세스와 스레드']))return diagrams.process();
+    if(matches(value,['hashmap','hash map']))return diagrams.hashmap();
+    if(matches(value,['arraylist vs linkedlist','arraylist / linkedlist']))return diagrams.list();
+    if(matches(value,['b-tree','b+tree','b tree','b plus tree','btree','b-tree index','b+tree index']))return diagrams.btree();
+    if(matches(value,['servlet과 container','servlet and container','servlet container','servlet request lifecycle']))return diagrams.servlet();
+    if(matches(value,['dispatcherservlet','dispatcher servlet','spring mvc','spring web mvc']))return diagrams.springMvc();
+    if(matches(value,['web request','browser request lifecycle']))return diagrams.web();
+    if(matches(value,['rag','rag pipeline','retrieval augmented generation']))return diagrams.rag();
+    if(matches(value,['docker','kubernetes','container platform']))return diagrams.container();
+    return '';
   };
   window.renderSystemFlow=(title,items)=>flow(title,items);
 })();

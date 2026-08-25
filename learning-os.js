@@ -4,6 +4,10 @@
   const norm = v => String(v ?? '').toLowerCase().replace(/\s+/g, ' ').trim();
   const questionTitle = q => q.question || q.q || '질문 준비 중';
   const questionDifficulty = q => q.difficulty || q.level || '기본';
+  const safeDecode = value => {
+    try { return decodeURIComponent(value); }
+    catch { return ''; }
+  };
 
   const index = bank.map(q => ({
     q,
@@ -18,7 +22,25 @@
     ].join(' '))
   }));
 
-  const saved = () => JSON.parse(localStorage.getItem('interviewDeck') || '{"wrong":[]}');
+  const saved = () => {
+    try{
+      const parsed=JSON.parse(localStorage.getItem('interviewDeck') || '{"wrong":[]}');
+      if(!parsed||typeof parsed!=='object'||Array.isArray(parsed)) return {wrong:[],categoryStats:{}};
+      const knownIds=new Set(bank.map(question=>question.id));
+      const knownCategories=new Set(bank.map(question=>question.category));
+      const wrong=Array.isArray(parsed.wrong)?[...new Set(parsed.wrong.filter(id=>typeof id==='string'&&knownIds.has(id)))]:[];
+      const rawCategoryStats=parsed.categoryStats&&typeof parsed.categoryStats==='object'&&!Array.isArray(parsed.categoryStats)?parsed.categoryStats:{};
+      const categoryStats=Object.fromEntries(Object.entries(rawCategoryStats).filter(([category,value])=>knownCategories.has(category)&&value&&typeof value==='object'&&!Array.isArray(value)).map(([category,value])=>{
+        const solved=Number.isInteger(value.solved)&&value.solved>=0?value.solved:0;
+        const correct=Number.isInteger(value.correct)&&value.correct>=0?Math.min(solved,value.correct):0;
+        return [category,{solved,correct}];
+      }));
+      return {...parsed,wrong,categoryStats};
+    }catch{
+      try{localStorage.removeItem('interviewDeck');}catch{}
+      return {wrong:[],categoryStats:{}};
+    }
+  };
 
   function filters(){
     return {
@@ -97,7 +119,7 @@
 	    const w=question.whyDetails||{};
 	    const rows=[['왜 이런 개념이 생겼는가',w.origin||question.whyExplanation],['왜 다른 방식보다 좋은가',w.better||question.interviewPoint],['언제 쓰는가',w.when||question.practicalScenario||question.interviewPoint],['언제 쓰면 안 되는가',w.avoid||'요구사항과 비용을 측정하지 않은 채 관성적으로 적용하면 안 됩니다.'],['실무에서는 어떻게 사용하는가',w.practice||question.practicalScenario||question.interviewPoint],['면접에서는 어떻게 설명하는가',w.interview||question.interviewPoint]];
 	    const topics=[...(question.prerequisites||[]),...(question.relatedTopics||[]),...(question.nextTopics||[])];
-	    return `<div class="why-block">${rows.map(([h,p],i)=>`<details class="study-detail" ${i===0?'open':''}><summary>${h}</summary><p>${esc(p)}</p></details>`).join('')}<h4>연결해서 학습하기</h4>${chips([...new Set(topics)])}<details class="study-detail"><summary>꼬리 질문</summary><ul>${(question.followUpQuestions||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></details></div>`;
+	    return `<div class="why-block">${rows.map(([h,p],i)=>`<details class="study-detail" ${i===0?'open':''}><summary>${h}</summary><p>${esc(p)}</p></details>`).join('')}<h4>연결해서 학습하기</h4>${chips([...new Set(topics)])}<details class="study-detail"><summary>꼬리 질문</summary>${(question.followUpQuestions||[]).map((item,index)=>`<section class="tail-answer"><strong>${esc(item)}</strong><p>${esc(question.followUpAnswers?.[index]||question.interviewAnswer||question.whyExplanation)}</p></section>`).join('')}</details></div>`;
 	  }
 	  window.renderAtlasWhy=renderAtlasWhy;
 
@@ -134,38 +156,53 @@
     const cleanQuery = String(query || '').trim();
     const top = results[0]?.question;
     const concept = cleanQuery ? window.findCurriculumConcept?.(cleanQuery) : null;
-    const title = cleanQuery || concept?.title || '백엔드 지식 백과';
-    const definition = concept?.definition || top?.explanation || (cleanQuery
-      ? `“${cleanQuery}”와(과) 관련된 백엔드 학습 자료를 정리했습니다. 아래 자료에서 정의와 사용 맥락을 확인하세요.`
-      : '궁금한 백엔드 용어를 검색하면 핵심 정의, 동작 원리와 관련 학습 자료를 순서대로 보여드립니다.');
-    const principle = concept?.internals || top?.whyExplanation || top?.interviewPoint ||
-      (cleanQuery ? `${title}은(는) 요구사항, 성능, 일관성 및 운영 비용을 함께 고려해 선택합니다.` : '학습 자료는 개념의 정의보다 실제 동작과 선택 기준을 함께 이해하도록 구성되어 있습니다.');
-    const practice = concept?.practice || top?.practicalUse || top?.practicalScenario || top?.interviewAnswer ||
-      '실무에서는 적용 전후의 지표와 실패 조건을 먼저 정하고, 인접한 대안과 trade-off를 비교합니다.';
-    const related = [...new Set([
-      ...(concept?.related || []),
-      ...(top?.tags || []),
-      ...(top?.relatedTopics || []),
-      ...results.slice(0, 8).flatMap(({ question }) => question.relatedTopics || question.tags || [])
-    ])].filter(item => norm(item) !== norm(title)).slice(0, 8);
-    return { title, definition, principle, practice, related, concept, top };
+    if(cleanQuery&&!concept&&!top) return null;
+    const reviewedConcept = concept?.reviewStatus === 'reviewed' ? concept : null;
+    const reviewedQuestion = cleanQuery && !concept && top?.reviewStatus === 'reviewed' ? top : null;
+    const contentConcept = concept;
+    const title = concept?.title || cleanQuery || '백엔드 지식 백과';
+    const definition = contentConcept?.definition || reviewedQuestion?.explanation || '검증된 개념을 검색하면 정의, 동작 원리와 적용 기준을 연결해 보여드립니다.';
+    const principle = contentConcept?.internals || reviewedQuestion?.whyExplanation || reviewedQuestion?.interviewPoint || '검색된 문제의 해설과 출처를 확인하세요.';
+    const practice = contentConcept?.practice || reviewedQuestion?.practicalScenario || reviewedQuestion?.interviewPoint || '관련 검증 문제에서 실제 적용 조건을 확인하세요.';
+    const relatedSource=concept
+      ? concept.related||[]
+      : cleanQuery
+        ? [...(top?.tags||[]),...(top?.relatedTopics||[]),...results.slice(0,8).flatMap(({question})=>question.relatedTopics||question.tags||[])]
+        : [];
+    const related = [...new Set(relatedSource)].filter(item => norm(item) !== norm(title)).slice(0, 8);
+    const sources=contentConcept?.sources||reviewedQuestion?.sources||[];
+    const reviewStatus=reviewedConcept?'reviewed-concept':reviewedQuestion?'reviewed-question':concept?'draft':'guide';
+    const provenance={
+      'reviewed-concept':'직접 출처 대조 검수 완료',
+      'reviewed-question':'직접 출처 대조 문항 기반 요약',
+      draft:'검토 중인 커리큘럼 초안',
+      guide:'검색 안내'
+    }[reviewStatus];
+    return { title, definition, principle, practice, related, concept, top, reviewedQuestion, sources, reviewStatus, provenance };
   }
 
   function renderEncyclopediaEntry(entry, resultCount){
+    const reviewed=entry.reviewStatus?.startsWith('reviewed');
     return `
       <article class="encyclopedia-card" aria-label="${esc(entry.title)} 핵심 개념">
         <header class="encyclopedia-heading">
           <p class="eyebrow">BACKEND ENCYCLOPEDIA</p>
-          <div><h2>${esc(entry.title)}</h2><span>핵심 개념</span></div>
+          <div><h2>${esc(entry.title)}</h2><span class="content-status-badge ${reviewed?'content-status-badge--reviewed':'content-status-badge--draft'}">${esc(entry.provenance)}</span></div>
           <p class="encyclopedia-definition">${esc(oneLine(entry.definition))}</p>
+          ${entry.reviewStatus==='draft'?'<p class="draft-content-notice" role="note">직접 출처 검수가 끝나기 전의 참고 초안입니다. 면접 답안이나 완료 학습 기준으로 사용하지 마세요.</p>':''}
         </header>
         <dl class="encyclopedia-facts">
           <div><dt>핵심 원리</dt><dd>${esc(oneLine(entry.principle))}</dd></div>
           <div><dt>실무 맥락</dt><dd>${esc(oneLine(entry.practice))}</dd></div>
         </dl>
         ${entry.related.length ? `<div class="encyclopedia-related"><strong>함께 보면 좋은 개념</strong>${chips(entry.related)}</div>` : ''}
+        ${entry.sources.length?`<div class="encyclopedia-sources"><strong>근거 문서</strong>${entry.sources.map(source=>`<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(source.title)}${source.checkedAt?` · 확인 ${esc(source.checkedAt)}`:''} ↗</a>`).join('')}</div>`:''}
         <p class="encyclopedia-count">${resultCount ? `연결된 학습 자료 ${resultCount}개` : '검색어를 입력하면 연결된 학습 자료를 함께 보여드립니다.'}</p>
       </article>`;
+  }
+
+  function renderNoVerifiedEntry(query){
+    return `<section class="knowledge-card empty-state no-verified-entry" role="status"><p class="eyebrow">NO VERIFIED CONTENT</p><h2>등록된 개념이 없습니다</h2><p>“${esc(query)}”에 대해 검토된 정의나 문제를 찾지 못했습니다. 임의 설명은 생성하지 않습니다.</p><div class="topic-chips"><button data-topic="B-Tree">B-Tree</button><button data-topic="Servlet과 Container">Servlet과 Container</button><button data-topic="Transaction">Transaction</button></div></section>`;
   }
 
   function renderIncruitHandoff(query){
@@ -199,32 +236,33 @@
 	  function renderKnowledgeSearch(query){
 	    const results = window.searchKnowledge(query, filters());
     const entry = getEncyclopediaEntry(query, results);
-    const path = window.getLearningPath(query || entry.top?.relatedTopics?.[0] || 'default');
-    const interviews = window.getInterviewQuestions(query || 'default');
-    const concept = entry.concept;
+    const path = entry?.reviewStatus?.startsWith('reviewed')?window.getLearningPath(query || entry.top?.relatedTopics?.[0] || 'default'):null;
+    const concept = entry?.concept;
 
-    document.getElementById('knowledgeSummary').innerHTML = `${renderIncruitHandoff(query)}${renderEncyclopediaEntry(entry, results.length)}`;
+    document.getElementById('knowledgeSummary').innerHTML = `${renderIncruitHandoff(query)}${entry?renderEncyclopediaEntry(entry, results.length):renderNoVerifiedEntry(query)}`;
     document.getElementById('knowledgeResults').innerHTML = results.length ? `
       <section class="knowledge-card secondary-materials">
-        <div class="section-title"><div><p class="eyebrow">RELATED LEARNING</p><h2>관련 학습 자료</h2></div><span>상위 ${Math.min(results.length, 8)}개</span></div>
+        <div class="section-title"><div><p class="eyebrow">RELATED LEARNING</p><h2>관련 학습 자료</h2></div><span>${Math.min(results.length, 8)}개 표시</span></div>
         <p class="section-description">핵심 개념을 확인한 뒤, 필요한 문제를 선택해 학습하세요.</p>
         <div class="supplement-results">${results.slice(0, 8).map(({question:q,wrong}) => renderSupplementCard(q, wrong)).join('')}</div>
-      </section>` : (String(query || '').trim() ? '<section class="knowledge-card empty-state">일치하는 자료가 없습니다. 다른 표현으로 검색하거나 상세 필터를 확인하세요.</section>' : '');
+      </section>` : '';
 
-    const comparison = concept?.comparison ? `<div class="comparison-table-wrap"><table class="comparison-table"><thead><tr>${concept.comparison.headers.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>${concept.comparison.rows.map(row=>`<tr>${row.map(x=>`<td>${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : '';
-    document.getElementById('learningPath').innerHTML = `
+    const comparison = concept?.reviewStatus==='reviewed'&&concept.comparison ? `<div class="comparison-table-wrap"><table class="comparison-table"><thead><tr>${concept.comparison.headers.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>${concept.comparison.rows.map(row=>`<tr>${row.map((x,index)=>`<td data-label="${esc(concept.comparison.headers[index]||'')}">${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : '';
+    document.getElementById('learningPath').innerHTML = path?`
       <details class="supplement-section"><summary>학습 경로와 비교 보기</summary>
         <div class="supplement-section-body">
           <div class="path-grid">${[['먼저 알아야 하는 것',path.prerequisites],['핵심 개념',path.core],['심화',path.advanced],['실무',path.practical]].map(([t,a]) => `<div><strong>${t}</strong>${chips(a || [])}</div>`).join('')}</div>
           ${comparison}
         </div>
-      </details>`;
+      </details>`:'';
 
-    const interviewItems = concept ? `<details open><summary>30초 답변</summary><p>${esc(concept.interview || entry.definition)}</p></details>${(concept.tails || []).map(item=>`<details><summary>${esc(item)}</summary><p><b>답변 방향</b> · 내부 원리, 선택 기준, trade-off와 실무 지표를 연결하세요.</p></details>`).join('')}` : interviews.map(([item,keywords]) => `<details><summary>${esc(item)}</summary><p><b>답변 키워드</b> · ${(keywords || []).map(esc).join(' · ')}</p></details>`).join('');
-    document.getElementById('interviewSection').innerHTML = `
+    const reviewedConcept=concept?.reviewStatus==='reviewed'?concept:null;
+    const tailAnswers=reviewedConcept?.tailAnswers||[];
+    const interviewItems = reviewedConcept ? `<details open><summary>검수 30초 답변</summary><p>${esc(reviewedConcept.interview || entry.definition)}</p></details>${(reviewedConcept.tails || []).map((item,index)=>`<details><summary>${esc(item)}</summary><p><b>먼저 답한 뒤 검수 답안과 비교</b> · ${esc(tailAnswers[index]||reviewedConcept.interview)}</p></details>`).join('')}` : entry?.reviewedQuestion ? (entry.reviewedQuestion.followUpQuestions||[]).map((item,index)=>`<details><summary>${esc(item)}</summary><p><b>검수 답안</b> · ${esc(entry.reviewedQuestion.followUpAnswers?.[index]||entry.reviewedQuestion.interviewPoint||entry.reviewedQuestion.explanation)}</p></details>`).join('') : '';
+    document.getElementById('interviewSection').innerHTML = interviewItems?`
       <details class="supplement-section"><summary>면접·실무 질문 보기</summary>
         <div class="supplement-section-body interview-list">${interviewItems}</div>
-      </details>`;
+      </details>`:'';
 
     bind(document.getElementById('knowledgeView'));
 	    document.querySelectorAll('[data-why]').forEach(btn => btn.onclick = () => {
@@ -241,20 +279,32 @@
   window.renderKnowledgeSearch = renderKnowledgeSearch;
   window.renderStudyOverview = true;
 
+  const categoryFilter=document.getElementById('categoryFilter');
+  const categories=[...new Set(bank.map(question=>question.category).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ko'));
+  const existingCategoryValues=new Set([...categoryFilter.options].map(option=>option.value));
+  categories.forEach(category=>{
+    if(existingCategoryValues.has(category)) return;
+    const option=document.createElement('option');
+    option.value=category;
+    option.textContent=category;
+    categoryFilter.append(option);
+  });
+
   document.getElementById('homeSearchForm').onsubmit = e => {
     e.preventDefault();
     openSearch(document.getElementById('homeSearchInput').value);
   };
   document.getElementById('knowledgeSearchForm').onsubmit = e => {
     e.preventDefault();
-    renderKnowledgeSearch(document.getElementById('knowledgeSearchInput').value);
+    openSearch(document.getElementById('knowledgeSearchInput').value);
   };
   ['categoryFilter','difficultyFilter','tagFilter','scenarioFilter','wrongFilter'].forEach(id =>
     document.getElementById(id).addEventListener(id === 'tagFilter' ? 'input' : 'change', () =>
       renderKnowledgeSearch(document.getElementById('knowledgeSearchInput').value))
   );
   document.getElementById('knowledgeBackBtn').onclick = () => {
-    history.back();
+    if(typeof window.safeAtlasBack==='function') window.safeAtlasBack();
+    else history.back();
   };
   document.getElementById('whyBtn').onclick = () => {
     const q = window.currentQuestion;
@@ -265,23 +315,6 @@
     if (!panel.hidden) {
       panel.innerHTML = renderAtlasWhy(q);
       bind(panel);
-      return;
-      panel.innerHTML = `
-        <div class="why-main">
-          <p class="why-summary">${esc(q.whyExplanation)}</p>
-          ${chips(q.relatedTopics)}
-          <div class="why-links">
-            ${window.getRelatedQuestions(q.relatedTopics[0] || q.tags[0]).slice(0,3).map(x => `<button class="why-link" data-topic="${esc(x.relatedTopics?.[0] || x.tags?.[0] || x.category)}">${esc(x.question)}</button>`).join('')}
-          </div>
-        </div>
-        <div class="why-folders">
-          <details class="study-detail" open><summary>왜 중요한가</summary><p>${esc(q.whyExplanation)}</p></details>
-          <details class="study-detail"><summary>실무 사용 예</summary><p>${esc(q.practicalScenario || q.interviewPoint)}</p></details>
-          <details class="study-detail"><summary>꼬리질문</summary><ul>${q.followUpQuestions.map(x => `<li>${esc(x)}</li>`).join('')}</ul></details>
-        </div>`;
-      bind(panel);
-      panel.querySelectorAll('[data-topic]').forEach(btn => btn.onclick = () => openSearch(btn.dataset.topic));
-      panel.querySelectorAll('.why-link').forEach(btn => btn.onclick = () => openSearch(btn.dataset.topic));
     }
   };
 
@@ -291,6 +324,15 @@
   if(handoffTopic){
     window.ATLAS_INCRUIT_CONTEXT={job:handoffJob||'',topic:handoffTopic};
     window.openAtlasSearch?.(handoffTopic,false);
-    history.replaceState({route:'search',query:handoffTopic,job:handoffJob||'',source:'incruit'},'',`${location.pathname}${location.search}#search`);
+    history.replaceState({route:'search',query:handoffTopic,job:handoffJob||'',source:'incruit',atlasDepth:0},'',`${location.pathname}${location.search}#search/${encodeURIComponent(handoffTopic)}`);
+  }else if(location.hash.startsWith('#search/')){
+    const hashQuery=safeDecode(location.hash.slice('#search/'.length));
+    if(hashQuery){
+      document.getElementById('knowledgeSearchInput').value=hashQuery;
+      renderKnowledgeSearch(hashQuery);
+    }else{
+      history.replaceState({route:'search',query:'',atlasDepth:0},'',`${location.pathname}${location.search}#search`);
+      renderKnowledgeSearch('');
+    }
   }
 })();

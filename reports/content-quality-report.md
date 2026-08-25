@@ -1,90 +1,264 @@
 # Backend Atlas content quality report
 
-Generated: 2026-08-20T03:48:16.176Z
+Generated: 2026-08-25T00:00:00.000Z
 
-- Questions: 5000
+- Questions: 15
 - Concepts: 187
+- Reviewed concepts: 4
+- Draft concepts: 183
+- Answer positions: 4 / 4 / 4 / 3
 - Errors: 0
-- Warnings: 79
+- Warnings: 260
 
 ## Findings
 
+- **warning / draft-without-source** `변수와 자료형`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `값 전달 방식`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `final`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `static`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `접근제어자`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `상속`: summary is shorter than 35 characters
+- **warning / draft-without-source** `상속`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `다형성`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `예외 처리`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Annotation`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Reflection`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `OOP와 객체 모델`: summary is shorter than 35 characters
+- **warning / draft-without-source** `OOP와 객체 모델`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `SOLID`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `함수형 프로그래밍`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Java Call By Value`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Framework vs Library`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `문자 인코딩과 UTF-8`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `동기 vs 비동기`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `SQL Injection 방어`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `TDD와 테스트 피라미드`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `DDD와 Bounded Context`: summary is shorter than 35 characters
+- **warning / draft-without-source** `DDD와 Bounded Context`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Monolith vs Microservices`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `List / Set / Map`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `TreeMap`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `HashSet`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Queue와 Deque`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Queue와 Deque`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Stack 사용 시 주의점`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Iterator와 fail-fast`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Immutable Collection`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Immutable Collection`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `시간복잡도 비교`: summary is shorter than 35 characters
+- **warning / draft-without-source** `시간복잡도 비교`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Lambda`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Lambda`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Functional Interface`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Method Reference`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Record`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Sealed Class`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Virtual Thread`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Stack vs Queue`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Tree vs Graph`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Heap과 PriorityQueue`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Hash Table`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Balanced Search Tree`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Balanced Search Tree`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `정렬 알고리즘 선택`: summary is shorter than 35 characters
+- **warning / draft-without-source** `정렬 알고리즘 선택`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Dynamic Programming`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Dynamic Programming`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Recursion`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `HashMap 동작 원리`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Hash 충돌 처리`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `equals와 hashCode`: summary is shorter than 35 characters
+- **warning / draft-without-source** `equals와 hashCode`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `String / StringBuilder / StringBuffer`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Primitive vs Wrapper`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Primitive vs Wrapper`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Interface vs Abstract Class`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Overloading vs Overriding`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Checked vs Unchecked Exception`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Generic`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Generic`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Stream`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Stream`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Optional`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Optional`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Collection Framework`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Class / Object / Instance`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Singleton과 전역 상태`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `String 불변성과 Interning`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Thread`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Synchronization`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Executor`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `ConcurrentHashMap`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `CompletableFuture`: summary is shorter than 35 characters
+- **warning / draft-without-source** `CompletableFuture`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `synchronized`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `volatile`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Atomic과 CAS`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Atomic과 CAS`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Lock과 Deadlock`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Thread Pool`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Thread Pool`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Future`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Future`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `JVM 메모리 구조`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `GC 기본 원리`: summary is shorter than 35 characters
+- **warning / draft-without-source** `GC 기본 원리`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `ClassLoader`: summary is shorter than 35 characters
+- **warning / draft-without-source** `ClassLoader`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `JIT`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `객체 생성 과정`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `GC 종류`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Escape Analysis`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Memory Leak과 OOM 분석`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Thread Dump와 Heap Dump`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `DI / IoC`: summary is shorter than 35 characters
+- **warning / draft-without-source** `DI / IoC`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Bean Scope`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Bean Scope`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `AOP`: summary is shorter than 35 characters
+- **warning / draft-without-source** `AOP`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `@Transactional`: summary is shorter than 35 characters
+- **warning / draft-without-source** `@Transactional`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Transaction Propagation`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Transaction Propagation`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Spring MVC`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Bean Lifecycle`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Component Scan`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Proxy`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Validation`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Validation`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Transaction Isolation`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `JPA 영속성 컨텍스트`: summary is shorter than 35 characters
+- **warning / draft-without-source** `JPA 영속성 컨텍스트`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `N+1 문제`: summary is shorter than 35 characters
+- **warning / draft-without-source** `N+1 문제`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Lazy vs Eager Loading`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Lazy vs Eager Loading`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Dirty Checking`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Dirty Checking`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Entity 상태`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Fetch Join`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `JPA Lock`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Profile`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Profile`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Actuator`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Actuator`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Logging`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Logging`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Exception Handling`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Exception Handling`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Spring Batch`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Spring Batch`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Spring Security`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Spring Test`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `WS vs WAS`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `DispatcherServlet`: draft remains excluded from verified learning until direct review
 - **warning / mobile-overflow-token** `DispatcherServlet`: HandlerMapping→HandlerAdapter→Controller→MessageConverter/ExceptionResolver
 - **warning / short-content** `DTO / VO / Entity`: summary is shorter than 35 characters
+- **warning / draft-without-source** `DTO / VO / Entity`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `CORS`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Scale Up vs Scale Out`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Scale Up vs Scale Out`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Design Patterns`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Process / Thread`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Context Switching`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Deadlock`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Deadlock`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Virtual Memory`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Lock / CAS`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Lock / CAS`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `TCP/IP`: summary is shorter than 35 characters
+- **warning / draft-without-source** `TCP/IP`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `HTTP`: summary is shorter than 35 characters
+- **warning / draft-without-source** `HTTP`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `DNS`: summary is shorter than 35 characters
+- **warning / draft-without-source** `DNS`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `TLS`: summary is shorter than 35 characters
+- **warning / draft-without-source** `TLS`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Load Balancing`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Load Balancing`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Concurrency vs Parallelism`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Mutex vs Semaphore`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Page Fault와 TLB`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Page Replacement와 LRU`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Byte Order`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `OSI와 TCP/IP 계층`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `TCP vs UDP`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `HTTP vs HTTPS`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `GET vs POST`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Web Request Lifecycle`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Index`: summary is shorter than 35 characters
-- **warning / short-content** `B-Tree`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Index`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `SQL Tuning`: summary is shorter than 35 characters
+- **warning / draft-without-source** `SQL Tuning`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `PostgreSQL`: summary is shorter than 35 characters
+- **warning / draft-without-source** `PostgreSQL`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `pgvector`: summary is shorter than 35 characters
+- **warning / draft-without-source** `pgvector`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Normalization`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Connection Pool`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Transaction`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Transaction`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Isolation Level`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Lock`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Lock`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `MVCC`: summary is shorter than 35 characters
+- **warning / draft-without-source** `MVCC`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `JPA`: summary is shorter than 35 characters
+- **warning / draft-without-source** `JPA`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `ACID`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Optimistic vs Pessimistic Lock`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Browser Rendering`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Event Loop`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `PWA`: summary is shorter than 35 characters
+- **warning / draft-without-source** `PWA`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `WebView`: summary is shorter than 35 characters
+- **warning / draft-without-source** `WebView`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Mobile UX`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Mobile UX`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `State`: summary is shorter than 35 characters
+- **warning / draft-without-source** `State`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Props`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Props`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `React Key`: summary is shorter than 35 characters
+- **warning / draft-without-source** `React Key`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Component Lifecycle`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Docker Image vs Container`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Layer`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Layer`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Volume`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Volume`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Network`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Network`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `CI/CD`: summary is shorter than 35 characters
+- **warning / draft-without-source** `CI/CD`: draft remains excluded from verified learning until direct review
 - **warning / duplicate-concept** `Logging`: also in Java & Spring
 - **warning / short-content** `Logging`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Logging`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Monitoring`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Monitoring`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `OpenTelemetry`: summary is shorter than 35 characters
+- **warning / draft-without-source** `OpenTelemetry`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Kubernetes 기초`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Kubernetes 기초`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `배포 / 롤백`: summary is shorter than 35 characters
+- **warning / draft-without-source** `배포 / 롤백`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `RAG`: summary is shorter than 35 characters
+- **warning / draft-without-source** `RAG`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Embedding`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Vector DB`: draft remains excluded from verified learning until direct review
 - **warning / duplicate-concept** `pgvector`: also in Database
+- **warning / draft-without-source** `pgvector`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `HNSW`: summary is shorter than 35 characters
+- **warning / draft-without-source** `HNSW`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Reranking`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Prompt Engineering`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Prompt Injection`: draft remains excluded from verified learning until direct review
+- **warning / draft-without-source** `Function Calling`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `MCP`: summary is shorter than 35 characters
+- **warning / draft-without-source** `MCP`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Agent`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Agent`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Workflow`: summary is shorter than 35 characters
+- **warning / draft-without-source** `Workflow`: draft remains excluded from verified learning until direct review
 - **warning / short-content** `Spring AI`: summary is shorter than 35 characters
-- **warning / answer-length-bias** `question-bank`: correct answer is longest in 96.0%

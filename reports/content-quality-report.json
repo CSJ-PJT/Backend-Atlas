@@ -1,30 +1,100 @@
 {
-  "generatedAt": "2026-08-20T03:48:16.176Z",
+  "generatedAt": "2026-08-25T00:00:00.000Z",
   "counts": {
-    "questions": 5000,
+    "questions": 15,
     "concepts": 187,
+    "reviewedConcepts": 4,
+    "draftConcepts": 183,
     "errors": 0,
-    "warnings": 79
+    "warnings": 260
   },
+  "answerPositions": [
+    4,
+    4,
+    4,
+    3
+  ],
   "checks": [
+    "review status and provenance",
+    "direct primary sources",
+    "reviewed-only public bank",
+    "answer position balance",
+    "follow-up answer parity",
     "template repetition",
-    "short concepts",
     "internal operation",
-    "source metadata",
     "URL syntax",
     "duplicate questions/options",
-    "answer length bias",
     "distractor reasons",
-    "category tags",
+    "assessment trace IDs",
     "comparison shape",
     "mobile overflow tokens"
   ],
   "issues": [
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "변수와 자료형",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "값 전달 방식",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "final",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "static",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "접근제어자",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "상속",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "상속",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "다형성",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "예외 처리",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Annotation",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Reflection",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -34,9 +104,93 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "OOP와 객체 모델",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "SOLID",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "함수형 프로그래밍",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Java Call By Value",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Framework vs Library",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "문자 인코딩과 UTF-8",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "동기 vs 비동기",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "SQL Injection 방어",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "TDD와 테스트 피라미드",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "DDD와 Bounded Context",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "DDD와 Bounded Context",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Monolith vs Microservices",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "List / Set / Map",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "TreeMap",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "HashSet",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -46,9 +200,33 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Queue와 Deque",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Stack 사용 시 주의점",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Iterator와 fail-fast",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Immutable Collection",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Immutable Collection",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -58,9 +236,75 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "시간복잡도 비교",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Lambda",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Lambda",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Functional Interface",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Method Reference",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Record",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Sealed Class",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Virtual Thread",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Stack vs Queue",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Tree vs Graph",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Heap과 PriorityQueue",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Hash Table",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -70,9 +314,21 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Balanced Search Tree",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "정렬 알고리즘 선택",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "정렬 알고리즘 선택",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -82,9 +338,45 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Dynamic Programming",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Recursion",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "HashMap 동작 원리",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Hash 충돌 처리",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "equals와 hashCode",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "equals와 hashCode",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "String / StringBuilder / StringBuffer",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -94,9 +386,39 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Primitive vs Wrapper",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Interface vs Abstract Class",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Overloading vs Overriding",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Checked vs Unchecked Exception",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Generic",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Generic",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -106,9 +428,69 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Stream",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Optional",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Optional",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Collection Framework",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Class / Object / Instance",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Singleton과 전역 상태",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "String 불변성과 Interning",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Thread",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Synchronization",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Executor",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "ConcurrentHashMap",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -118,9 +500,39 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "CompletableFuture",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "synchronized",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "volatile",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Atomic과 CAS",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Atomic과 CAS",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Lock과 Deadlock",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -130,9 +542,27 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Thread Pool",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Future",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Future",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "JVM 메모리 구조",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -142,9 +572,57 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "GC 기본 원리",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "ClassLoader",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "ClassLoader",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "JIT",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "객체 생성 과정",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "GC 종류",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Escape Analysis",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Memory Leak과 OOM 분석",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Thread Dump와 Heap Dump",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -154,9 +632,21 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "DI / IoC",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Bean Scope",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Bean Scope",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -166,9 +656,21 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "AOP",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "@Transactional",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "@Transactional",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -178,9 +680,51 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Transaction Propagation",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Spring MVC",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Bean Lifecycle",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Component Scan",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Proxy",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Validation",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Validation",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Transaction Isolation",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -190,9 +734,21 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "JPA 영속성 컨텍스트",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "N+1 문제",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "N+1 문제",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -202,9 +758,39 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Lazy vs Eager Loading",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Dirty Checking",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Dirty Checking",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Entity 상태",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Fetch Join",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "JPA Lock",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -214,9 +800,21 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Profile",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Actuator",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Actuator",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -226,15 +824,57 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Logging",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Exception Handling",
       "message": "summary is shorter than 35 characters"
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Exception Handling",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Spring Batch",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Spring Batch",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Spring Security",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Spring Test",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "WS vs WAS",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "DispatcherServlet",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -250,9 +890,45 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "DTO / VO / Entity",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "CORS",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Scale Up vs Scale Out",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Scale Up vs Scale Out",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Design Patterns",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Process / Thread",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Context Switching",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -262,9 +938,27 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Deadlock",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Virtual Memory",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Lock / CAS",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Lock / CAS",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -274,9 +968,21 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "TCP/IP",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "HTTP",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "HTTP",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -286,9 +992,21 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "DNS",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "TLS",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "TLS",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -298,15 +1016,81 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Load Balancing",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Concurrency vs Parallelism",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Mutex vs Semaphore",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Page Fault와 TLB",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Page Replacement와 LRU",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Byte Order",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "OSI와 TCP/IP 계층",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "TCP vs UDP",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "HTTP vs HTTPS",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "GET vs POST",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Web Request Lifecycle",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Index",
       "message": "summary is shorter than 35 characters"
     },
     {
       "severity": "warning",
-      "type": "short-content",
-      "id": "B-Tree",
-      "message": "summary is shorter than 35 characters"
+      "type": "draft-without-source",
+      "id": "Index",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -316,9 +1100,21 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "SQL Tuning",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "PostgreSQL",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "PostgreSQL",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -328,9 +1124,39 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "pgvector",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Normalization",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Connection Pool",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Transaction",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Transaction",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Isolation Level",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -340,9 +1166,21 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Lock",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "MVCC",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "MVCC",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -352,9 +1190,45 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "JPA",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "ACID",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Optimistic vs Pessimistic Lock",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Browser Rendering",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Event Loop",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "PWA",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "PWA",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -364,9 +1238,21 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "WebView",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Mobile UX",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Mobile UX",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -376,9 +1262,21 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "State",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Props",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Props",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -388,9 +1286,33 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "React Key",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Component Lifecycle",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Docker Image vs Container",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Layer",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Layer",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -400,15 +1322,33 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Volume",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Network",
       "message": "summary is shorter than 35 characters"
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Network",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "CI/CD",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "CI/CD",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -424,9 +1364,21 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Logging",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Monitoring",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Monitoring",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -436,9 +1388,21 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "OpenTelemetry",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Kubernetes 기초",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Kubernetes 기초",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -448,9 +1412,33 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "배포 / 롤백",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "RAG",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "RAG",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Embedding",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Vector DB",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -460,9 +1448,45 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "pgvector",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "HNSW",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "HNSW",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Reranking",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Prompt Engineering",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Prompt Injection",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Function Calling",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -472,9 +1496,21 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "MCP",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Agent",
       "message": "summary is shorter than 35 characters"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Agent",
+      "message": "draft remains excluded from verified learning until direct review"
     },
     {
       "severity": "warning",
@@ -484,15 +1520,75 @@
     },
     {
       "severity": "warning",
+      "type": "draft-without-source",
+      "id": "Workflow",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
       "type": "short-content",
       "id": "Spring AI",
       "message": "summary is shorter than 35 characters"
     },
     {
       "severity": "warning",
-      "type": "answer-length-bias",
-      "id": "question-bank",
-      "message": "correct answer is longest in 96.0%"
+      "type": "draft-without-source",
+      "id": "Spring AI",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "장애 분석",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "운영 판단",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "성능 병목",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "데이터 정합성",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "RAG 품질 저하",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "LLM API 장애",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "배치 실패",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "재처리 설계",
+      "message": "draft remains excluded from verified learning until direct review"
+    },
+    {
+      "severity": "warning",
+      "type": "draft-without-source",
+      "id": "로그·메트릭·트레이스",
+      "message": "draft remains excluded from verified learning until direct review"
     }
   ]
 }

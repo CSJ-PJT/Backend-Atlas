@@ -5,7 +5,9 @@
   "description": "Backend Atlas - AX and backend engineering learning platform",
   "scripts": {
     "build": "node scripts/build-web.mjs",
-    "test": "node scripts/smoke-test.mjs",
+    "build:release": "node scripts/build-web.mjs --release",
+    "test": "node scripts/smoke-test.mjs && node scripts/test-education-quality-contract.mjs && node scripts/test-learning-runtime.mjs && node scripts/test-learning-visuals.mjs",
+    "test:release": "npm run test && npm run quality:audit && node scripts/test-content-quality-audit.mjs && npm run build:release && node scripts/test-build-provenance.mjs --release",
     "quality:audit": "node scripts/content-quality-audit.mjs",
     "android:sync": "npm run build && cap sync android",
     "android:open": "cap open android",
