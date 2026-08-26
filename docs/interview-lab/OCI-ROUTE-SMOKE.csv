@@ -1,15 +1,15 @@
-route,predeploy_status,expected_after_deploy,notes
-/,200,200,protected Atlas root
-/learn,301,301,redirect to slash
-/learn/,200,200,only target path
-/run,308,308,compatibility redirect
-/run/,308,308,compatibility redirect
-/travel/,200,200,protected
-/health/,200,200,protected
-/jobs/,200,200,protected
-/sketchfy/,200,200,protected
-/world/,200,200,protected
-/archive/,200,200,protected
-/archiveos/,200,200,protected
-/admin/,200,200,protected
-/api/,404,404,no root API handler
+route,predeploy_status,observed_after_deploy,result,notes
+/,200,200,PASS,protected Atlas root
+/learn,301,301,PASS,redirect to slash
+/learn/,200,200,PASS,only target path and new release
+/run,308,308,PASS,compatibility redirect
+/run/,308,308,PASS,compatibility redirect
+/travel/,200,200,PASS,protected
+/health/,200,200,PASS,protected
+/jobs/,200,200,PASS,protected
+/sketchfy/,200,200,PASS,protected
+/world/,200,200,PASS,protected
+/archive/,200,200,PASS,protected
+/archiveos/,200,200,PASS,protected
+/admin/,200,200,PASS,protected
+/api/,404,404,PASS,no root API handler

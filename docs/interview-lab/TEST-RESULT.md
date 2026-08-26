@@ -1,6 +1,6 @@
 # Test Result
 
-상태: LOCAL RELEASE GATES PASS, OCI DEPLOYMENT PENDING USER APPROVAL
+상태: LOCAL RELEASE GATES PASS, OCI DEPLOYMENT AND PUBLIC SMOKE PASS
 
 - 기존 smoke: PASS — 공개 reviewed 객관식 15개
 - education quality contract: PASS
@@ -23,6 +23,12 @@
 - browser 768×1024: PASS — overflow 0
 - browser 1440×900: PASS — overflow 0
 - browser offline/PWA: PASS — local server 중단 후 reload, Interview session과 22개 asset graph 복구, console warn/error 0
+- OCI stage/operating/public asset parity: PASS — source `44fcb49`, manifest `bfc9396d`, 공개 asset 44개
+- OCI browser 390×844: PASS — D-Day Top 30, 시스템 설계 5, 체크리스트 10, overflow 0
+- OCI browser 412×915: PASS — 직무 briefing, 실제 세션, 공식 공고 링크, overflow 0
+- OCI browser console warning/error: 0
+- OCI owner/mode/SELinux mismatch: 0
+- OCI Nginx 및 다른 Atlas route status contract: PASS
 
 실브라우저에서 발견해 수정한 회귀:
 
@@ -39,4 +45,4 @@
 11. 공통 모드에서 D-Day가 사용자가 선택하지 않은 첫 번째 회사를 암묵적으로 사용함
 12. Incruit 공고 handoff 뒤 역할·전형·공개 안전 경력 근거·학습 큐·공식 링크가 한 화면에 연결되지 않음
 
-clean 기능 브랜치에서 `npm run test:release` 전체 PASS와 44개 공개 asset provenance를 확인했다. exact 최종 SHA·manifest는 커밋 이후 생성되는 `www/build-info.json`과 사전 배포 보고를 단일 권위로 사용한다.
+clean 기능 브랜치에서 `npm run test:release` 전체 PASS와 44개 공개 asset provenance를 확인했다. 운영 `build-info.json`, disk manifest, 공개 asset graph는 승인·배포한 앱 source `44fcb49db2effe5cd5f49caa57cfd4c9be078008`와 exact 일치한다. 배포 후 helper 안전성 수정은 앱 code/asset을 변경하지 않으며 별도 Git commit으로 추적한다.
