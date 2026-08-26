@@ -92,7 +92,6 @@ deploy_release() {
   chown -R root:root "$staged"
   find "$staged" -type d -exec chmod 0755 {} +
   find "$staged" -type f -exec chmod 0644 {} +
-  command -v restorecon >/dev/null 2>&1 && restorecon -RF "$staged"
 
   rollback_on_error() {
     local exit_code=$?
@@ -108,6 +107,7 @@ deploy_release() {
   mv -- "$TARGET_ROOT" "$backup"
   switched=1
   mv -- "$staged" "$TARGET_ROOT"
+  command -v restorecon >/dev/null 2>&1 && restorecon -RF "$TARGET_ROOT"
   validate_tree "$TARGET_ROOT" "$expected_head" "$expected_manifest"
   nginx -t
   trap - ERR
