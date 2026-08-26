@@ -1,0 +1,11 @@
+job_id,status,provenance,company_questions,playlist_questions,legacy_reviewed,system_focus,source_grade
+linepay-server-engineer,active,official-jd-derived,25,50,15,payment-ledger|batch-settlement|event-outbox,A
+linepay-ai-data-platform-engineer,active,official-jd-derived,25,50,15,event-outbox|rag-agent|observability,A
+kakaomobility-logistics-agent-backend,active,official-jd-derived,25,50,15,shipment-state|event-outbox|observability,A
+jyp-software-engineer-backend,needs-confirmation,official-jd-derived,25,50,15,cache-degradation|api-gateway|observability,A
+nhnkcp-java-backend,active,official-jd-derived,25,50,15,payment-ledger|batch-settlement|migration-cutover,A
+kakaopaysec-backend-needs-confirmation,needs-confirmation,practice-inference,25,50,15,payment-ledger|event-outbox|observability,A+B
+coupang-backend-needs-confirmation,needs-confirmation,practice-inference,25,50,15,shipment-state|event-outbox|observability,A+B
+kakaostyle-display-backend-needs-confirmation,needs-confirmation,practice-inference,25,50,15,cache-degradation|api-gateway|observability,A+B
+cjoliveyoung-ad-dsp-backend-needs-confirmation,needs-confirmation,practice-inference,25,50,15,ad-budget|event-outbox|observability,A+B
+cjoliveyoung-common-platform-backend-needs-confirmation,needs-confirmation,practice-inference,25,50,15,api-gateway|migration-cutover|rag-agent,A+B

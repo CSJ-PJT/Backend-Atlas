@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "releaseMinimums": {
+    "candidate": 120,
+    "companyPerJob": 25,
+    "systemScenario": 80,
+    "behavior": 60,
+    "topLevel": 400,
+    "followUps": 1200,
+    "playlistPerJob": 50,
+    "coding": {
+      "java-algorithm": 40,
+      "data-structure": 20,
+      "java-concurrency": 15,
+      "sql": 40,
+      "data-modeling": 20,
+      "debug-code-review": 20,
+      "live-coding": 15,
+      "refactoring": 15
+    }
+  },
+  "publicQuestionRules": {
+    "reviewStatus": "reviewed",
+    "minimumFollowUps": 2,
+    "sourceRefsRequired": true,
+    "answerRequired": true,
+    "uniqueIdRequired": true,
+    "candidateEvidenceRequiredForCandidateScope": true,
+    "forbiddenClaimCheck": true,
+    "companyRoleMatch": true,
+    "piiAndSecretScan": true,
+    "longSourceCopyForbidden": true
+  },
+  "provenanceLevels": [
+    "verified-candidate",
+    "official-jd-derived",
+    "technical-official-source",
+    "practice-inference"
+  ],
+  "forbiddenPublicPatterns": [
+    "지원 완료",
+    "희망연봉",
+    "자체 LLM 학습 경험",
+    "GPU 모델 서버 운영 경험",
+    "DSP 실무 경험 보유",
+    "Staff 조직 관리 경험"
+  ]
+}
