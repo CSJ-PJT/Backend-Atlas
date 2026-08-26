@@ -1,8 +1,8 @@
 [Unit]
-Description=Finalize the Atlas access baseline at the 2026-08-26 KST cutoff
+Description=Finalize the Atlas access baseline at the 2026-08-27 KST cutoff
 
 [Timer]
-OnCalendar=2026-08-26 00:00:30 Asia/Seoul
+OnCalendar=2026-08-27 00:00:30 Asia/Seoul
 Persistent=true
 AccuracySec=1s
 Unit=atlas-access-baseline.service

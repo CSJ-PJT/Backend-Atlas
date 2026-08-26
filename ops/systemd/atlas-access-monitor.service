@@ -7,7 +7,7 @@ After=network-online.target nginx.service atlas-access-baseline.service
 Type=oneshot
 User=root
 Group=root
-Environment=ATLAS_ACCESS_START_DATE=2026-08-26
+Environment=ATLAS_ACCESS_START_DATE=2026-08-27
 EnvironmentFile=/etc/incruit-atlas-crawl.env
 StateDirectory=atlas-access-monitor
 StateDirectoryMode=0700

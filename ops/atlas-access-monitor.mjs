@@ -7,7 +7,7 @@ import { createGunzip } from 'node:zlib';
 import { createInterface } from 'node:readline';
 import { fileURLToPath } from 'node:url';
 
-const DEFAULT_START_DATE = '2026-08-26';
+const DEFAULT_START_DATE = '2026-08-27';
 const DAY_MS = 86_400_000;
 const MONTHS = new Map(['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map((month, index) => [month, index]));
 const STATIC_ASSET = /\.(?:avif|css|gif|ico|jpe?g|js|map|png|svg|webmanifest|webp|woff2?|ttf)(?:$|\?)/i;
