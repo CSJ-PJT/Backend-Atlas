@@ -13,7 +13,7 @@ const baseAssets = [
   'index.html', 'styles.css', 'learning-os.css', 'questions.js', 'question-expander.js',
   'ax-question-extension.js', 'learning-os-data.js', 'atlas-content.js', 'curriculum-data.js', 'developer-guide-data.js', 'learning-visuals.js', 'app.js', 'learning-os.js',
   'manifest.webmanifest', 'sw.js', 'assets/backend-atlas-icon.png',
-  'docs/backend-study/Backend-Atlas-백엔드-실무-학습-32일.pdf'
+  'docs/backend-study/Backend-Atlas-Backend-Practice-32-Day.pdf'
 ];
 const listFiles = async directory => {
   const absolute = resolve(root, directory);

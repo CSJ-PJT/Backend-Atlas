@@ -85,7 +85,7 @@
         <div class="hero-actions">
           <button class="primary-button" type="button" data-open-day="${nextDay.id}">${completed ? '이어서 학습' : 'DAY 01 시작'}</button>
           <button class="secondary-button" type="button" data-open-view="exam">진단 시험</button>
-          <a class="secondary-button" href="../docs/backend-study/Backend-Atlas-백엔드-실무-학습-32일.pdf" target="_blank" rel="noreferrer">인쇄용 32일 가이드</a>
+          <a class="secondary-button" href="../docs/backend-study/Backend-Atlas-Backend-Practice-32-Day.pdf" target="_blank" rel="noreferrer">인쇄용 32일 가이드</a>
         </div>
       </section>
       <section class="metric-grid" aria-label="학습 현황">

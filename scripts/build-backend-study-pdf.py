@@ -25,7 +25,7 @@ from reportlab.platypus import (
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "backend-study"
-OUTPUT = ROOT / "docs" / "backend-study" / "Backend-Atlas-백엔드-실무-학습-32일.pdf"
+OUTPUT = ROOT / "docs" / "backend-study" / "Backend-Atlas-Backend-Practice-32-Day.pdf"
 
 
 def load(name: str):
