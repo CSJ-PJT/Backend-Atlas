@@ -19,6 +19,9 @@ android/local.properties
 !.env.example
 *.local
 
+# Local-only Interview Lab candidate data. Never build or deploy this tree.
+private/
+
 # Logs, caches, IDE and OS files
 *.log
 .cache/

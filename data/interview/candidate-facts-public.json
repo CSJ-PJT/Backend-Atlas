@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "privacy": "public-safe-practice-evidence-only",
+  "facts": [
+    {
+      "id": "career-java-spring-six-plus",
+      "statement": "Java와 Spring 기반 API, 배치, 통계, 대외 연계 개발 및 운영 경험이 6년 이상이다.",
+      "status": "verified",
+      "sourceRefs": ["candidate-source-resume-20260701"]
+    },
+    {
+      "id": "project-transit-settlement",
+      "statement": "교통 정산 시스템에서 정산, 통계, 배치, 기관 연계 업무를 수행했다.",
+      "status": "verified",
+      "sourceRefs": ["candidate-source-career-20260701"]
+    },
+    {
+      "id": "metric-throughput-normalized-855x",
+      "statement": "서로 다른 처리 건수와 실행 시간을 분당 처리량으로 정규화한 결과 약 855배의 처리량 개선으로 계산된다.",
+      "status": "verified",
+      "sourceRefs": ["candidate-source-career-20260701"],
+      "caveat": "동일 건수의 단순 실행시간 비교가 아니다."
+    },
+    {
+      "id": "integration-count-27",
+      "statement": "두 개 노선 확장에서 합계 27개 대외 연계 인터페이스를 다뤘다.",
+      "status": "verified",
+      "sourceRefs": ["candidate-source-career-20260701"]
+    },
+    {
+      "id": "project-archive-atlas",
+      "statement": "Archive와 Atlas 계열은 개인 프로젝트이며 합성 또는 비식별 데이터를 중심으로 검증했다.",
+      "status": "verified",
+      "sourceRefs": ["candidate-source-portfolio-20260701"]
+    },
+    {
+      "id": "integration-sap-rest",
+      "statement": "SAP ERP REST API 연동을 수행했다.",
+      "status": "verified",
+      "sourceRefs": ["candidate-source-career-20260701"],
+      "caveat": "SAP ERP 자체 개발 경험을 뜻하지 않는다."
+    }
+  ],
+  "forbiddenClaimIds": [
+    "claim-tmoney-employee",
+    "claim-yanolja-employee",
+    "claim-sap-erp-development",
+    "claim-self-trained-llm",
+    "claim-direct-dsp",
+    "claim-staff-people-management",
+    "claim-same-volume-comparison",
+    "claim-commercial-personal-project"
+  ]
+}

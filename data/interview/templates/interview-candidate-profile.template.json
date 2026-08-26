@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "candidateId": "replace-with-local-id",
+  "storagePolicy": "local-only",
+  "facts": [
+    {
+      "id": "fact-id",
+      "statement": "검증된 사실을 입력하세요.",
+      "status": "verified",
+      "source": "local-source-id",
+      "publicSafe": false
+    }
+  ],
+  "forbiddenClaims": [
+    {"id": "claim-id", "statement": "면접에서 하지 말아야 할 과장 표현을 입력하세요."}
+  ],
+  "projectBoundaries": [],
+  "metrics": []
+}

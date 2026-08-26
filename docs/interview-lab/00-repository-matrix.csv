@@ -1,0 +1,9 @@
+repository,path,git,branch,head,origin_main,behind_main,ahead_main,dirty,decision
+Backend-Atlas source,C:\Users\dan18\AppData\Local\Temp\Backend-Atlas-education-20260825,YES,feat/run-atlas-learning-quality,c03bceede1871709ad268bfd883178222cff342f,6fb5480b2615516987739d6b9b65c8c72a812e13,0,6,NO,Interview Lab source of truth
+Backend-Atlas Interview Lab,C:\Users\dan18\AppData\Local\Temp\Backend-Atlas-interview-lab-20260826-110006,YES,feat/learn-atlas-interview-lab,c03bceede1871709ad268bfd883178222cff342f,6fb5480b2615516987739d6b9b65c8c72a812e13,0,6,NO_BEFORE_PHASE0_ARTIFACTS,Clean isolated implementation worktree
+Backend-Atlas access monitor,C:\Users\dan18\AppData\Local\Temp\Backend-Atlas-access-monitor-20260826-105112,YES,fix/atlas-access-monitor-cutoff-20260827,855ea0230d48bc9f0a5078408027640f8fbafb70,6fb5480b2615516987739d6b9b65c8c72a812e13,0,8,NO,Separate operations-only follow-up branch
+Backend-Atlas workspace snapshot,C:\Users\dan18\OneDrive\문서\Archive\Backend-Atlas,NO,,,,,,N/A,Do not use as Git provenance
+Atlas-Management,C:\Users\dan18\OneDrive\문서\Archive\Atlas-Management,YES,main,e3f39efeac281e3257f8ca1d93a463fa7c70c050,06957fc50c45faa59eb0a10b817761ab6da983da,1,3,YES:README.md|index.html,Preserve user changes; canonical card already points to Learn Atlas /learn/
+Incruit-Atlas,C:\Users\dan18\AppData\Local\Temp\Incruit-Atlas-job-card-link-20260825,YES,fix/incruit-job-card-external-link,90d201489f678f8112ce1bc04be93fe4cb357329,675eb58740e1e2bc578465a58019588a970d8c82,0,16,NO,Related handoff source only
+Incruit-Atlas workspace snapshot,C:\Users\dan18\OneDrive\문서\Archive\Incruit-Atlas,NO,,,,,,N/A,Do not use as Git provenance
+
