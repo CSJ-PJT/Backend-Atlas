@@ -1,0 +1,555 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "SRC-001",
+      "title": "AWS Builders' Library",
+      "url": "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-002",
+      "title": "Official or Direct Reference",
+      "url": "https://curl.se/docs/manpage.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-003",
+      "title": "Docker Documentation",
+      "url": "https://docs.docker.com/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-004",
+      "title": "Docker Documentation",
+      "url": "https://docs.docker.com/reference/cli/docker/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-005",
+      "title": "Oracle Database 19c Documentation",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/arpls/DBMS_XPLAN.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-006",
+      "title": "Oracle Database 19c Documentation",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/data-concurrency-and-consistency.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-007",
+      "title": "Oracle Database 19c Documentation",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/Analytic-Functions.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-008",
+      "title": "Oracle Database 19c Documentation",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/tgsql/generating-and-displaying-execution-",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-009",
+      "title": "Oracle Database 19c Documentation",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/tgsql/introduction-to-sql-tuning.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-010",
+      "title": "Oracle Database 19c Documentation",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/vldbg/partition-pruning.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-011",
+      "title": "Oracle Java SE 21 Documentation",
+      "url": "https://docs.oracle.com/en/java/javase/21/",
+      "authority": "official-primary",
+      "currentStudyVersion": "Java 21",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-012",
+      "title": "Oracle Java SE 21 Documentation",
+      "url": "https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "Java 21",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-013",
+      "title": "Oracle Java SE 21 Documentation",
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "Java 21",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-014",
+      "title": "Oracle Java SE 21 Documentation",
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayDeque.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "Java 21",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-015",
+      "title": "Oracle Java SE 21 Documentation",
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "Java 21",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-016",
+      "title": "Oracle Java SE 21 Documentation",
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "Java 21",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-017",
+      "title": "Oracle Java SE 21 Documentation",
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/LinkedHashMap.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "Java 21",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-018",
+      "title": "Oracle Java SE 21 Documentation",
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/PriorityQueue.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "Java 21",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-019",
+      "title": "Oracle Java SE 21 Documentation",
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "Java 21",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-020",
+      "title": "Oracle Java SE 21 Documentation",
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/package-summary.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "Java 21",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-021",
+      "title": "Oracle Java SE 21 Documentation",
+      "url": "https://docs.oracle.com/en/java/javase/21/vm/",
+      "authority": "official-primary",
+      "currentStudyVersion": "Java 21",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-022",
+      "title": "Official or Direct Reference",
+      "url": "https://docs.oracle.com/javase/specs/jvms/se21/html/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-023",
+      "title": "Spring AI Reference",
+      "url": "https://docs.spring.io/spring-ai/reference/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 Spring 버전과 현재 reference의 차이를 적용 전에 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-024",
+      "title": "Spring Batch Reference",
+      "url": "https://docs.spring.io/spring-batch/reference/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 Spring 버전과 현재 reference의 차이를 적용 전에 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-025",
+      "title": "Spring Batch Reference",
+      "url": "https://docs.spring.io/spring-batch/reference/job/configuring-job.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 Spring 버전과 현재 reference의 차이를 적용 전에 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-026",
+      "title": "Spring Batch Reference",
+      "url": "https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 Spring 버전과 현재 reference의 차이를 적용 전에 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-027",
+      "title": "Official or Direct Reference",
+      "url": "https://docs.spring.io/spring-data/jpa/reference/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 Spring 버전과 현재 reference의 차이를 적용 전에 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-028",
+      "title": "Spring Framework Reference",
+      "url": "https://docs.spring.io/spring-framework/reference/core/aop/proxying.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 Spring 버전과 현재 reference의 차이를 적용 전에 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-029",
+      "title": "Spring Framework Reference",
+      "url": "https://docs.spring.io/spring-framework/reference/core/beans.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 Spring 버전과 현재 reference의 차이를 적용 전에 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-030",
+      "title": "Spring Framework Reference",
+      "url": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 Spring 버전과 현재 reference의 차이를 적용 전에 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-031",
+      "title": "Spring Framework Reference",
+      "url": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 Spring 버전과 현재 reference의 차이를 적용 전에 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-032",
+      "title": "Spring Framework Reference",
+      "url": "https://docs.spring.io/spring-framework/reference/web/webmvc.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 Spring 버전과 현재 reference의 차이를 적용 전에 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-033",
+      "title": "BMC Control-M Documentation",
+      "url": "https://documents.bmc.com/supportu/controlm-saas/en-US/Documentation/API_Intro.htm",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "구버전 condition과 현재 event 용어 차이를 운영 Control-M 버전에서 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-034",
+      "title": "BMC Control-M Documentation",
+      "url": "https://documents.bmc.com/supportu/controlm-saas/en-US/Documentation/Events.htm",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "구버전 condition과 현재 event 용어 차이를 운영 Control-M 버전에서 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-035",
+      "title": "Official or Direct Reference",
+      "url": "https://github.com/pgvector/pgvector",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-036",
+      "title": "Retrieval and Spacing Research",
+      "url": "https://journals.sagepub.com/doi/10.1111/j.1467-9280.2008.02209.x",
+      "authority": "peer-reviewed-direct",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-037",
+      "title": "Apache Kafka Documentation",
+      "url": "https://kafka.apache.org/42/configuration/consumer-configs/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "ordering과 idempotence 조건은 운영 broker/client 버전의 producer config로 다시 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-038",
+      "title": "Apache Kafka Documentation",
+      "url": "https://kafka.apache.org/42/configuration/producer-configs/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "ordering과 idempotence 조건은 운영 broker/client 버전의 producer config로 다시 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-039",
+      "title": "Apache Kafka Documentation",
+      "url": "https://kafka.apache.org/42/getting-started/introduction/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "ordering과 idempotence 조건은 운영 broker/client 버전의 producer config로 다시 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-040",
+      "title": "Kubernetes Documentation",
+      "url": "https://kubernetes.io/docs/concepts/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-041",
+      "title": "Official or Direct Reference",
+      "url": "https://martinfowler.com/eaaDev/EventSourcing.html",
+      "authority": "authoritative-secondary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-042",
+      "title": "Official or Direct Reference",
+      "url": "https://microservices.io/patterns/data/transactional-outbox.html",
+      "authority": "authoritative-secondary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-043",
+      "title": "Nginx Documentation",
+      "url": "https://nginx.org/en/docs/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-044",
+      "title": "Nginx Documentation",
+      "url": "https://nginx.org/en/docs/http/ngx_http_proxy_module.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-045",
+      "title": "OWASP Guidance",
+      "url": "https://owasp.org/www-project-top-ten/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-046",
+      "title": "Official or Direct Reference",
+      "url": "https://platform.openai.com/docs/guides/embeddings",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-047",
+      "title": "Redis Documentation",
+      "url": "https://redis.io/docs/latest/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-048",
+      "title": "Google SRE Book",
+      "url": "https://sre.google/sre-book/handling-overload/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-049",
+      "title": "Google SRE Book",
+      "url": "https://sre.google/sre-book/monitoring-distributed-systems/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-050",
+      "title": "Google SRE Book",
+      "url": "https://sre.google/sre-book/postmortem-culture/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-051",
+      "title": "Google SRE Book",
+      "url": "https://sre.google/sre-book/service-level-objectives/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-052",
+      "title": "Google SRE Book",
+      "url": "https://sre.google/sre-book/table-of-contents/",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-053",
+      "title": "Official or Direct Reference",
+      "url": "https://www.postgresql.org/docs/current/transaction-iso.html",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-054",
+      "title": "Retrieval and Spacing Research",
+      "url": "https://www.psychologicalscience.org/journals/psychological-science/j.1467-9280.2006.01693.x/",
+      "authority": "peer-reviewed-direct",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "SRC-055",
+      "title": "Official or Direct Reference",
+      "url": "https://www.rfc-editor.org/rfc/rfc9110",
+      "authority": "official-primary",
+      "currentStudyVersion": "official-current-at-review",
+      "legacyOperationalNote": "운영 버전이 다르면 해당 버전 문서를 함께 확인한다.",
+      "checkedAt": "2026-08-26",
+      "reviewStatus": "reviewed"
+    }
+  ]
+}

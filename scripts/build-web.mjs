@@ -12,7 +12,8 @@ const releaseMode = process.argv.slice(2).includes('--release');
 const baseAssets = [
   'index.html', 'styles.css', 'learning-os.css', 'questions.js', 'question-expander.js',
   'ax-question-extension.js', 'learning-os-data.js', 'atlas-content.js', 'curriculum-data.js', 'developer-guide-data.js', 'learning-visuals.js', 'app.js', 'learning-os.js',
-  'manifest.webmanifest', 'sw.js', 'assets/backend-atlas-icon.png'
+  'manifest.webmanifest', 'sw.js', 'assets/backend-atlas-icon.png',
+  'docs/backend-study/Backend-Atlas-백엔드-실무-학습-32일.pdf'
 ];
 const listFiles = async directory => {
   const absolute = resolve(root, directory);
@@ -23,7 +24,13 @@ const listFiles = async directory => {
   }));
   return nested.flat();
 };
-const assets = [...baseAssets, ...(await listFiles('interview')), ...(await listFiles('data/interview'))]
+const assets = [
+  ...baseAssets,
+  ...(await listFiles('interview')),
+  ...(await listFiles('data/interview')),
+  ...(await listFiles('backend-study')),
+  ...(await listFiles('data/backend-study'))
+]
   .map(file => file.replaceAll('\\', '/')).sort();
 
 const sha256 = value => createHash('sha256').update(value).digest('hex');

@@ -35,6 +35,9 @@ AX·Backend 엔지니어가 기술을 외우는 데서 그치지 않고 원리�
 - 질문 우선 → 답변 → 자가 평가 → 20초·90초 기준 답안 → 꼬리질문 → 복습일의 면접 학습 흐름
 - Incruit Atlas `/learn/?mode=interview&job=<id>&topic=<role>` 맞춤 질문팩 handoff와 안전한 공통 fallback
 - private profile JSON의 session-only import, 답변 원문의 명시적 opt-in 로컬 저장, D-Day Top 30 인쇄
+- 별도 `/learn/backend-study/`에서 제공하는 21챕터·32일 백엔드 실무 학습
+- 매 DAY의 개념 → Worked Example → 안내 실습 → 독립 실습 → 증거 검증 → 회상 평가 → 간격 복습
+- 하나의 `data/backend-study/` 정규화 소스에서 웹·192문항 평가·32개 실습·인쇄용 PDF 생성
 
 학습 내용은 Oracle·Spring·PostgreSQL 등 공식 문서와 공개 기술 면접 자료의 주제 범위를 참고해 독자적으로 재구성했습니다. 원문 문장을 복제하지 않으며 앱 안에서 원본과 공식 문서 링크를 함께 제공합니다.
 
@@ -55,6 +58,8 @@ Backend-Atlas/
 ├─ learning-os.js             # 검색·Why·지식 그래프 UI
 ├─ interview/                 # Interview Lab UI·상태·채점·import·router 모듈
 ├─ data/interview/            # job/source/fact/질문팩/품질 계약
+├─ backend-study/             # 백엔드 실무 학습 독립 페이지·상태·런타임
+├─ data/backend-study/        # 21챕터·32일·실습·평가·출처 canonical source
 ├─ atlas-content.js           # 심층 챕터·TOP20·강화 메타데이터
 ├─ curriculum-data.js        # 공식 문서 기반 커리큘럼·비교·품질 문제
 ├─ developer-guide-data.js   # 세 프로젝트 architecture와 기술 딥링크
@@ -75,6 +80,8 @@ npm install
 npm test
 npm run quality:audit
 npm run test:interview
+npm run test:backend-study
+npm run backend-study:audit
 npm run build
 npx serve . -l 4173
 ```
@@ -114,6 +121,7 @@ cd android
 | 기능명 | Interview Lab |
 | GitHub repository | Backend-Atlas |
 | OCI/Nginx 공개 경로 | `/learn/` |
+| 백엔드 실무 학습 | `/learn/backend-study/` |
 | 기존 호환 경로 | `/run/` → `/learn/` |
 | Incruit handoff | `/learn/?mode=interview&job=<id>&topic=<role>` |
 | Portfolio 표기 | Backend Atlas · Interview Lab |

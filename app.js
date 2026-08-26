@@ -684,6 +684,7 @@ $('wrongBtn').onclick = () => start(null, true);
 $('reviewTodayBtn').onclick = startTodayReview;
 $('weakTopicBtn').onclick = startWeakReview;
 $('interviewModeBtn').onclick = () => window.openInterviewLab?.();
+$('backendStudyBtn').onclick = () => { location.href = './backend-study/'; };
 $('axModeBtn').onclick = openAxMode;
 $('quitBtn').onclick = () => {persistQuizSession();safeBack(()=>show('homeView'));};
 $('nextBtn').onclick = next;

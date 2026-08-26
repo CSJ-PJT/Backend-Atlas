@@ -1,0 +1,3815 @@
+{
+  "schemaVersion": 1,
+  "title": "백엔드 실무 학습",
+  "publicBoundary": "범용 Java, Spring, Database, Batch, Messaging, Distributed Systems, System Design 학습만 포함한다.",
+  "sourceDocument": {
+    "title": "백엔드 실무 역량 학습 가이드",
+    "pages": 141,
+    "role": "migration-seed",
+    "runtimeParsed": false
+  },
+  "learningFlow": [
+    "learn",
+    "worked-example",
+    "guided-practice",
+    "independent-practice",
+    "verify",
+    "quiz-explain",
+    "weakness",
+    "spaced-review"
+  ],
+  "chapters": [
+    {
+      "id": "CH01",
+      "order": 1,
+      "title": "학습 환경과 문제 해결 루틴",
+      "dayIds": [
+        "D01"
+      ]
+    },
+    {
+      "id": "CH02",
+      "order": 2,
+      "title": "복잡도·자료구조·Java 객체 모델",
+      "dayIds": [
+        "D02",
+        "D03"
+      ]
+    },
+    {
+      "id": "CH03",
+      "order": 3,
+      "title": "OS·JVM·Java 동시성",
+      "dayIds": [
+        "D04",
+        "D05"
+      ]
+    },
+    {
+      "id": "CH04",
+      "order": 4,
+      "title": "네트워크와 Web Infra",
+      "dayIds": [
+        "D06",
+        "D07"
+      ]
+    },
+    {
+      "id": "CH05",
+      "order": 5,
+      "title": "Spring Container와 Web Runtime",
+      "dayIds": [
+        "D08",
+        "D09"
+      ]
+    },
+    {
+      "id": "CH06",
+      "order": 6,
+      "title": "Spring Transaction과 DB 동시성",
+      "dayIds": [
+        "D10",
+        "D11"
+      ]
+    },
+    {
+      "id": "CH07",
+      "order": 7,
+      "title": "SQL·실행계획·Oracle Partition",
+      "dayIds": [
+        "D12",
+        "D13"
+      ]
+    },
+    {
+      "id": "CH08",
+      "order": 8,
+      "title": "Spring Batch와 대외 연계",
+      "dayIds": [
+        "D14",
+        "D15"
+      ]
+    },
+    {
+      "id": "CH09",
+      "order": 9,
+      "title": "Array·String·Hash·Two Pointer",
+      "dayIds": [
+        "D16"
+      ]
+    },
+    {
+      "id": "CH10",
+      "order": 10,
+      "title": "Stack·Queue·Heap·Sort",
+      "dayIds": [
+        "D17"
+      ]
+    },
+    {
+      "id": "CH11",
+      "order": 11,
+      "title": "Binary Search·Greedy·Prefix",
+      "dayIds": [
+        "D18"
+      ]
+    },
+    {
+      "id": "CH12",
+      "order": 12,
+      "title": "Graph·Union-Find",
+      "dayIds": [
+        "D19"
+      ]
+    },
+    {
+      "id": "CH13",
+      "order": 13,
+      "title": "DP·Backtracking",
+      "dayIds": [
+        "D20"
+      ]
+    },
+    {
+      "id": "CH14",
+      "order": 14,
+      "title": "SQL 심화·Java 구현 품질·통합 코딩",
+      "dayIds": [
+        "D21",
+        "D22"
+      ]
+    },
+    {
+      "id": "CH15",
+      "order": 15,
+      "title": "분산 실패 처리",
+      "dayIds": [
+        "D23"
+      ]
+    },
+    {
+      "id": "CH16",
+      "order": 16,
+      "title": "Kafka Architecture와 Reliability",
+      "dayIds": [
+        "D24",
+        "D25"
+      ]
+    },
+    {
+      "id": "CH17",
+      "order": 17,
+      "title": "결제·정산·대사·원장",
+      "dayIds": [
+        "D26"
+      ]
+    },
+    {
+      "id": "CH18",
+      "order": 18,
+      "title": "System Design",
+      "dayIds": [
+        "D27"
+      ]
+    },
+    {
+      "id": "CH19",
+      "order": 19,
+      "title": "JPA·Redis·Container·Kubernetes·Security",
+      "dayIds": [
+        "D28"
+      ]
+    },
+    {
+      "id": "CH20",
+      "order": 20,
+      "title": "AI/RAG를 사용하는 백엔드",
+      "dayIds": [
+        "D29"
+      ]
+    },
+    {
+      "id": "CH21",
+      "order": 21,
+      "title": "실무 사례 분석·통합 평가·회상",
+      "dayIds": [
+        "D30",
+        "D31",
+        "D32"
+      ]
+    }
+  ],
+  "days": [
+    {
+      "id": "D01",
+      "day": 1,
+      "chapterId": "CH01",
+      "title": "학습 환경과 백엔드 시스템 관찰법",
+      "purpose": "학습 환경과 백엔드 시스템 관찰법 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 JDK의 정의와 내부 동작을 설명합니다.",
+        "학습 환경과 백엔드 시스템 관찰법에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "명령행 기본 사용",
+        "텍스트 파일 작성"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: JDK, PATH, stdout/stderr.",
+        "학습 환경과 백엔드 시스템 관찰법의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "JDK",
+        "PATH",
+        "stdout/stderr",
+        "exit code",
+        "baseline",
+        "log",
+        "metric",
+        "trace"
+      ],
+      "learn": {
+        "definition": "같은 실험을 다시 실행할 수 있도록 JDK/OS/환경변수/포트/입력/명령/예상출력을 고정한다.",
+        "why": "학습 환경과 백엔드 시스템 관찰법 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "같은 실험을 다시 실행할 수 있도록 JDK/OS/환경변수/포트/입력/명령/예상출력을 고정한다. 로그는 사건의 문맥, 메트릭은 시간에 따른 수치, 트레이스는 여러 컴포넌트의 요청 경로를 보여준다.",
+        "choiceCriteria": "컨테이너로 모든 환경을 즉시 숨기기보다 초반에는 실제 환경 차이를 눈으로 확인하는 편이 원인 분석 훈련에 유리하다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "JDK와 PATH의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "컨테이너로 모든 환경을 즉시 숨기기보다 초반에는 실제 환경 차이를 눈으로 확인하는 편이 원인 분석 훈련에 유리하다."
+        ],
+        "failureConditions": [
+          "환경 차이를 확인하지 않고 코드를 먼저 수정하면 재현되지 않는 문제를 만들기 쉽다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "두 PC에서 같은 Java 프로그램의 출력이 다르다. JDK, timezone, locale, 파일 인코딩부터 비교한다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: 환경 차이를 확인하지 않고 코드를 먼저 수정하면 재현되지 않는 문제를 만들기 쉽다."
+        ],
+        "action": "환경 정보를 README에 고정하고 동일 명령을 새 terminal에서 다시 실행해 결과를 검증한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "컨테이너로 모든 환경을 즉시 숨기기보다 초반에는 실제 환경 차이를 눈으로 확인하는 편이 원인 분석 훈련에 유리하다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D01-P01"
+      ],
+      "independentPracticeIds": [
+        "D01-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D01-Q01",
+        "D01-Q02",
+        "D01-Q03",
+        "D01-Q04",
+        "D01-Q05",
+        "D01-Q06"
+      ],
+      "weaknessTags": [
+        "JDK",
+        "PATH",
+        "stdout/stderr",
+        "exit code"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-011",
+        "SRC-004"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D02",
+      "day": 2,
+      "chapterId": "CH02",
+      "title": "복잡도와 자료구조",
+      "purpose": "복잡도와 자료구조 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 Big-O의 정의와 내부 동작을 설명합니다.",
+        "복잡도와 자료구조에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D01 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: Big-O, amortized, ArrayList.",
+        "복잡도와 자료구조의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "Big-O",
+        "amortized",
+        "ArrayList",
+        "LinkedList",
+        "HashMap",
+        "collision",
+        "Deque",
+        "LRU"
+      ],
+      "learn": {
+        "definition": "Big-O는 초 단위 속도가 아니라 입력 크기가 커질 때 연산량의 증가 형태를 설명한다.",
+        "why": "복잡도와 자료구조 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "Big-O는 초 단위 속도가 아니라 입력 크기가 커질 때 연산량의 증가 형태를 설명한다. HashMap은 hashCode로 bucket 후보를 좁힌 뒤 equals로 동등성을 확인하고, ArrayList는 연속 배열 기반이라 조회/순회가 유리하다.",
+        "choiceCriteria": "O(1)이라도 상수 비용과 메모리 접근이 비쌀 수 있고, LinkedList는 삽입 이점보다 탐색/객체 오버헤드가 더 클 수 있다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "Big-O와 amortized의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "O(1)이라도 상수 비용과 메모리 접근이 비쌀 수 있고, LinkedList는 삽입 이점보다 탐색/객체 오버헤드가 더 클 수 있다."
+        ],
+        "failureConditions": [
+          "mutable key를 HashMap에 넣은 뒤 equality에 영향을 주는 값을 바꾸면 기존 bucket에서 찾지 못할 수 있다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "요청 ID 빈도 집계가 List 선형 검색 반복으로 느리다. 키 조회 요구를 HashMap 누적으로 바꾼다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: mutable key를 HashMap에 넣은 뒤 equality에 영향을 주는 값을 바꾸면 기존 bucket에서 찾지 못할 수 있다."
+        ],
+        "action": "brute force와 HashMap 결과를 같은 입력으로 비교하고 N 증가에 따른 시간을 참고 수준으로 측정한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "O(1)이라도 상수 비용과 메모리 접근이 비쌀 수 있고, LinkedList는 삽입 이점보다 탐색/객체 오버헤드가 더 클 수 있다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D02-P01"
+      ],
+      "independentPracticeIds": [
+        "D02-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D02-Q01",
+        "D02-Q02",
+        "D02-Q03",
+        "D02-Q04",
+        "D02-Q05",
+        "D02-Q06"
+      ],
+      "weaknessTags": [
+        "Big-O",
+        "amortized",
+        "ArrayList",
+        "LinkedList"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-016",
+        "SRC-017"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D03",
+      "day": 3,
+      "chapterId": "CH02",
+      "title": "Java 객체 모델과 API 계약",
+      "purpose": "Java 객체 모델과 API 계약 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 identity의 정의와 내부 동작을 설명합니다.",
+        "Java 객체 모델과 API 계약에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D02 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: identity, equality, immutable.",
+        "Java 객체 모델과 API 계약의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "identity",
+        "equality",
+        "immutable",
+        "generic",
+        "PECS",
+        "checked/unchecked exception",
+        "Stream"
+      ],
+      "learn": {
+        "definition": "identity와 equality를 구분하고 equals를 재정의할 때 hashCode도 같은 동등성 기준을 사용한다.",
+        "why": "Java 객체 모델과 API 계약 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "identity와 equality를 구분하고 equals를 재정의할 때 hashCode도 같은 동등성 기준을 사용한다. 불변 객체는 공유와 캐시 key에 유리하고 제네릭은 컴파일 시 타입 안전성을 높인다.",
+        "choiceCriteria": "불변성은 복사 비용을 만들 수 있고 복잡한 wildcard는 API 가독성을 낮출 수 있다. Stream과 loop는 선언성, 할당, 예외 처리, 디버깅을 기준으로 선택한다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "identity와 equality의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "불변성은 복사 비용을 만들 수 있고 복잡한 wildcard는 API 가독성을 낮출 수 있다. Stream과 loop는 선언성, 할당, 예외 처리, 디버깅을 기준으로 선택한다."
+        ],
+        "failureConditions": [
+          "내부 예외를 그대로 외부에 노출하거나 같은 stack trace를 여러 계층에서 중복 기록하면 운영 로그의 신호 대 잡음 비율이 떨어진다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "Money 값 객체의 amount/currency 비교 규칙이 여러 호출부에 중복되어 결과가 달라진다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: 내부 예외를 그대로 외부에 노출하거나 같은 stack trace를 여러 계층에서 중복 기록하면 운영 로그의 신호 대 잡음 비율이 떨어진다."
+        ],
+        "action": "불변 값 객체에 생성 검증과 equality를 모으고 테스트로 계약을 고정한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "불변성은 복사 비용을 만들 수 있고 복잡한 wildcard는 API 가독성을 낮출 수 있다. Stream과 loop는 선언성, 할당, 예외 처리, 디버깅을 기준으로 선택한다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D03-P01"
+      ],
+      "independentPracticeIds": [
+        "D03-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D03-Q01",
+        "D03-Q02",
+        "D03-Q03",
+        "D03-Q04",
+        "D03-Q05",
+        "D03-Q06"
+      ],
+      "weaknessTags": [
+        "identity",
+        "equality",
+        "immutable",
+        "generic"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-013"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D04",
+      "day": 4,
+      "chapterId": "CH03",
+      "title": "OS·Process·Thread·JVM",
+      "purpose": "OS·Process·Thread·JVM 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 process의 정의와 내부 동작을 설명합니다.",
+        "OS·Process·Thread·JVM에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D03 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: process, thread, context switch.",
+        "OS·Process·Thread·JVM의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "process",
+        "thread",
+        "context switch",
+        "virtual memory",
+        "stack",
+        "heap",
+        "metaspace",
+        "class loading",
+        "GC",
+        "STW"
+      ],
+      "learn": {
+        "definition": "프로세스는 독립 주소공간을 갖고 같은 프로세스의 스레드는 heap과 여러 자원을 공유하면서 각자 stack과 실행 상태를 가진다.",
+        "why": "OS·Process·Thread·JVM 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "프로세스는 독립 주소공간을 갖고 같은 프로세스의 스레드는 heap과 여러 자원을 공유하면서 각자 stack과 실행 상태를 가진다. JVM은 class loading과 heap/stack/metaspace를 관리하고 GC는 도달 불가능 객체를 회수한다.",
+        "choiceCriteria": "스레드를 늘리면 context switch와 공유 자원 경쟁이 늘 수 있다. GC pause만 줄이는 것보다 allocation rate 와 live set을 먼저 본다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "process와 thread의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "스레드를 늘리면 context switch와 공유 자원 경쟁이 늘 수 있다. GC pause만 줄이는 것보다 allocation rate 와 live set을 먼저 본다."
+        ],
+        "failureConditions": [
+          "CPU가 낮아도 외부 I/O, DB connection 또는 lock 대기로 요청이 쌓일 수 있다."
+        ],
+        "observe": [
+          "thread dump·JFR·pool state",
+          "queue·active count·rejection",
+          "CPU·blocking I/O 구분"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "응답 지연 중 CPU는 낮고 Thread dump에서 worker들이 connection 획득을 기다린다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "thread dump·JFR·pool state",
+          "queue·active count·rejection",
+          "CPU·blocking I/O 구분"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: CPU가 낮아도 외부 I/O, DB connection 또는 lock 대기로 요청이 쌓일 수 있다."
+        ],
+        "action": "worker 수만 늘리지 않고 thread state, connection pool, 외부 timeout의 균형을 조정한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "스레드를 늘리면 context switch와 공유 자원 경쟁이 늘 수 있다. GC pause만 줄이는 것보다 allocation rate 와 live set을 먼저 본다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D04-P01"
+      ],
+      "independentPracticeIds": [
+        "D04-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D04-Q01",
+        "D04-Q02",
+        "D04-Q03",
+        "D04-Q04",
+        "D04-Q05",
+        "D04-Q06"
+      ],
+      "weaknessTags": [
+        "process",
+        "thread",
+        "context switch",
+        "virtual memory"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-022",
+        "SRC-021"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D05",
+      "day": 5,
+      "chapterId": "CH03",
+      "title": "Java 동시성과 실행자",
+      "purpose": "Java 동시성과 실행자 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 JMM의 정의와 내부 동작을 설명합니다.",
+        "Java 동시성과 실행자에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D04 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: JMM, happens-before, volatile.",
+        "Java 동시성과 실행자의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "JMM",
+        "happens-before",
+        "volatile",
+        "synchronized",
+        "Atomic",
+        "CAS",
+        "ThreadPoolExecutor",
+        "queue",
+        "rejection",
+        "Virtual Thread"
+      ],
+      "learn": {
+        "definition": "JMM은 visibility/atomicity/ordering 규칙을 정의한다.",
+        "why": "Java 동시성과 실행자 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "JMM은 visibility/atomicity/ordering 규칙을 정의한다. volatile은 visibility와 일부 ordering을 돕지만 count++ 전체의 atomicity를 보장하지 않고, synchronized는 상호 배제와 happens-before를 제공한다. ThreadPoolExecutor는 core→queue→max→rejection을 함께 이해해야 한다.",
+        "choiceCriteria": "worker 수가 downstream capacity보다 많으면 처리량보다 대기만 늘 수 있다. Virtual Thread는 blocking I/O 동시성에 유리하지만 CPU 작업과 DB connection 제한을 없애지 않는다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "JMM와 happens-before의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "worker 수가 downstream capacity보다 많으면 처리량보다 대기만 늘 수 있다. Virtual Thread는 blocking I/O 동시성에 유리하지만 CPU 작업과 DB connection 제한을 없애지 않는다."
+        ],
+        "failureConditions": [
+          "unbounded queue는 maximumPoolSize 확장을 사실상 사용하지 못하게 만들 수 있고 대기 task가 메모 리를 압박할 수 있다."
+        ],
+        "observe": [
+          "thread dump·JFR·pool state",
+          "queue·active count·rejection",
+          "CPU·blocking I/O 구분"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "worker 100개인데 DB pool 20개라 connection wait만 증가한다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "thread dump·JFR·pool state",
+          "queue·active count·rejection",
+          "CPU·blocking I/O 구분"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: unbounded queue는 maximumPoolSize 확장을 사실상 사용하지 못하게 만들 수 있고 대기 task가 메모 리를 압박할 수 있다."
+        ],
+        "action": "worker/queue/pool을 전체 capacity로 맞추고 timeout/backpressure를 함께 둔다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "worker 수가 downstream capacity보다 많으면 처리량보다 대기만 늘 수 있다. Virtual Thread는 blocking I/O 동시성에 유리하지만 CPU 작업과 DB connection 제한을 없애지 않는다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D05-P01"
+      ],
+      "independentPracticeIds": [
+        "D05-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D05-Q01",
+        "D05-Q02",
+        "D05-Q03",
+        "D05-Q04",
+        "D05-Q05",
+        "D05-Q06"
+      ],
+      "weaknessTags": [
+        "JMM",
+        "happens-before",
+        "volatile",
+        "synchronized"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-012",
+        "SRC-019"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D06",
+      "day": 6,
+      "chapterId": "CH04",
+      "title": "DNS·TCP·TLS·HTTP",
+      "purpose": "DNS·TCP·TLS·HTTP 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 DNS의 정의와 내부 동작을 설명합니다.",
+        "DNS·TCP·TLS·HTTP에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D05 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: DNS, TCP handshake, TLS.",
+        "DNS·TCP·TLS·HTTP의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "DNS",
+        "TCP handshake",
+        "TLS",
+        "keep-alive",
+        "connect/read timeout",
+        "method",
+        "status",
+        "idempotency"
+      ],
+      "learn": {
+        "definition": "URL 호출은 DNS→TCP→TLS→HTTP 순서의 여러 경계를 지나며 각 단계의 실패 증상이 다르다.",
+        "why": "DNS·TCP·TLS·HTTP 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "URL 호출은 DNS→TCP→TLS→HTTP 순서의 여러 경계를 지나며 각 단계의 실패 증상이 다르다. TCP는 byte stream이고 HTTP method 의미와 멱등성은 retry 설계와 연결된다.",
+        "choiceCriteria": "keep-alive는 handshake 비용을 줄이지만 stale connection 관리가 필요하다. timeout은 DNS/connect/acquire/read 등 계층별로 budget을 나눈다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "DNS와 TCP handshake의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "keep-alive는 handshake 비용을 줄이지만 stale connection 관리가 필요하다. timeout은 DNS/connect/acquire/read 등 계층별로 budget을 나눈다."
+        ],
+        "failureConditions": [
+          "“timeout” 한 단어만 로그에 남기면 연결 실패인지 응답 지연인지 구분하기 어렵다."
+        ],
+        "observe": [
+          "DNS·connect·TLS·HTTP 단계별 시간",
+          "status와 upstream log",
+          "timeout budget"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "외부 API가 30초 후 실패하지만 connect/read 구분이 없다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "DNS·connect·TLS·HTTP 단계별 시간",
+          "status와 upstream log",
+          "timeout budget"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: “timeout” 한 단어만 로그에 남기면 연결 실패인지 응답 지연인지 구분하기 어렵다."
+        ],
+        "action": "curl -v와 단계별 timeout을 사용하고 멱등한 경우에만 bounded retry를 설계한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "keep-alive는 handshake 비용을 줄이지만 stale connection 관리가 필요하다. timeout은 DNS/connect/acquire/read 등 계층별로 budget을 나눈다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D06-P01"
+      ],
+      "independentPracticeIds": [
+        "D06-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D06-Q01",
+        "D06-Q02",
+        "D06-Q03",
+        "D06-Q04",
+        "D06-Q05",
+        "D06-Q06"
+      ],
+      "weaknessTags": [
+        "DNS",
+        "TCP handshake",
+        "TLS",
+        "keep-alive"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-055",
+        "SRC-002"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D07",
+      "day": 7,
+      "chapterId": "CH04",
+      "title": "Nginx·Reverse Proxy·Load Balancer·Timeout",
+      "purpose": "Nginx·Reverse Proxy·Load Balancer·Timeout 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 reverse proxy의 정의와 내부 동작을 설명합니다.",
+        "Nginx·Reverse Proxy·Load Balancer·Timeout에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D06 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: reverse proxy, upstream, proxy_pass.",
+        "Nginx·Reverse Proxy·Load Balancer·Timeout의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "reverse proxy",
+        "upstream",
+        "proxy_pass",
+        "load balancing",
+        "X-Forwarded-For",
+        "502",
+        "504",
+        "access/error log"
+      ],
+      "learn": {
+        "definition": "Reverse proxy는 TLS 종료, 라우팅, 정적 파일, header 전달, load balancing을 담당할 수 있다.",
+        "why": "Nginx·Reverse Proxy·Load Balancer·Timeout 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "Reverse proxy는 TLS 종료, 라우팅, 정적 파일, header 전달, load balancing을 담당할 수 있다. access log와 error log를 함께 보 고 request_time과 upstream_response_time을 분리하면 병목 계층을 좁히기 쉽다.",
+        "choiceCriteria": "proxy timeout을 무작정 크게 하면 장애를 감추고 socket/worker를 오래 점유한다. forwarded header는 신뢰할 proxy 경계에서만 믿는다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "reverse proxy와 upstream의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "proxy timeout을 무작정 크게 하면 장애를 감추고 socket/worker를 오래 점유한다. forwarded header는 신뢰할 proxy 경계에서만 믿는다."
+        ],
+        "failureConditions": [
+          "upstream port가 틀리거나 SELinux/권한/방화벽 문제면 application log에 요청이 없는데 502가 발생할 수 있다."
+        ],
+        "observe": [
+          "DNS·connect·TLS·HTTP 단계별 시간",
+          "status와 upstream log",
+          "timeout budget"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "사용자는 502를 받지만 애플리케이션에는 요청 로그가 없다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "DNS·connect·TLS·HTTP 단계별 시간",
+          "status와 upstream log",
+          "timeout budget"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: upstream port가 틀리거나 SELinux/권한/방화벽 문제면 application log에 요청이 없는데 502가 발생할 수 있다."
+        ],
+        "action": "Nginx error log와 실제 upstream listen port를 확인하고 nginx -t 후 reload한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "proxy timeout을 무작정 크게 하면 장애를 감추고 socket/worker를 오래 점유한다. forwarded header는 신뢰할 proxy 경계에서만 믿는다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D07-P01"
+      ],
+      "independentPracticeIds": [
+        "D07-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D07-Q01",
+        "D07-Q02",
+        "D07-Q03",
+        "D07-Q04",
+        "D07-Q05",
+        "D07-Q06"
+      ],
+      "weaknessTags": [
+        "reverse proxy",
+        "upstream",
+        "proxy_pass",
+        "load balancing"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-043",
+        "SRC-044"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D08",
+      "day": 8,
+      "chapterId": "CH05",
+      "title": "Spring IoC·DI·Bean Lifecycle",
+      "purpose": "Spring IoC·DI·Bean Lifecycle 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 IoC의 정의와 내부 동작을 설명합니다.",
+        "Spring IoC·DI·Bean Lifecycle에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D07 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: IoC, DI, ApplicationContext.",
+        "Spring IoC·DI·Bean Lifecycle의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "IoC",
+        "DI",
+        "ApplicationContext",
+        "BeanDefinition",
+        "BeanPostProcessor",
+        "lifecycle",
+        "scope",
+        "constructor injection"
+      ],
+      "learn": {
+        "definition": "IoC는 객체 생성/조립/생명주기의 제어권을 container가 갖는 큰 원칙이고 DI는 의존성을 외부에서 제공하는 방식이다.",
+        "why": "Spring IoC·DI·Bean Lifecycle 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "IoC는 객체 생성/조립/생명주기의 제어권을 container가 갖는 큰 원칙이고 DI는 의존성을 외부에서 제공하는 방식이다. ApplicationContext는 BeanDefinition을 읽고 bean을 만들며 후처리기를 적용한다.",
+        "choiceCriteria": "생성자 주입은 필수 의존성과 테스트를 명확히 하지만 순환참조가 보이면 주입 방식보다 책임 분리를 먼저 본다. singleton은 공유 인스턴스이므로 request state를 필드에 저장하지 않는다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "IoC와 DI의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "생성자 주입은 필수 의존성과 테스트를 명확히 하지만 순환참조가 보이면 주입 방식보다 책임 분리를 먼저 본다. singleton은 공유 인스턴스이므로 request state를 필드에 저장하지 않는다."
+        ],
+        "failureConditions": [
+          "singleton service의 mutable field는 동시 요청에서 값이 섞일 수 있다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "currentUserId를 service field에 저장해 사용자 정보가 다른 요청과 섞인다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: singleton service의 mutable field는 동시 요청에서 값이 섞일 수 있다."
+        ],
+        "action": "method local/parameter로 상태를 이동하고 bean을 stateless하게 만든다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "생성자 주입은 필수 의존성과 테스트를 명확히 하지만 순환참조가 보이면 주입 방식보다 책임 분리를 먼저 본다. singleton은 공유 인스턴스이므로 request state를 필드에 저장하지 않는다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D08-P01"
+      ],
+      "independentPracticeIds": [
+        "D08-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D08-Q01",
+        "D08-Q02",
+        "D08-Q03",
+        "D08-Q04",
+        "D08-Q05",
+        "D08-Q06"
+      ],
+      "weaknessTags": [
+        "IoC",
+        "DI",
+        "ApplicationContext",
+        "BeanDefinition"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-029"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D09",
+      "day": 9,
+      "chapterId": "CH05",
+      "title": "Spring AOP·Proxy·MVC·Validation·Exception",
+      "purpose": "Spring AOP·Proxy·MVC·Validation·Exception 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 AOP의 정의와 내부 동작을 설명합니다.",
+        "Spring AOP·Proxy·MVC·Validation·Exception에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D08 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: AOP, proxy, advice.",
+        "Spring AOP·Proxy·MVC·Validation·Exception의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "AOP",
+        "proxy",
+        "advice",
+        "pointcut",
+        "DispatcherServlet",
+        "HandlerMapping",
+        "validation",
+        "ControllerAdvice"
+      ],
+      "learn": {
+        "definition": "Spring AOP는 target 앞의 proxy가 method 호출을 가로채 공통 관심사를 적용한다.",
+        "why": "Spring AOP·Proxy·MVC·Validation·Exception 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "Spring AOP는 target 앞의 proxy가 method 호출을 가로채 공통 관심사를 적용한다. MVC는 DispatcherServlet에서 handler mapping/adapter, argument resolver, validation, message converter, exception resolver 를 거쳐 응답을 만든다.",
+        "choiceCriteria": "AOP는 cross-cutting concern에 제한하고 business branching까지 숨기지 않는다. validation은 입력 형 식과 business rule의 책임 위치를 구분한다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "AOP와 proxy의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "AOP는 cross-cutting concern에 제한하고 business branching까지 숨기지 않는다. validation은 입력 형 식과 business rule의 책임 위치를 구분한다."
+        ],
+        "failureConditions": [
+          "내부 stack trace와 SQL 메시지를 client response에 노출하면 보안·운영 문제가 된다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "Controller에 validation, logging, transaction, business logic이 모두 들어있다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: 내부 stack trace와 SQL 메시지를 client response에 노출하면 보안·운영 문제가 된다."
+        ],
+        "action": "Web 경계와 service 책임을 분리하고 ControllerAdvice로 안정적인 error contract를 만든다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "AOP는 cross-cutting concern에 제한하고 business branching까지 숨기지 않는다. validation은 입력 형 식과 business rule의 책임 위치를 구분한다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D09-P01"
+      ],
+      "independentPracticeIds": [
+        "D09-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D09-Q01",
+        "D09-Q02",
+        "D09-Q03",
+        "D09-Q04",
+        "D09-Q05",
+        "D09-Q06"
+      ],
+      "weaknessTags": [
+        "AOP",
+        "proxy",
+        "advice",
+        "pointcut"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-028",
+        "SRC-032"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D10",
+      "day": 10,
+      "chapterId": "CH06",
+      "title": "Spring Transaction",
+      "purpose": "Spring Transaction 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 TransactionInterceptor의 정의와 내부 동작을 설명합니다.",
+        "Spring Transaction에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D09 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: TransactionInterceptor, PlatformTransactionManager, proxy boundary.",
+        "Spring Transaction의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "TransactionInterceptor",
+        "PlatformTransactionManager",
+        "proxy boundary",
+        "REQUIRED",
+        "REQUIRES_NEW",
+        "rollback",
+        "readOnly"
+      ],
+      "learn": {
+        "definition": "@Transactional은 proxy가 호출을 가로채 TransactionInterceptor와 TransactionManager를 통해 transaction을 시작/참여/종료한다.",
+        "why": "Spring Transaction 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "@Transactional은 proxy가 호출을 가로채 TransactionInterceptor와 TransactionManager를 통해 transaction을 시작/참여/종료한다. 기본 proxy mode에서 같은 객체의 self-invocation은 proxy를 통과하지 않아 interception이 빠질 수 있다.",
+        "choiceCriteria": "REQUIRES_NEW는 독립 transaction을 만들지만 connection 증가와 outer rollback/inner commit 불일치를 낳을 수 있다. transaction 안의 느린 외부 I/O는 lock과 connection 점유시간을 늘린다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "TransactionInterceptor와 PlatformTransactionManager의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "REQUIRES_NEW는 독립 transaction을 만들지만 connection 증가와 outer rollback/inner commit 불일치를 낳을 수 있다. transaction 안의 느린 외부 I/O는 lock과 connection 점유시간을 늘린다."
+        ],
+        "failureConditions": [
+          "예외를 catch하고 삼키면 transaction manager가 실패를 모른 채 commit할 수 있다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "outer()가 같은 class의 @Transactional inner()를 호출해 예상한 rollback이 발생하지 않는다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: 예외를 catch하고 삼키면 transaction manager가 실패를 모른 채 commit할 수 있다."
+        ],
+        "action": "별도 bean 경계로 책임을 분리하고 runtime/checked exception 및 propagation 결과를 테스트한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "REQUIRES_NEW는 독립 transaction을 만들지만 connection 증가와 outer rollback/inner commit 불일치를 낳을 수 있다. transaction 안의 느린 외부 I/O는 lock과 connection 점유시간을 늘린다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D10-P01"
+      ],
+      "independentPracticeIds": [
+        "D10-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D10-Q01",
+        "D10-Q02",
+        "D10-Q03",
+        "D10-Q04",
+        "D10-Q05",
+        "D10-Q06"
+      ],
+      "weaknessTags": [
+        "TransactionInterceptor",
+        "PlatformTransactionManager",
+        "proxy boundary",
+        "REQUIRED"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-030",
+        "SRC-031"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D11",
+      "day": 11,
+      "chapterId": "CH06",
+      "title": "DB Transaction·Isolation·MVCC·Lock·Deadlock",
+      "purpose": "DB Transaction·Isolation·MVCC·Lock·Deadlock 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 ACID의 정의와 내부 동작을 설명합니다.",
+        "DB Transaction·Isolation·MVCC·Lock·Deadlock에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D10 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: ACID, dirty/non-repeatable/phantom read, MVCC.",
+        "DB Transaction·Isolation·MVCC·Lock·Deadlock의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "ACID",
+        "dirty/non-repeatable/phantom read",
+        "MVCC",
+        "row lock",
+        "deadlock",
+        "optimistic locking"
+      ],
+      "learn": {
+        "definition": "Isolation은 동시성과 anomaly 사이의 trade-off이며 MVCC는 reader/writer 충돌을 줄이지만 write lock과 deadlock을 없애지 않는다.",
+        "why": "DB Transaction·Isolation·MVCC·Lock·Deadlock 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "Isolation은 동시성과 anomaly 사이의 trade-off이며 MVCC는 reader/writer 충돌을 줄이지만 write lock과 deadlock을 없애지 않는다. deadlock은 transaction들이 서로 가진 자원을 기다리는 cycle이다.",
+        "choiceCriteria": "isolation을 높이면 정합성 보장은 늘 수 있지만 concurrency 비용이 커진다. 낙관적 lock은 version mismatch를 감지하고 충돌 처리 책임을 application에 둔다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "ACID와 dirty/non-repeatable/phantom read의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "isolation을 높이면 정합성 보장은 늘 수 있지만 concurrency 비용이 커진다. 낙관적 lock은 version mismatch를 감지하고 충돌 처리 책임을 application에 둔다."
+        ],
+        "failureConditions": [
+          "오래 열린 transaction과 불일치한 lock 획득 순서는 blocking/deadlock을 만든다."
+        ],
+        "observe": [
+          "실행계획의 estimate와 실제 row",
+          "lock wait와 transaction 경계",
+          "동일 입력의 결과 집합"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "T1은 A→B, T2는 B→A 순으로 update하여 cycle이 생긴다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "실행계획의 estimate와 실제 row",
+          "lock wait와 transaction 경계",
+          "동일 입력의 결과 집합"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: 오래 열린 transaction과 불일치한 lock 획득 순서는 blocking/deadlock을 만든다."
+        ],
+        "action": "lock 획득 순서를 통일하고 transaction을 짧게 하며 transient deadlock만 bounded retry한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "isolation을 높이면 정합성 보장은 늘 수 있지만 concurrency 비용이 커진다. 낙관적 lock은 version mismatch를 감지하고 충돌 처리 책임을 application에 둔다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D11-P01"
+      ],
+      "independentPracticeIds": [
+        "D11-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D11-Q01",
+        "D11-Q02",
+        "D11-Q03",
+        "D11-Q04",
+        "D11-Q05",
+        "D11-Q06"
+      ],
+      "weaknessTags": [
+        "ACID",
+        "dirty/non-repeatable/phantom read",
+        "MVCC",
+        "row lock"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-006",
+        "SRC-053"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D12",
+      "day": 12,
+      "chapterId": "CH07",
+      "title": "SQL·Index·Execution Plan",
+      "purpose": "SQL·Index·Execution Plan 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 B-tree의 정의와 내부 동작을 설명합니다.",
+        "SQL·Index·Execution Plan에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D11 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: B-tree, selectivity, cardinality.",
+        "SQL·Index·Execution Plan의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "B-tree",
+        "selectivity",
+        "cardinality",
+        "range/full scan",
+        "nested loop",
+        "hash join",
+        "statistics",
+        "predicate"
+      ],
+      "learn": {
+        "definition": "B-tree index는 검색 범위를 줄이지만 결과 비율이 높거나 table access가 많으면 full scan이 더 유리할 수 있다.",
+        "why": "SQL·Index·Execution Plan 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "B-tree index는 검색 범위를 줄이지만 결과 비율이 높거나 table access가 많으면 full scan이 더 유리할 수 있다. 실행계획은 optimizer의 operator tree이고 예상 rows와 실제 rows의 차이는 plan 선택 오류의 중요한 단서다.",
+        "choiceCriteria": "인덱스는 write/storage 비용이 있고 복합 인덱스는 column 순서와 predicate 형태가 중요하다. hint로 계획 을 고정하기 전에 통계와 data skew를 확인한다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "B-tree와 selectivity의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "인덱스는 write/storage 비용이 있고 복합 인덱스는 column 순서와 predicate 형태가 중요하다. hint로 계획 을 고정하기 전에 통계와 data skew를 확인한다."
+        ],
+        "failureConditions": [
+          "함수/형변환 때문에 예상한 index access가 사라지거나 cardinality estimate가 틀리면 잘못된 join method가 선택될 수 있다."
+        ],
+        "observe": [
+          "실행계획의 estimate와 실제 row",
+          "lock wait와 transaction 경계",
+          "동일 입력의 결과 집합"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "기간 조회가 느려 인덱스를 추가했지만 결과가 table의 큰 비율이라 random access만 증가한다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "실행계획의 estimate와 실제 row",
+          "lock wait와 transaction 경계",
+          "동일 입력의 결과 집합"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: 함수/형변환 때문에 예상한 index access가 사라지거나 cardinality estimate가 틀리면 잘못된 join method가 선택될 수 있다."
+        ],
+        "action": "결과 건수/선택도/plan을 확인하고 query 범위, partition, 적절한 index 또는 full scan을 비교한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "인덱스는 write/storage 비용이 있고 복합 인덱스는 column 순서와 predicate 형태가 중요하다. hint로 계획 을 고정하기 전에 통계와 data skew를 확인한다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D12-P01"
+      ],
+      "independentPracticeIds": [
+        "D12-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D12-Q01",
+        "D12-Q02",
+        "D12-Q03",
+        "D12-Q04",
+        "D12-Q05",
+        "D12-Q06"
+      ],
+      "weaknessTags": [
+        "B-tree",
+        "selectivity",
+        "cardinality",
+        "range/full scan"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-009",
+        "SRC-008"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D13",
+      "day": 13,
+      "chapterId": "CH07",
+      "title": "Oracle Tuning·Partition",
+      "purpose": "Oracle Tuning·Partition 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 partition의 정의와 내부 동작을 설명합니다.",
+        "Oracle Tuning·Partition에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D12 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: partition, pruning, local/global index.",
+        "Oracle Tuning·Partition의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "partition",
+        "pruning",
+        "local/global index",
+        "bind",
+        "histogram",
+        "DBMS_XPLAN",
+        "bulk DML"
+      ],
+      "learn": {
+        "definition": "Partition은 큰 table의 성능뿐 아니라 lifecycle·관리성·가용성을 나누는 도구다.",
+        "why": "Oracle Tuning·Partition 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "Partition은 큰 table의 성능뿐 아니라 lifecycle·관리성·가용성을 나누는 도구다. partition key와 predicate가 맞으면 pruning으 로 불필요한 partition을 제외할 수 있으며 DBMS_XPLAN의 PSTART/PSTOP 같은 단서를 확인한다.",
+        "choiceCriteria": "시간 기반 데이터에서 row-by-row DELETE 대신 partition 단위 정리가 유리할 수 있지만 FK/index/archive/운영정책을 함께 본다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "partition와 pruning의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "시간 기반 데이터에서 row-by-row DELETE 대신 partition 단위 정리가 유리할 수 있지만 FK/index/archive/운영정책을 함께 본다."
+        ],
+        "failureConditions": [
+          "partition key 가공으로 pruning이 깨지거나 global index maintenance 문제가 생길 수 있다."
+        ],
+        "observe": [
+          "실행계획의 estimate와 실제 row",
+          "lock wait와 transaction 경계",
+          "동일 입력의 결과 집합"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "오래된 시간 데이터를 대량 DELETE하면서 lock/undo 부하가 증가한다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "실행계획의 estimate와 실제 row",
+          "lock wait와 transaction 경계",
+          "동일 입력의 결과 집합"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: partition key 가공으로 pruning이 깨지거나 global index maintenance 문제가 생길 수 있다."
+        ],
+        "action": "시간 partition과 lifecycle이 맞는지 검토하고 partition 단위 정리로 변경한 뒤 plan과 정합성을 검증한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "시간 기반 데이터에서 row-by-row DELETE 대신 partition 단위 정리가 유리할 수 있지만 FK/index/archive/운영정책을 함께 본다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D13-P01"
+      ],
+      "independentPracticeIds": [
+        "D13-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D13-Q01",
+        "D13-Q02",
+        "D13-Q03",
+        "D13-Q04",
+        "D13-Q05",
+        "D13-Q06"
+      ],
+      "weaknessTags": [
+        "partition",
+        "pruning",
+        "local/global index",
+        "bind"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-010",
+        "SRC-005"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D14",
+      "day": 14,
+      "chapterId": "CH08",
+      "title": "Spring Batch",
+      "purpose": "Spring Batch 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 Job의 정의와 내부 동작을 설명합니다.",
+        "Spring Batch에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D13 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: Job, Step, Chunk.",
+        "Spring Batch의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "Job",
+        "Step",
+        "Chunk",
+        "JobInstance",
+        "JobExecution",
+        "StepExecution",
+        "ExecutionContext",
+        "restart",
+        "retry",
+        "skip"
+      ],
+      "learn": {
+        "definition": "JobInstance는 논리 실행, JobExecution은 그 instance의 실제 시도이며 Chunk는 read/process/write를 commit interval 단 위 transaction으로 처리한다.",
+        "why": "Spring Batch 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "JobInstance는 논리 실행, JobExecution은 그 instance의 실제 시도이며 Chunk는 read/process/write를 commit interval 단 위 transaction으로 처리한다. restart/retry/skip은 서로 다른 복구 개념이다.",
+        "choiceCriteria": "chunk size를 키우면 round trip은 줄 수 있지만 transaction log, memory, rollback 범위가 커질 수 있다. ExecutionContext는 restart state이지 큰 business data 저장소가 아니다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "Job와 Step의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "chunk size를 키우면 round trip은 줄 수 있지만 transaction log, memory, rollback 범위가 커질 수 있다. ExecutionContext는 restart state이지 큰 business data 저장소가 아니다."
+        ],
+        "failureConditions": [
+          "retry 가능한 transient 오류와 deterministic 오류를 구분하지 않으면 무한/불필요 재시도가 생긴다."
+        ],
+        "observe": [
+          "JobInstance·Execution 상태",
+          "처리 건수와 기준일",
+          "부분 실패·재처리 기록"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "10건을 5건 chunk로 처리하다 7번째 item이 한 번 실패한다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "JobInstance·Execution 상태",
+          "처리 건수와 기준일",
+          "부분 실패·재처리 기록"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: retry 가능한 transient 오류와 deterministic 오류를 구분하지 않으면 무한/불필요 재시도가 생긴다."
+        ],
+        "action": "두 번째 chunk rollback→retry→재시작 metadata를 관찰하고 writer 중복 안전성을 확인한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "chunk size를 키우면 round trip은 줄 수 있지만 transaction log, memory, rollback 범위가 커질 수 있다. ExecutionContext는 restart state이지 큰 business data 저장소가 아니다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D14-P01"
+      ],
+      "independentPracticeIds": [
+        "D14-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D14-Q01",
+        "D14-Q02",
+        "D14-Q03",
+        "D14-Q04",
+        "D14-Q05",
+        "D14-Q06"
+      ],
+      "weaknessTags": [
+        "Job",
+        "Step",
+        "Chunk",
+        "JobInstance"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-024",
+        "SRC-026",
+        "SRC-025"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D15",
+      "day": 15,
+      "chapterId": "CH08",
+      "title": "EAI·File 연계·Control-M·정산 Batch",
+      "purpose": "EAI·File 연계·Control-M·정산 Batch 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 EAI의 정의와 내부 동작을 설명합니다.",
+        "EAI·File 연계·Control-M·정산 Batch에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D14 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: EAI, File-to-File, interface table.",
+        "EAI·File 연계·Control-M·정산 Batch의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "EAI",
+        "File-to-File",
+        "interface table",
+        "polling",
+        "predecessor/successor",
+        "event/condition",
+        "reconciliation",
+        "rerun"
+      ],
+      "learn": {
+        "definition": "대외 연계는 접속 성공→수신→형식/중복 검증→business 반영→후속 batch→송신→상대 확인 단계로 본다.",
+        "why": "EAI·File 연계·Control-M·정산 Batch 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "대외 연계는 접속 성공→수신→형식/중복 검증→business 반영→후속 batch→송신→상대 확인 단계로 본다. scheduler의 성공 상태 와 business 데이터 정합성은 별도다.",
+        "choiceCriteria": "DB-Link를 interface table/polling으로 분리하면 재처리와 상태 관리가 쉬워지지만 poison record, polling interval, retention 운영이 추가된다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "EAI와 File-to-File의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "DB-Link를 interface table/polling으로 분리하면 재처리와 상태 관리가 쉬워지지만 poison record, polling interval, retention 운영이 추가된다."
+        ],
+        "failureConditions": [
+          "partial file을 읽거나 원천 batch를 다시 돌려 이미 완료된 외부 송신까지 중복할 수 있다."
+        ],
+        "observe": [
+          "JobInstance·Execution 상태",
+          "처리 건수와 기준일",
+          "부분 실패·재처리 기록"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "원천 batch는 성공했지만 외부 송신만 실패했다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "JobInstance·Execution 상태",
+          "처리 건수와 기준일",
+          "부분 실패·재처리 기록"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: partial file을 읽거나 원천 batch를 다시 돌려 이미 완료된 외부 송신까지 중복할 수 있다."
+        ],
+        "action": "업무 결과와 delivery 상태를 분리하고 failed delivery만 같은 key로 재시도한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "DB-Link를 interface table/polling으로 분리하면 재처리와 상태 관리가 쉬워지지만 poison record, polling interval, retention 운영이 추가된다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D15-P01"
+      ],
+      "independentPracticeIds": [
+        "D15-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D15-Q01",
+        "D15-Q02",
+        "D15-Q03",
+        "D15-Q04",
+        "D15-Q05",
+        "D15-Q06"
+      ],
+      "weaknessTags": [
+        "EAI",
+        "File-to-File",
+        "interface table",
+        "polling"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-034",
+        "SRC-033"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D16",
+      "day": 16,
+      "chapterId": "CH09",
+      "title": "Array·String·Hash·Two Pointer",
+      "purpose": "Array·String·Hash·Two Pointer 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 frequency map의 정의와 내부 동작을 설명합니다.",
+        "Array·String·Hash·Two Pointer에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D15 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: frequency map, two pointer, sliding window.",
+        "Array·String·Hash·Two Pointer의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "frequency map",
+        "two pointer",
+        "sliding window",
+        "invariant",
+        "edge case",
+        "overflow"
+      ],
+      "learn": {
+        "definition": "문제를 코딩하기 전에 N, 정렬 여부, 중복, 음수, 결과 범위를 읽고 자료구조 후보를 정한다.",
+        "why": "Array·String·Hash·Two Pointer 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "문제를 코딩하기 전에 N, 정렬 여부, 중복, 음수, 결과 범위를 읽고 자료구조 후보를 정한다. two pointer/sliding window는 pointer 이 동에 사용할 단조성 또는 유지 가능한 invariant가 있을 때 적합하다.",
+        "choiceCriteria": "영문 소문자처럼 key 범위가 고정되면 배열이 Map보다 단순할 수 있고, 입력이 정렬되지 않았으면 정렬 비용과 HashMap 대안을 비교한다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "frequency map와 two pointer의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "영문 소문자처럼 key 범위가 고정되면 배열이 Map보다 단순할 수 있고, 입력이 정렬되지 않았으면 정렬 비용과 HashMap 대안을 비교한다."
+        ],
+        "failureConditions": [
+          "음수 때문에 window sum이 단조롭지 않으면 단순 sliding window가 잘못된 해를 낼 수 있다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "정렬된 배열에서 target 합 pair를 찾는다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: 음수 때문에 window sum이 단조롭지 않으면 단순 sliding window가 잘못된 해를 낼 수 있다."
+        ],
+        "action": "O(n^2) brute force를 oracle로 두고 O(n) two pointer 결과를 random input으로 비교한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "영문 소문자처럼 key 범위가 고정되면 배열이 Map보다 단순할 수 있고, 입력이 정렬되지 않았으면 정렬 비용과 HashMap 대안을 비교한다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D16-P01"
+      ],
+      "independentPracticeIds": [
+        "D16-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D16-Q01",
+        "D16-Q02",
+        "D16-Q03",
+        "D16-Q04",
+        "D16-Q05",
+        "D16-Q06"
+      ],
+      "weaknessTags": [
+        "frequency map",
+        "two pointer",
+        "sliding window",
+        "invariant"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-020"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D17",
+      "day": 17,
+      "chapterId": "CH10",
+      "title": "Stack·Queue·Heap·Sort",
+      "purpose": "Stack·Queue·Heap·Sort 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 Deque의 정의와 내부 동작을 설명합니다.",
+        "Stack·Queue·Heap·Sort에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D16 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: Deque, stack, queue.",
+        "Stack·Queue·Heap·Sort의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "Deque",
+        "stack",
+        "queue",
+        "PriorityQueue",
+        "heap",
+        "comparator",
+        "stable sort"
+      ],
+      "learn": {
+        "definition": "Deque는 stack과 queue를 모두 표현할 수 있고 PriorityQueue는 최우선 원소를 빠르게 제공하지만 전체 요소 정렬을 보장하지 않는 다.",
+        "why": "Stack·Queue·Heap·Sort 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "Deque는 stack과 queue를 모두 표현할 수 있고 PriorityQueue는 최우선 원소를 빠르게 제공하지만 전체 요소 정렬을 보장하지 않는 다. Comparator는 overflow 없이 total order를 만들어야 한다.",
+        "choiceCriteria": "상위 K처럼 K가 N보다 작고 streaming 유지가 필요하면 heap이 유리하지만 한 번 전체 결과가 필요하면 sort 가 더 단순할 수 있다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "Deque와 stack의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "상위 K처럼 K가 N보다 작고 streaming 유지가 필요하면 heap이 유리하지만 한 번 전체 결과가 필요하면 sort 가 더 단순할 수 있다."
+        ],
+        "failureConditions": [
+          "Comparator에서 a-b를 반환하면 integer overflow로 순서가 뒤집힐 수 있다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "실시간 점수 상위 K개를 유지한다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: Comparator에서 a-b를 반환하면 integer overflow로 순서가 뒤집힐 수 있다."
+        ],
+        "action": "K 크기의 min-heap을 유지하고 full sort와 N/K 변화에서 선택 기준을 비교한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "상위 K처럼 K가 N보다 작고 streaming 유지가 필요하면 heap이 유리하지만 한 번 전체 결과가 필요하면 sort 가 더 단순할 수 있다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D17-P01"
+      ],
+      "independentPracticeIds": [
+        "D17-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D17-Q01",
+        "D17-Q02",
+        "D17-Q03",
+        "D17-Q04",
+        "D17-Q05",
+        "D17-Q06"
+      ],
+      "weaknessTags": [
+        "Deque",
+        "stack",
+        "queue",
+        "PriorityQueue"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-018"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D18",
+      "day": 18,
+      "chapterId": "CH11",
+      "title": "Binary Search·Greedy·Prefix·Interval",
+      "purpose": "Binary Search·Greedy·Prefix·Interval 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 monotonic predicate의 정의와 내부 동작을 설명합니다.",
+        "Binary Search·Greedy·Prefix·Interval에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D17 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: monotonic predicate, lower/upper bound, greedy proof.",
+        "Binary Search·Greedy·Prefix·Interval의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "monotonic predicate",
+        "lower/upper bound",
+        "greedy proof",
+        "prefix sum",
+        "interval"
+      ],
+      "learn": {
+        "definition": "Binary search의 핵심은 정답 후보에 대한 predicate가 단조로운지 확인하는 것이다.",
+        "why": "Binary Search·Greedy·Prefix·Interval 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "Binary search의 핵심은 정답 후보에 대한 predicate가 단조로운지 확인하는 것이다. Greedy는 현재 선택이 전역 최적해로 이어지는 구조적 근거가 필요하고 Prefix sum은 전처리로 반복 range query를 빠르게 한다.",
+        "choiceCriteria": "Binary search boundary는 inclusive/exclusive 규칙을 하나로 고정한다. Greedy 근거가 없으면 DP 후보를 비교한다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "monotonic predicate와 lower/upper bound의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "Binary search boundary는 inclusive/exclusive 규칙을 하나로 고정한다. Greedy 근거가 없으면 DP 후보를 비교한다."
+        ],
+        "failureConditions": [
+          "off-by-one과 잘못된 greedy 선택은 작은 입력에서는 통과하고 큰/특수 입력에서만 실패하기 쉽다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "D일 안에 작업을 끝낼 최소 capacity를 구한다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: off-by-one과 잘못된 greedy 선택은 작은 입력에서는 통과하고 큰/특수 입력에서만 실패하기 쉽다."
+        ],
+        "action": "canFinish(capacity)의 단조성을 이용해 answer-space lower-bound search를 구현한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "Binary search boundary는 inclusive/exclusive 규칙을 하나로 고정한다. Greedy 근거가 없으면 DP 후보를 비교한다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D18-P01"
+      ],
+      "independentPracticeIds": [
+        "D18-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D18-Q01",
+        "D18-Q02",
+        "D18-Q03",
+        "D18-Q04",
+        "D18-Q05",
+        "D18-Q06"
+      ],
+      "weaknessTags": [
+        "monotonic predicate",
+        "lower/upper bound",
+        "greedy proof",
+        "prefix sum"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-015"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D19",
+      "day": 19,
+      "chapterId": "CH12",
+      "title": "BFS·DFS·Graph·Union-Find",
+      "purpose": "BFS·DFS·Graph·Union-Find 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 vertex의 정의와 내부 동작을 설명합니다.",
+        "BFS·DFS·Graph·Union-Find에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D18 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: vertex, edge, adjacency list.",
+        "BFS·DFS·Graph·Union-Find의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "vertex",
+        "edge",
+        "adjacency list",
+        "BFS",
+        "DFS",
+        "visited",
+        "Union-Find",
+        "path compression"
+      ],
+      "learn": {
+        "definition": "그래프 문제는 알고리즘보다",
+        "why": "BFS·DFS·Graph·Union-Find 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "그래프 문제는 알고리즘보다 vertex/edge 모델링을 먼저 한다. BFS는 unweighted shortest path에 강하고 DFS는 경로/구성요 소/백트래킹에 자주 쓰며 Union-Find는 연결 집합 대표를 관리한다.",
+        "choiceCriteria": "DFS recursion은 깊은 graph에서 stack 위험이 있고 Union-Find는 실제 경로를 제공하지 않는다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "vertex와 edge의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "DFS recursion은 깊은 graph에서 stack 위험이 있고 Union-Find는 실제 경로를 제공하지 않는다."
+        ],
+        "failureConditions": [
+          "BFS에서 dequeue 시점에만 visited를 표시하면 같은 node가 queue에 여러 번 들어갈 수 있다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "서버 연결 정보에서 component 수와 동적 연결 여부를 구한다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: BFS에서 dequeue 시점에만 visited를 표시하면 같은 node가 queue에 여러 번 들어갈 수 있다."
+        ],
+        "action": "일회성 전체 graph는 BFS/DFS, 반복 connectivity query는 Union-Find로 비교한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "DFS recursion은 깊은 graph에서 stack 위험이 있고 Union-Find는 실제 경로를 제공하지 않는다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D19-P01"
+      ],
+      "independentPracticeIds": [
+        "D19-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D19-Q01",
+        "D19-Q02",
+        "D19-Q03",
+        "D19-Q04",
+        "D19-Q05",
+        "D19-Q06"
+      ],
+      "weaknessTags": [
+        "vertex",
+        "edge",
+        "adjacency list",
+        "BFS"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-014"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D20",
+      "day": 20,
+      "chapterId": "CH13",
+      "title": "DP·Backtracking·Brute Force",
+      "purpose": "DP·Backtracking·Brute Force 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 state의 정의와 내부 동작을 설명합니다.",
+        "DP·Backtracking·Brute Force에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D19 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: state, transition, base case.",
+        "DP·Backtracking·Brute Force의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "state",
+        "transition",
+        "base case",
+        "memoization",
+        "tabulation",
+        "backtracking",
+        "pruning"
+      ],
+      "learn": {
+        "definition": "DP는 중복되는 부분 문제의 state를 정의하고 결과를 재사용한다.",
+        "why": "DP·Backtracking·Brute Force 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "DP는 중복되는 부분 문제의 state를 정의하고 결과를 재사용한다. 먼저 dp[i]의 의미를 한 문장으로 쓰고 base/transition/iteration order를 정한다. Backtracking은 선택→검사→복구를 반복하며 안전한 pruning 근거가 필요하다.",
+        "choiceCriteria": "Memoization과 tabulation은 접근하는 state와 recursion depth에 따라 선택한다. greedy 근거가 없으면 DP를 검토한다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "state와 transition의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "Memoization과 tabulation은 접근하는 state와 recursion depth에 따라 선택한다. greedy 근거가 없으면 DP를 검토한다."
+        ],
+        "failureConditions": [
+          "정답 근거 없이 pruning하면 필요한 branch를 제거해 오답이 된다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "일반 coin set의 최소 동전 수를 구한다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: 정답 근거 없이 pruning하면 필요한 branch를 제거해 오답이 된다."
+        ],
+        "action": "dp[x]를 정의하고 brute force 작은 입력으로 DP 결과를 검증한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "Memoization과 tabulation은 접근하는 state와 recursion depth에 따라 선택한다. greedy 근거가 없으면 DP를 검토한다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D20-P01"
+      ],
+      "independentPracticeIds": [
+        "D20-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D20-Q01",
+        "D20-Q02",
+        "D20-Q03",
+        "D20-Q04",
+        "D20-Q05",
+        "D20-Q06"
+      ],
+      "weaknessTags": [
+        "state",
+        "transition",
+        "base case",
+        "memoization"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-015"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D21",
+      "day": 21,
+      "chapterId": "CH14",
+      "title": "SQL 심화와 Java 구현 품질",
+      "purpose": "SQL 심화와 Java 구현 품질 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 window function의 정의와 내부 동작을 설명합니다.",
+        "SQL 심화와 Java 구현 품질에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D20 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: window function, ROW_NUMBER, NULL.",
+        "SQL 심화와 Java 구현 품질의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "window function",
+        "ROW_NUMBER",
+        "NULL",
+        "3-valued logic",
+        "CTE",
+        "outer join",
+        "readability",
+        "testability"
+      ],
+      "learn": {
+        "definition": "Window function은 row를 축약하지 않고 partition 기준 순위/집계를 붙인다.",
+        "why": "SQL 심화와 Java 구현 품질 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "Window function은 row를 축약하지 않고 partition 기준 순위/집계를 붙인다. SQL NULL은 unknown semantics를 가져 = NULL 대신 IS NULL을 사용하고 NOT IN에 NULL이 섞이면 결과가 달라질 수 있다.",
+        "choiceCriteria": "CTE는 가독성을 높이지만 DB/version별 optimizer 처리 차이를 확인한다. Java 구현도 naming, side effect, null/exception, test boundary를 함께 본다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "window function와 ROW_NUMBER의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "CTE는 가독성을 높이지만 DB/version별 optimizer 처리 차이를 확인한다. Java 구현도 naming, side effect, null/exception, test boundary를 함께 본다."
+        ],
+        "failureConditions": [
+          "outer join 후 WHERE 조건을 잘못 두면 사실상 inner join처럼 결과가 줄어들 수 있다."
+        ],
+        "observe": [
+          "실행계획의 estimate와 실제 row",
+          "lock wait와 transaction 경계",
+          "동일 입력의 결과 집합"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "고객별 최근 주문 1건을 반복 correlated subquery로 찾는다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "실행계획의 estimate와 실제 row",
+          "lock wait와 transaction 경계",
+          "동일 입력의 결과 집합"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: outer join 후 WHERE 조건을 잘못 두면 사실상 inner join처럼 결과가 줄어들 수 있다."
+        ],
+        "action": "ROW_NUMBER OVER(PARTITION BY customer ORDER BY created_at DESC)로 전환하고 plan/index를 확인한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "CTE는 가독성을 높이지만 DB/version별 optimizer 처리 차이를 확인한다. Java 구현도 naming, side effect, null/exception, test boundary를 함께 본다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D21-P01"
+      ],
+      "independentPracticeIds": [
+        "D21-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D21-Q01",
+        "D21-Q02",
+        "D21-Q03",
+        "D21-Q04",
+        "D21-Q05",
+        "D21-Q06"
+      ],
+      "weaknessTags": [
+        "window function",
+        "ROW_NUMBER",
+        "NULL",
+        "3-valued logic"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-007"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D22",
+      "day": 22,
+      "chapterId": "CH14",
+      "title": "통합 코딩 실습",
+      "purpose": "통합 코딩 실습 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 timebox의 정의와 내부 동작을 설명합니다.",
+        "통합 코딩 실습에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D21 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: timebox, constraints, brute force oracle.",
+        "통합 코딩 실습의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "timebox",
+        "constraints",
+        "brute force oracle",
+        "edge case",
+        "postmortem",
+        "complexity"
+      ],
+      "learn": {
+        "definition": "제한시간에서도 5분 요구사항/제약 분석→자료구조/브루트포스 후보→구현→edge case→복잡도 설명 순서를 유지한다.",
+        "why": "통합 코딩 실습 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "제한시간에서도 5분 요구사항/제약 분석→자료구조/브루트포스 후보→구현→edge case→복잡도 설명 순서를 유지한다. 오답은 패턴 이름보다 사고 단계의 실패로 분류한다.",
+        "choiceCriteria": "정답을 본 직후 베끼는 대신 잠시 뒤나 다음 날 다시 구현해 retrieval을 만든다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "timebox와 constraints의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "정답을 본 직후 베끼는 대신 잠시 뒤나 다음 날 다시 구현해 retrieval을 만든다."
+        ],
+        "failureConditions": [
+          "문제 해석 없이 코딩부터 시작하면 알고리즘 지식이 있어도 시간을 잃는다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "90분 세트에서 마지막 문제의 해석에 25분을 사용한다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: 문제 해석 없이 코딩부터 시작하면 알고리즘 지식이 있어도 시간을 잃는다."
+        ],
+        "action": "다음 세트부터 첫 5분 분석 메모를 강제하고 반복 실패 유형 감소를 추적한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "정답을 본 직후 베끼는 대신 잠시 뒤나 다음 날 다시 구현해 retrieval을 만든다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D22-P01"
+      ],
+      "independentPracticeIds": [
+        "D22-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D22-Q01",
+        "D22-Q02",
+        "D22-Q03",
+        "D22-Q04",
+        "D22-Q05",
+        "D22-Q06"
+      ],
+      "weaknessTags": [
+        "timebox",
+        "constraints",
+        "brute force oracle",
+        "edge case"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-054"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D23",
+      "day": 23,
+      "chapterId": "CH15",
+      "title": "Timeout·Retry·Backoff·Circuit Breaker",
+      "purpose": "Timeout·Retry·Backoff·Circuit Breaker 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 deadline의 정의와 내부 동작을 설명합니다.",
+        "Timeout·Retry·Backoff·Circuit Breaker에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D22 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: deadline, timeout budget, retry.",
+        "Timeout·Retry·Backoff·Circuit Breaker의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "deadline",
+        "timeout budget",
+        "retry",
+        "exponential backoff",
+        "jitter",
+        "retry storm",
+        "breaker",
+        "bulkhead"
+      ],
+      "learn": {
+        "definition": "분산 호출은 부분 실패하므로 전체 deadline 안에 connect/acquire/read/retry budget을 배분한다.",
+        "why": "Timeout·Retry·Backoff·Circuit Breaker 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "분산 호출은 부분 실패하므로 전체 deadline 안에 connect/acquire/read/retry budget을 배분한다. Retry는 transient 오류에 제한 하고 backoff+jitter로 재폭주를 줄이며 circuit breaker는 일정 기간 호출을 차단해 downstream을 보호한다.",
+        "choiceCriteria": "retry와 breaker의 목적은 다르고 여러 계층이 각자 재시도하면 횟수가 곱셈으로 폭증할 수 있다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "deadline와 timeout budget의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "retry와 breaker의 목적은 다르고 여러 계층이 각자 재시도하면 횟수가 곱셈으로 폭증할 수 있다."
+        ],
+        "failureConditions": [
+          "deterministic 4xx까지 재시도하거나 write idempotency 없이 retry하면 부하와 중복 부수효과가 커진다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "A→B→C 각 계층이 3회 retry하여 C 장애 시 요청이 폭증한다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: deterministic 4xx까지 재시도하거나 write idempotency 없이 retry하면 부하와 중복 부수효과가 커진다."
+        ],
+        "action": "retry ownership을 한 경계로 제한하고 backoff+jitter, breaker, deadline을 적용한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "retry와 breaker의 목적은 다르고 여러 계층이 각자 재시도하면 횟수가 곱셈으로 폭증할 수 있다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D23-P01"
+      ],
+      "independentPracticeIds": [
+        "D23-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D23-Q01",
+        "D23-Q02",
+        "D23-Q03",
+        "D23-Q04",
+        "D23-Q05",
+        "D23-Q06"
+      ],
+      "weaknessTags": [
+        "deadline",
+        "timeout budget",
+        "retry",
+        "exponential backoff"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-001",
+        "SRC-048"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D24",
+      "day": 24,
+      "chapterId": "CH16",
+      "title": "Kafka Architecture",
+      "purpose": "Kafka Architecture 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 broker의 정의와 내부 동작을 설명합니다.",
+        "Kafka Architecture에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D23 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: broker, topic, partition.",
+        "Kafka Architecture의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "broker",
+        "topic",
+        "partition",
+        "replica",
+        "leader",
+        "producer",
+        "consumer group",
+        "offset",
+        "rebalance",
+        "lag"
+      ],
+      "learn": {
+        "definition": "Kafka partition은 ordered log이고 ordering 범위는 topic 전체가 아니라 partition 내부다.",
+        "why": "Kafka Architecture 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "Kafka partition은 ordered log이고 ordering 범위는 topic 전체가 아니라 partition 내부다. Consumer group은 partition을 group 내 consumer에 할당하며 offset은 읽기 위치를 나타낸다.",
+        "choiceCriteria": "consumer만 늘려도 partition 수보다 많으면 idle이 생긴다. key ordering은 hot partition trade-off가 있 다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "broker와 topic의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "consumer만 늘려도 partition 수보다 많으면 idle이 생긴다. key ordering은 hot partition trade-off가 있 다."
+        ],
+        "failureConditions": [
+          "offset commit이 business 처리 완료보다 먼저 되면 장애 시 처리 누락처럼 보일 수 있다."
+        ],
+        "observe": [
+          "partition·offset·consumer lag",
+          "producer acknowledgement와 retry 설정",
+          "중복 처리 방지 key"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "같은 주문의 CREATED/CANCELLED가 key 없이 다른 partition으로 가 순서가 뒤섞인다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "partition·offset·consumer lag",
+          "producer acknowledgement와 retry 설정",
+          "중복 처리 방지 key"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: offset commit이 business 처리 완료보다 먼저 되면 장애 시 처리 누락처럼 보일 수 있다."
+        ],
+        "action": "orderId key를 사용해 같은 entity ordering을 유지하고 partition skew를 확인한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "consumer만 늘려도 partition 수보다 많으면 idle이 생긴다. key ordering은 hot partition trade-off가 있 다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D24-P01"
+      ],
+      "independentPracticeIds": [
+        "D24-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D24-Q01",
+        "D24-Q02",
+        "D24-Q03",
+        "D24-Q04",
+        "D24-Q05",
+        "D24-Q06"
+      ],
+      "weaknessTags": [
+        "broker",
+        "topic",
+        "partition",
+        "replica"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-039",
+        "SRC-037"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D25",
+      "day": 25,
+      "chapterId": "CH16",
+      "title": "Kafka Reliability·Idempotence·Outbox",
+      "purpose": "Kafka Reliability·Idempotence·Outbox 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 acks의 정의와 내부 동작을 설명합니다.",
+        "Kafka Reliability·Idempotence·Outbox에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D24 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: acks, retries, producer idempotence.",
+        "Kafka Reliability·Idempotence·Outbox의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "acks",
+        "retries",
+        "producer idempotence",
+        "at-least-once",
+        "idempotent consumer",
+        "Outbox",
+        "dual-write",
+        "CDC"
+      ],
+      "learn": {
+        "definition": "Producer idempotence는 broker publish retry 중복을 줄이는 범위이고 business idempotency와 다르다.",
+        "why": "Kafka Reliability·Idempotence·Outbox 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "Producer idempotence는 broker publish retry 중복을 줄이는 범위이고 business idempotency와 다르다. Outbox는 business data와 발행 의도를 같은 DB transaction에 기록해 dual-write gap을 줄인다.",
+        "choiceCriteria": "Outbox publisher가 전송 후 status update 전에 죽으면 중복 publish가 가능하므로 consumer idempotency가 여전히 필요하다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "acks와 retries의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "Outbox publisher가 전송 후 status update 전에 죽으면 중복 publish가 가능하므로 consumer idempotency가 여전히 필요하다."
+        ],
+        "failureConditions": [
+          "DB commit 후 Kafka publish 전 crash는 후속 서비스에 event가 전달되지 않는 gap을 만든다."
+        ],
+        "observe": [
+          "partition·offset·consumer lag",
+          "producer acknowledgement와 retry 설정",
+          "중복 처리 방지 key"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "주문 DB commit 직후 process가 죽어 Kafka event가 없다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "partition·offset·consumer lag",
+          "producer acknowledgement와 retry 설정",
+          "중복 처리 방지 key"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: DB commit 후 Kafka publish 전 crash는 후속 서비스에 event가 전달되지 않는 gap을 만든다."
+        ],
+        "action": "order와 outbox를 같은 transaction에 저장하고 publisher/consumer를 idempotent하게 만든다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "Outbox publisher가 전송 후 status update 전에 죽으면 중복 publish가 가능하므로 consumer idempotency가 여전히 필요하다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D25-P01"
+      ],
+      "independentPracticeIds": [
+        "D25-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D25-Q01",
+        "D25-Q02",
+        "D25-Q03",
+        "D25-Q04",
+        "D25-Q05",
+        "D25-Q06"
+      ],
+      "weaknessTags": [
+        "acks",
+        "retries",
+        "producer idempotence",
+        "at-least-once"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-038",
+        "SRC-042"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D26",
+      "day": 26,
+      "chapterId": "CH17",
+      "title": "결제·정산·대사·원장",
+      "purpose": "결제·정산·대사·원장 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 authorization의 정의와 내부 동작을 설명합니다.",
+        "결제·정산·대사·원장에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D25 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: authorization, cancel, refund.",
+        "결제·정산·대사·원장의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "authorization",
+        "cancel",
+        "refund",
+        "settlement",
+        "reconciliation",
+        "ledger",
+        "double-entry",
+        "idempotency key",
+        "cutoff"
+      ],
+      "learn": {
+        "definition": "금액 처리 시스템은 승인/취소/환불/정산 상태를 분리하고 기준일/cutoff와 adjustment를 명시한다.",
+        "why": "결제·정산·대사·원장 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "금액 처리 시스템은 승인/취소/환불/정산 상태를 분리하고 기준일/cutoff와 adjustment를 명시한다. 원장은 append-oriented 기록 으로 금액 변화 근거를 남기고 대사는 서로 다른 경계의 누락/중복/금액 차이를 찾는다.",
+        "choiceCriteria": "실제 사업자별 용어가 다르므로 범용 상태 machine과 금액 invariant를 먼저 정의한다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "authorization와 cancel의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "실제 사업자별 용어가 다르므로 범용 상태 machine과 금액 invariant를 먼저 정의한다."
+        ],
+        "failureConditions": [
+          "승인 요청 timeout을 곧바로 실패로 처리하면 실제 remote 성공 후 재요청으로 이중 승인이 생길 수 있다."
+        ],
+        "observe": [
+          "JobInstance·Execution 상태",
+          "처리 건수와 기준일",
+          "부분 실패·재처리 기록"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "승인 timeout 후 client가 같은 결제를 다시 요청한다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "JobInstance·Execution 상태",
+          "처리 건수와 기준일",
+          "부분 실패·재처리 기록"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: 승인 요청 timeout을 곧바로 실패로 처리하면 실제 remote 성공 후 재요청으로 이중 승인이 생길 수 있다."
+        ],
+        "action": "idempotency key와 remote transaction/status query로 결과 미확정 상태를 해결한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "실제 사업자별 용어가 다르므로 범용 상태 machine과 금액 invariant를 먼저 정의한다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D26-P01"
+      ],
+      "independentPracticeIds": [
+        "D26-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D26-Q01",
+        "D26-Q02",
+        "D26-Q03",
+        "D26-Q04",
+        "D26-Q05",
+        "D26-Q06"
+      ],
+      "weaknessTags": [
+        "authorization",
+        "cancel",
+        "refund",
+        "settlement"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-041"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D27",
+      "day": 27,
+      "chapterId": "CH18",
+      "title": "System Design",
+      "purpose": "System Design 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 requirements의 정의와 내부 동작을 설명합니다.",
+        "System Design에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D26 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: requirements, SLO, QPS.",
+        "System Design의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "requirements",
+        "SLO",
+        "QPS",
+        "capacity",
+        "API",
+        "DB",
+        "cache",
+        "queue",
+        "sharding",
+        "observability",
+        "failure mode"
+      ],
+      "learn": {
+        "definition": "설계는 요구사항과 규모를 먼저 확인하고 API→data model→consistency→cache/queue→failure→observability→security 순 으로 구체화한다.",
+        "why": "System Design 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "설계는 요구사항과 규모를 먼저 확인하고 API→data model→consistency→cache/queue→failure→observability→security 순 으로 구체화한다. Capacity estimate는 정확한 숫자보다 order of magnitude로 병목을 찾는 도구다.",
+        "choiceCriteria": "cache/queue/microservice를 기본값처럼 넣지 않고 latency, consistency, traffic, 운영비용이 실제 필요 성을 만든 경우에만 추가한다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "requirements와 SLO의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "cache/queue/microservice를 기본값처럼 넣지 않고 latency, consistency, traffic, 운영비용이 실제 필요 성을 만든 경우에만 추가한다."
+        ],
+        "failureConditions": [
+          "정상 경로만 설계하면 DB down, cache miss storm, queue lag 같은 운영 실패를 다루지 못한다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "대량 주문 조회 서비스를 설계한다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: 정상 경로만 설계하면 DB down, cache miss storm, queue lag 같은 운영 실패를 다루지 못한다."
+        ],
+        "action": "QPS/최신성/filter/sort/데이터량을 먼저 정하고 RDB+cursor pagination을 시작점으로 삼는다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "cache/queue/microservice를 기본값처럼 넣지 않고 latency, consistency, traffic, 운영비용이 실제 필요 성을 만든 경우에만 추가한다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D27-P01"
+      ],
+      "independentPracticeIds": [
+        "D27-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D27-Q01",
+        "D27-Q02",
+        "D27-Q03",
+        "D27-Q04",
+        "D27-Q05",
+        "D27-Q06"
+      ],
+      "weaknessTags": [
+        "requirements",
+        "SLO",
+        "QPS",
+        "capacity"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-051",
+        "SRC-049"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D28",
+      "day": 28,
+      "chapterId": "CH19",
+      "title": "JPA·Redis·Docker·Kubernetes·Security",
+      "purpose": "JPA·Redis·Docker·Kubernetes·Security 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 persistence context의 정의와 내부 동작을 설명합니다.",
+        "JPA·Redis·Docker·Kubernetes·Security에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D27 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: persistence context, dirty checking, lazy.",
+        "JPA·Redis·Docker·Kubernetes·Security의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "persistence context",
+        "dirty checking",
+        "lazy",
+        "N+1",
+        "Redis TTL",
+        "stampede",
+        "container image",
+        "Pod",
+        "readiness/liveness",
+        "secret",
+        "OWASP"
+      ],
+      "learn": {
+        "definition": "JPA는 persistence context에서 entity identity와 dirty checking을 관리하고 lazy association은 N+1을 만들 수 있다.",
+        "why": "JPA·Redis·Docker·Kubernetes·Security 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "JPA는 persistence context에서 entity identity와 dirty checking을 관리하고 lazy association은 N+1을 만들 수 있다. Redis는 TTL/invalidation/stampede를 운영해야 하며 container/Kubernetes는 image→Pod/Deployment/Service와 readiness/liveness를 구분한다.",
+        "choiceCriteria": "모든 association EAGER, TTL 없는 cache, image에 secret 포함, readiness/liveness 혼동은 운영 복잡도 를 키운다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "persistence context와 dirty checking의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "모든 association EAGER, TTL 없는 cache, image에 secret 포함, readiness/liveness 혼동은 운영 복잡도 를 키운다."
+        ],
+        "failureConditions": [
+          "연관관계 로딩 정책과 캐시·probe·secret 경계를 구분하지 않으면 쿼리 폭증, stale data, 잘못된 재시작, 비 밀값 노출이 함께 발생할 수 있다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "목록 100건을 직렬화하면서 lazy association 100번이 추가 조회된다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: 연관관계 로딩 정책과 캐시·probe·secret 경계를 구분하지 않으면 쿼리 폭증, stale data, 잘못된 재시작, 비 밀값 노출이 함께 발생할 수 있다."
+        ],
+        "action": "필요 필드를 확인해 fetch join/DTO projection 등으로 query 수를 줄이고 result cardinality를 검증한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "모든 association EAGER, TTL 없는 cache, image에 secret 포함, readiness/liveness 혼동은 운영 복잡도 를 키운다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D28-P01"
+      ],
+      "independentPracticeIds": [
+        "D28-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D28-Q01",
+        "D28-Q02",
+        "D28-Q03",
+        "D28-Q04",
+        "D28-Q05",
+        "D28-Q06"
+      ],
+      "weaknessTags": [
+        "persistence context",
+        "dirty checking",
+        "lazy",
+        "N+1"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-027",
+        "SRC-047",
+        "SRC-003",
+        "SRC-040",
+        "SRC-045"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D29",
+      "day": 29,
+      "chapterId": "CH20",
+      "title": "AI·RAG 를 사용하는 백엔드",
+      "purpose": "AI·RAG 를 사용하는 백엔드 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 LLM의 정의와 내부 동작을 설명합니다.",
+        "AI·RAG를 사용하는 백엔드에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D28 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: LLM, embedding, vector.",
+        "AI·RAG 를 사용하는 백엔드의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "LLM",
+        "embedding",
+        "vector",
+        "chunk",
+        "retrieval",
+        "RAG",
+        "grounding",
+        "provider timeout",
+        "rate limit",
+        "agent",
+        "approval"
+      ],
+      "learn": {
+        "definition": "RAG는 문서 chunk/index→query retrieval→context→model generation→source/validation 의 pipeline이다.",
+        "why": "AI·RAG 를 사용하는 백엔드 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "RAG는 문서 chunk/index→query retrieval→context→model generation→source/validation 의 pipeline이다. Vector search는 similarity retrieval이지 사실 보장이 아니며 provider API는 timeout/429/quota/model 변경을 가진 외부 dependency다.",
+        "choiceCriteria": "AI 기능을 core transaction과 분리해 실패 시 부분 DEGRADED로 만들고 mutation tool에는 approval/audit/allowlist를 둔다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "LLM와 embedding의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "AI 기능을 core transaction과 분리해 실패 시 부분 DEGRADED로 만들고 mutation tool에는 approval/audit/allowlist를 둔다."
+        ],
+        "failureConditions": [
+          "provider 장애가 core admin request path에 강결합되면 AI 기능 하나 때문에 전체 서비스가 500이 될 수 있다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "운영 문서 질의 provider 장애 때문에 관리 화면 전체가 실패한다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: provider 장애가 core admin request path에 강결합되면 AI 기능 하나 때문에 전체 서비스가 500이 될 수 있다."
+        ],
+        "action": "RAG만 DEGRADED로 격리하고 근거가 없는 답변은 “근거 없음”으로 처리한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "AI 기능을 core transaction과 분리해 실패 시 부분 DEGRADED로 만들고 mutation tool에는 approval/audit/allowlist를 둔다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D29-P01"
+      ],
+      "independentPracticeIds": [
+        "D29-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D29-Q01",
+        "D29-Q02",
+        "D29-Q03",
+        "D29-Q04",
+        "D29-Q05",
+        "D29-Q06"
+      ],
+      "weaknessTags": [
+        "LLM",
+        "embedding",
+        "vector",
+        "chunk"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-023",
+        "SRC-046",
+        "SRC-035"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D30",
+      "day": 30,
+      "chapterId": "CH21",
+      "title": "실무 장애·성능 사례 분석",
+      "purpose": "실무 장애·성능 사례 분석 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 symptom의 정의와 내부 동작을 설명합니다.",
+        "실무 장애·성능 사례 분석에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D29 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: symptom, hypothesis, evidence.",
+        "실무 장애·성능 사례 분석의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "symptom",
+        "hypothesis",
+        "evidence",
+        "root cause",
+        "mitigation",
+        "permanent fix",
+        "verification",
+        "rollback",
+        "regression"
+      ],
+      "learn": {
+        "definition": "사례는 증상→영향→가설→증거→root cause→임시 완화→영구 조치→검증→한계 순으로 기록한다.",
+        "why": "실무 장애·성능 사례 분석 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "사례는 증상→영향→가설→증거→root cause→임시 완화→영구 조치→검증→한계 순으로 기록한다. 성능은 입력 건수가 다르면 throughput 등 정규화 지표를 쓰고 측정하지 않은 숫자는 만들지 않는다.",
+        "choiceCriteria": "SQL 한 줄보다 데이터 lifecycle/write pattern 자체를 바꾸는 것이 필요한 문제도 있다. 환경/IDC 전환은 Java/DB/Batch/EAI/File/TLS/Nginx/데이터를 전수 확인한다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "symptom와 hypothesis의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "SQL 한 줄보다 데이터 lifecycle/write pattern 자체를 바꾸는 것이 필요한 문제도 있다. 환경/IDC 전환은 Java/DB/Batch/EAI/File/TLS/Nginx/데이터를 전수 확인한다."
+        ],
+        "failureConditions": [
+          "최근 변경과 기준선을 남기지 않으면 원인과 개선을 증명하기 어렵고 재처리 시 중복을 만들 수 있다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "반복 INSERT/DELETE와 대량 DELETE, thread/DB contention으로 대량 처리 지연이 커진다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: 최근 변경과 기준선을 남기지 않으면 원인과 개선을 증명하기 어렵고 재처리 시 중복을 만들 수 있다."
+        ],
+        "action": "append-oriented 적재와 시간 partition, worker 설정과 plan을 각각 검증하고 정합성 대사를 수행한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "SQL 한 줄보다 데이터 lifecycle/write pattern 자체를 바꾸는 것이 필요한 문제도 있다. 환경/IDC 전환은 Java/DB/Batch/EAI/File/TLS/Nginx/데이터를 전수 확인한다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D30-P01"
+      ],
+      "independentPracticeIds": [
+        "D30-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D30-Q01",
+        "D30-Q02",
+        "D30-Q03",
+        "D30-Q04",
+        "D30-Q05",
+        "D30-Q06"
+      ],
+      "weaknessTags": [
+        "symptom",
+        "hypothesis",
+        "evidence",
+        "root cause"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-050",
+        "SRC-049"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D31",
+      "day": 31,
+      "chapterId": "CH21",
+      "title": "통합 역량 시험",
+      "purpose": "통합 역량 시험 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 integrated assessment의 정의와 내부 동작을 설명합니다.",
+        "통합 역량 시험에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D30 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: integrated assessment, fact vs assumption, constraint.",
+        "통합 역량 시험의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "integrated assessment",
+        "fact vs assumption",
+        "constraint",
+        "trade-off",
+        "failure path",
+        "verification"
+      ],
+      "learn": {
+        "definition": "여러 영역을 하나의 시나리오에 연결한다.",
+        "why": "통합 역량 시험 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "여러 영역을 하나의 시나리오에 연결한다. 문제를 받으면 사실/가정/확인할 지표를 분리하고 Java는 복잡도·edge, SQL은 정합성 ·plan, 설계는 failure/metric까지 포함한다.",
+        "choiceCriteria": "모르는 부분은 추측으로 채우지 않고 현재 아는 범위와 확인 방법을 제시한다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "integrated assessment와 fact vs assumption의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "모르는 부분은 추측으로 채우지 않고 현재 아는 범위와 확인 방법을 제시한다."
+        ],
+        "failureConditions": [
+          "한 영역의 정답만 고집하면 실제 원인이 DB lock, thread pool, EAI backlog처럼 다른 경계에 있을 수 있다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "정산 마감 batch가 느려지고 외부 송신도 지연된다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: 한 영역의 정답만 고집하면 실제 원인이 DB lock, thread pool, EAI backlog처럼 다른 경계에 있을 수 있다."
+        ],
+        "action": "데이터량→Step 시간→plan/lock→thread/pool→EAI backlog→외부 응답 순으로 기준선과 비교한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "모르는 부분은 추측으로 채우지 않고 현재 아는 범위와 확인 방법을 제시한다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D31-P01"
+      ],
+      "independentPracticeIds": [
+        "D31-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D31-Q01",
+        "D31-Q02",
+        "D31-Q03",
+        "D31-Q04",
+        "D31-Q05",
+        "D31-Q06"
+      ],
+      "weaknessTags": [
+        "integrated assessment",
+        "fact vs assumption",
+        "constraint",
+        "trade-off"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-052"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D32",
+      "day": 32,
+      "chapterId": "CH21",
+      "title": "누적 회상·약점 복구",
+      "purpose": "누적 회상·약점 복구 주제를 API 이름이 아니라 입력, 처리, 상태 변화, 출력과 실패 경계로 설명하고 재현 가능한 증거로 검증한다.",
+      "objectives": [
+        "핵심 용어인 retrieval의 정의와 내부 동작을 설명합니다.",
+        "누적 회상·약점 복구에서 선택 기준과 trade-off를 설명합니다.",
+        "실패 조건을 직접 재현하고 어떤 로그/상태/계획을 확인할지 말합니다."
+      ],
+      "prerequisites": [
+        "D31 완료 또는 사전 진단",
+        "정상 결과와 실패 결과를 구분해 기록하는 습관"
+      ],
+      "diagnostic": [
+        "다음 핵심 용어를 보지 않고 정의한다: retrieval, spacing, interleaving.",
+        "누적 회상·약점 복구의 대표 실패를 어떤 증거로 분리할지 말한다."
+      ],
+      "terms": [
+        "retrieval",
+        "spacing",
+        "interleaving",
+        "error log",
+        "knowledge map",
+        "weakness queue"
+      ],
+      "learn": {
+        "definition": "노트를 다시 읽기 전에 기억에서 핵심 흐름을 꺼내고 빠진 부분만 보충한다.",
+        "why": "누적 회상·약점 복구 학습은 단순 API 사용법보다 시스템 경계와 상태 변화의 원리를 알아야 장애·성능 문제를 올바르게 진단할 수 있습니다. 코드나 설정을 먼저 바꾸기보다 현재 상태와 기대 invariant를 정의한 뒤 증거를 모으는 습관을 사용합니다.",
+        "internals": "노트를 다시 읽기 전에 기억에서 핵심 흐름을 꺼내고 빠진 부분만 보충한다. 오답은 날짜보다 원인 tag로 묶고 1/3/7/14일 같은 간격으로 재시험한다.",
+        "choiceCriteria": "초기 학습은 worked example과 같은 유형 연습이 도움이 되고 숙련 후에는 interleaving으로 전략 선택 능력 을 키운다. 요구 정합성, 동시성, 지연, 운영 복잡도와 rollback 가능성을 함께 보고 선택한다.",
+        "comparisons": [
+          "retrieval와 spacing의 책임·상태·실패 경계를 같은 입력으로 비교한다."
+        ],
+        "tradeoffs": [
+          "초기 학습은 worked example과 같은 유형 연습이 도움이 되고 숙련 후에는 interleaving으로 전략 선택 능력 을 키운다."
+        ],
+        "failureConditions": [
+          "이미 아는 정의를 계속 읽는 대신 반복 실패하는 연결을 찾지 않으면 약점이 그대로 남는다."
+        ],
+        "observe": [
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "howToRead": [
+          "명령이나 코드가 바꾸는 상태와 대상 범위를 먼저 표시한다.",
+          "정상 결과와 실패 시 첫 관찰 지점을 실행 전에 적는다.",
+          "측정값은 동일 입력·시간 단위·처리 건수로 정규화한다."
+        ]
+      },
+      "workedExample": {
+        "problem": "Transaction 정의는 알지만 self-invocation과 propagation에서 반복 실패한다.",
+        "observations": [
+          "증상 하나로 원인을 단정하지 않습니다. 최근 변경, 입력 크기, 오류 문맥, 상태/로그/메트릭을 비교해 가설을 줄입니다. 이 예에서는 핵심 제약과 실패 경계를 먼저 표시합니다.",
+          "입력과 예상 invariant",
+          "변경 전후 로그·metric·state",
+          "정상·경계·실패·재실행 결과"
+        ],
+        "hypotheses": [
+          "최근 변경과 입력 차이를 먼저 배제한다.",
+          "다음 실패 조건을 최소 재현으로 확인한다: 이미 아는 정의를 계속 읽는 대신 반복 실패하는 연결을 찾지 않으면 약점이 그대로 남는다."
+        ],
+        "action": "D10 실습을 다시 실행하고 1일/3일 뒤 관련 질문만 재시험해 취약 연결을 복구한다.",
+        "validation": "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다. 정상·경계·실패·재실행 결과를 같은 기준으로 보관한다.",
+        "alternatives": [
+          "대안은 단순히 다른 기술 이름을 나열하지 않고 “어떤 조건이면 더 나은가”를 적습니다. 변경 후에는 정상 입력, 경계 입력, 실패 입력, 재실행을 검증하고 결과 값뿐 아니라 관련 로그/상태/실행계획을 함께 보관합니다."
+        ],
+        "tradeoffs": [
+          "초기 학습은 worked example과 같은 유형 연습이 도움이 되고 숙련 후에는 interleaving으로 전략 선택 능력 을 키운다."
+        ]
+      },
+      "guidedPracticeIds": [
+        "D32-P01"
+      ],
+      "independentPracticeIds": [
+        "D32-P01"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "quizIds": [
+        "D32-Q01",
+        "D32-Q02",
+        "D32-Q03",
+        "D32-Q04",
+        "D32-Q05",
+        "D32-Q06"
+      ],
+      "weaknessTags": [
+        "retrieval",
+        "spacing",
+        "interleaving",
+        "error log"
+      ],
+      "spacedReview": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "sourceRefs": [
+        "SRC-054",
+        "SRC-036"
+      ],
+      "reviewStatus": "reviewed"
+    }
+  ]
+}

@@ -1,0 +1,2907 @@
+{
+  "schemaVersion": 1,
+  "practices": [
+    {
+      "id": "D01-P01",
+      "day": 1,
+      "chapterId": "CH01",
+      "title": "학습 환경과 백엔드 시스템 관찰법 재현·검증 Lab",
+      "goal": "두 PC에서 같은 Java 프로그램의 출력이 다르다. JDK, timezone, locale, 파일 인코딩부터 비교한다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: java",
+        "optional/local: javac",
+        "optional/local: git",
+        "optional/local: curl",
+        "optional/local: docker"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "java -version",
+        "javac -version",
+        "git --version",
+        "curl --version",
+        "docker version"
+      ],
+      "steps": [
+        "실습 디렉터리 생성",
+        "java/javac/git/curl/docker 버전 기록",
+        "정상 Java 프로그램 실행",
+        "잘못된 경로로 실패 재현",
+        "README만으로 재실행"
+      ],
+      "guidedSteps": [
+        "실습 디렉터리 생성",
+        "java/javac/git/curl/docker 버전 기록"
+      ],
+      "independentSteps": [
+        "정상 Java 프로그램 실행",
+        "잘못된 경로로 실패 재현",
+        "README만으로 재실행"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "환경 차이를 확인하지 않고 코드를 먼저 수정하면 재현되지 않는 문제를 만들기 쉽다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "컨테이너로 모든 환경을 즉시 숨기기보다 초반에는 실제 환경 차이를 눈으로 확인하는 편이 원인 분석 훈련에 유리하다."
+      ],
+      "sourceRefs": [
+        "SRC-011",
+        "SRC-004"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D02-P01",
+      "day": 2,
+      "chapterId": "CH02",
+      "title": "복잡도와 자료구조 재현·검증 Lab",
+      "goal": "요청 ID 빈도 집계가 List 선형 검색 반복으로 느리다. 키 조회 요구를 HashMap 누적으로 바꾼다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: javac",
+        "optional/local: java"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "javac src/CollectionLab.java",
+        "java -Xms256m -Xmx256m -cp src CollectionLab"
+      ],
+      "steps": [
+        "빈도 집계 2문제",
+        "mutable key 조회 실패 재현",
+        "잘못된 equals/hashCode 재현",
+        "LinkedHashMap LRU 구현",
+        "ArrayList/LinkedList 순회 비교"
+      ],
+      "guidedSteps": [
+        "빈도 집계 2문제",
+        "mutable key 조회 실패 재현"
+      ],
+      "independentSteps": [
+        "잘못된 equals/hashCode 재현",
+        "LinkedHashMap LRU 구현",
+        "ArrayList/LinkedList 순회 비교"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "mutable key를 HashMap에 넣은 뒤 equality에 영향을 주는 값을 바꾸면 기존 bucket에서 찾지 못할 수 있다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "O(1)이라도 상수 비용과 메모리 접근이 비쌀 수 있고, LinkedList는 삽입 이점보다 탐색/객체 오버헤드가 더 클 수 있다."
+      ],
+      "sourceRefs": [
+        "SRC-016",
+        "SRC-017"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D03-P01",
+      "day": 3,
+      "chapterId": "CH02",
+      "title": "Java 객체 모델과 API 계약 재현·검증 Lab",
+      "goal": "Money 값 객체의 amount/currency 비교 규칙이 여러 호출부에 중복되어 결과가 달라진다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: javac",
+        "optional/local: java"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "javac src/JavaContractLab.java",
+        "java -cp src JavaContractLab"
+      ],
+      "steps": [
+        "불변 Money 구현",
+        "equals/hashCode 계약 테스트",
+        "extends/super 예제",
+        "예외 변환 계층 구성",
+        "Stream/loop 비교"
+      ],
+      "guidedSteps": [
+        "불변 Money 구현",
+        "equals/hashCode 계약 테스트"
+      ],
+      "independentSteps": [
+        "extends/super 예제",
+        "예외 변환 계층 구성",
+        "Stream/loop 비교"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "내부 예외를 그대로 외부에 노출하거나 같은 stack trace를 여러 계층에서 중복 기록하면 운영 로그의 신호 대 잡음 비율이 떨어진다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "불변성은 복사 비용을 만들 수 있고 복잡한 wildcard는 API 가독성을 낮출 수 있다. Stream과 loop는 선언성, 할당, 예외 처리, 디버깅을 기준으로 선택한다."
+      ],
+      "sourceRefs": [
+        "SRC-013"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D04-P01",
+      "day": 4,
+      "chapterId": "CH03",
+      "title": "OS·Process·Thread·JVM 재현·검증 Lab",
+      "goal": "응답 지연 중 CPU는 낮고 Thread dump에서 worker들이 connection 획득을 기다린다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: jps",
+        "optional/local: jcmd",
+        "optional/local: jcmd",
+        "optional/local: java"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "jps -l",
+        "jcmd <pid> Thread.print",
+        "jcmd <pid> GC.heap_info",
+        "java -Xmx64m -Xlog:gc* -cp src JvmLab"
+      ],
+      "steps": [
+        "RUNNABLE/WAITING/BLOCKED 재현",
+        "jcmd Thread.print",
+        "작은 heap OOM 재현",
+        "GC 로그 관찰",
+        "OS RSS와 JVM heap 비교"
+      ],
+      "guidedSteps": [
+        "RUNNABLE/WAITING/BLOCKED 재현",
+        "jcmd Thread.print"
+      ],
+      "independentSteps": [
+        "작은 heap OOM 재현",
+        "GC 로그 관찰",
+        "OS RSS와 JVM heap 비교"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "CPU가 낮아도 외부 I/O, DB connection 또는 lock 대기로 요청이 쌓일 수 있다."
+      ],
+      "observe": [
+        "thread dump·JFR·pool state",
+        "queue·active count·rejection",
+        "CPU·blocking I/O 구분"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "스레드를 늘리면 context switch와 공유 자원 경쟁이 늘 수 있다. GC pause만 줄이는 것보다 allocation rate 와 live set을 먼저 본다."
+      ],
+      "sourceRefs": [
+        "SRC-022",
+        "SRC-021"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D05-P01",
+      "day": 5,
+      "chapterId": "CH03",
+      "title": "Java 동시성과 실행자 재현·검증 Lab",
+      "goal": "worker 100개인데 DB pool 20개라 connection wait만 증가한다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: java",
+        "optional/local: jcmd"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "java -cp src ConcurrencyLab",
+        "jcmd <pid> Thread.print"
+      ],
+      "steps": [
+        "volatile flag 비교",
+        "Atomic vs synchronized increment",
+        "작은 queue rejection 재현",
+        "queue 크기 변화 관찰",
+        "Virtual Thread I/O 모사"
+      ],
+      "guidedSteps": [
+        "volatile flag 비교",
+        "Atomic vs synchronized increment"
+      ],
+      "independentSteps": [
+        "작은 queue rejection 재현",
+        "queue 크기 변화 관찰",
+        "Virtual Thread I/O 모사"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "unbounded queue는 maximumPoolSize 확장을 사실상 사용하지 못하게 만들 수 있고 대기 task가 메모 리를 압박할 수 있다."
+      ],
+      "observe": [
+        "thread dump·JFR·pool state",
+        "queue·active count·rejection",
+        "CPU·blocking I/O 구분"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "worker 수가 downstream capacity보다 많으면 처리량보다 대기만 늘 수 있다. Virtual Thread는 blocking I/O 동시성에 유리하지만 CPU 작업과 DB connection 제한을 없애지 않는다."
+      ],
+      "sourceRefs": [
+        "SRC-012",
+        "SRC-019"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D06-P01",
+      "day": 6,
+      "chapterId": "CH04",
+      "title": "DNS·TCP·TLS·HTTP 재현·검증 Lab",
+      "goal": "외부 API가 30초 후 실패하지만 connect/read 구분이 없다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: curl",
+        "optional/local: curl",
+        "optional/local: nslookup"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "curl -v https://example.com/",
+        "curl --connect-timeout 2 --max-time 5 http://127.0.0.1:65530/",
+        "nslookup example.com"
+      ],
+      "steps": [
+        "curl -v 분석",
+        "connection refused 재현",
+        "read timeout 재현",
+        "POST 중복과 idempotency key",
+        "HTTP status 계약표"
+      ],
+      "guidedSteps": [
+        "curl -v 분석",
+        "connection refused 재현"
+      ],
+      "independentSteps": [
+        "read timeout 재현",
+        "POST 중복과 idempotency key",
+        "HTTP status 계약표"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "“timeout” 한 단어만 로그에 남기면 연결 실패인지 응답 지연인지 구분하기 어렵다."
+      ],
+      "observe": [
+        "DNS·connect·TLS·HTTP 단계별 시간",
+        "status와 upstream log",
+        "timeout budget"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "keep-alive는 handshake 비용을 줄이지만 stale connection 관리가 필요하다. timeout은 DNS/connect/acquire/read 등 계층별로 budget을 나눈다."
+      ],
+      "sourceRefs": [
+        "SRC-055",
+        "SRC-002"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D07-P01",
+      "day": 7,
+      "chapterId": "CH04",
+      "title": "Nginx·Reverse Proxy·Load Balancer·Timeout 재현·검증 Lab",
+      "goal": "사용자는 502를 받지만 애플리케이션에는 요청 로그가 없다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: nginx",
+        "optional/local: nginx",
+        "optional/local: curl",
+        "optional/local: tail"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "nginx -t",
+        "nginx -s reload",
+        "curl -i http://localhost/api/",
+        "tail -f /var/log/nginx/error.log"
+      ],
+      "steps": [
+        "/api proxy 구성",
+        "upstream port 오류로 502",
+        "느린 backend로 504",
+        "forwarded header 확인",
+        "nginx -t와 curl smoke"
+      ],
+      "guidedSteps": [
+        "/api proxy 구성",
+        "upstream port 오류로 502"
+      ],
+      "independentSteps": [
+        "느린 backend로 504",
+        "forwarded header 확인",
+        "nginx -t와 curl smoke"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "upstream port가 틀리거나 SELinux/권한/방화벽 문제면 application log에 요청이 없는데 502가 발생할 수 있다."
+      ],
+      "observe": [
+        "DNS·connect·TLS·HTTP 단계별 시간",
+        "status와 upstream log",
+        "timeout budget"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "proxy timeout을 무작정 크게 하면 장애를 감추고 socket/worker를 오래 점유한다. forwarded header는 신뢰할 proxy 경계에서만 믿는다."
+      ],
+      "sourceRefs": [
+        "SRC-043",
+        "SRC-044"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D08-P01",
+      "day": 8,
+      "chapterId": "CH05",
+      "title": "Spring IoC·DI·Bean Lifecycle 재현·검증 Lab",
+      "goal": "currentUserId를 service field에 저장해 사용자 정보가 다른 요청과 섞인다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: ./gradlew",
+        "optional/local: curl"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "./gradlew bootRun",
+        "curl -s http://localhost:8080/lab/bean"
+      ],
+      "steps": [
+        "생성자 주입 3개 bean",
+        "lifecycle 로그",
+        "BeanPostProcessor 로그",
+        "mutable field 동시성 재현",
+        "bean 목록 출력"
+      ],
+      "guidedSteps": [
+        "생성자 주입 3개 bean",
+        "lifecycle 로그"
+      ],
+      "independentSteps": [
+        "BeanPostProcessor 로그",
+        "mutable field 동시성 재현",
+        "bean 목록 출력"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "singleton service의 mutable field는 동시 요청에서 값이 섞일 수 있다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "생성자 주입은 필수 의존성과 테스트를 명확히 하지만 순환참조가 보이면 주입 방식보다 책임 분리를 먼저 본다. singleton은 공유 인스턴스이므로 request state를 필드에 저장하지 않는다."
+      ],
+      "sourceRefs": [
+        "SRC-029"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D09-P01",
+      "day": 9,
+      "chapterId": "CH05",
+      "title": "Spring AOP·Proxy·MVC·Validation·Exception 재현·검증 Lab",
+      "goal": "Controller에 validation, logging, transaction, business logic이 모두 들어있다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: ./gradlew",
+        "optional/local: curl"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "./gradlew bootRun",
+        "curl -i -H \"Content-Type: application/json\" -d \"{}\" http://localhost:8080/orders"
+      ],
+      "steps": [
+        "@Around 실행시간 측정",
+        "DTO validation 400",
+        "domain exception 409",
+        "415 재현",
+        "proxy class 출력"
+      ],
+      "guidedSteps": [
+        "@Around 실행시간 측정",
+        "DTO validation 400"
+      ],
+      "independentSteps": [
+        "domain exception 409",
+        "415 재현",
+        "proxy class 출력"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "내부 stack trace와 SQL 메시지를 client response에 노출하면 보안·운영 문제가 된다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "AOP는 cross-cutting concern에 제한하고 business branching까지 숨기지 않는다. validation은 입력 형 식과 business rule의 책임 위치를 구분한다."
+      ],
+      "sourceRefs": [
+        "SRC-028",
+        "SRC-032"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D10-P01",
+      "day": 10,
+      "chapterId": "CH06",
+      "title": "Spring Transaction 재현·검증 Lab",
+      "goal": "outer()가 같은 class의 @Transactional inner()를 호출해 예상한 rollback이 발생하지 않는다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: ./gradlew",
+        "optional/local: ./gradlew"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "./gradlew test --tests \"*Transaction*\"",
+        "./gradlew bootRun"
+      ],
+      "steps": [
+        "self-invocation 재현",
+        "별도 bean 비교",
+        "rollback 규칙 테스트",
+        "REQUIRES_NEW 결과 비교",
+        "transaction 안 slow I/O"
+      ],
+      "guidedSteps": [
+        "self-invocation 재현",
+        "별도 bean 비교"
+      ],
+      "independentSteps": [
+        "rollback 규칙 테스트",
+        "REQUIRES_NEW 결과 비교",
+        "transaction 안 slow I/O"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "예외를 catch하고 삼키면 transaction manager가 실패를 모른 채 commit할 수 있다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "REQUIRES_NEW는 독립 transaction을 만들지만 connection 증가와 outer rollback/inner commit 불일치를 낳을 수 있다. transaction 안의 느린 외부 I/O는 lock과 connection 점유시간을 늘린다."
+      ],
+      "sourceRefs": [
+        "SRC-030",
+        "SRC-031"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D11-P01",
+      "day": 11,
+      "chapterId": "CH06",
+      "title": "DB Transaction·Isolation·MVCC·Lock·Deadlock 재현·검증 Lab",
+      "goal": "T1은 A→B, T2는 B→A 순으로 update하여 cycle이 생긴다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: SELECT",
+        "optional/local: COMMIT",
+        "optional/local: ROLLBACK"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "SELECT ... FOR UPDATE",
+        "COMMIT",
+        "ROLLBACK"
+      ],
+      "steps": [
+        "두 session blocking",
+        "반대 순서 deadlock",
+        "isolation 비교",
+        "unique 경쟁",
+        "version column 충돌"
+      ],
+      "guidedSteps": [
+        "두 session blocking",
+        "반대 순서 deadlock"
+      ],
+      "independentSteps": [
+        "isolation 비교",
+        "unique 경쟁",
+        "version column 충돌"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "오래 열린 transaction과 불일치한 lock 획득 순서는 blocking/deadlock을 만든다."
+      ],
+      "observe": [
+        "실행계획의 estimate와 실제 row",
+        "lock wait와 transaction 경계",
+        "동일 입력의 결과 집합"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "isolation을 높이면 정합성 보장은 늘 수 있지만 concurrency 비용이 커진다. 낙관적 lock은 version mismatch를 감지하고 충돌 처리 책임을 application에 둔다."
+      ],
+      "sourceRefs": [
+        "SRC-006",
+        "SRC-053"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D12-P01",
+      "day": 12,
+      "chapterId": "CH07",
+      "title": "SQL·Index·Execution Plan 재현·검증 Lab",
+      "goal": "기간 조회가 느려 인덱스를 추가했지만 결과가 table의 큰 비율이라 random access만 증가한다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: EXPLAIN",
+        "optional/local: SELECT"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "EXPLAIN PLAN FOR SELECT ...;",
+        "SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);"
+      ],
+      "steps": [
+        "대량 sample table",
+        "index 전후 plan",
+        "복합 인덱스 순서",
+        "함수 predicate 비교",
+        "join 방식 비교"
+      ],
+      "guidedSteps": [
+        "대량 sample table",
+        "index 전후 plan"
+      ],
+      "independentSteps": [
+        "복합 인덱스 순서",
+        "함수 predicate 비교",
+        "join 방식 비교"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "함수/형변환 때문에 예상한 index access가 사라지거나 cardinality estimate가 틀리면 잘못된 join method가 선택될 수 있다."
+      ],
+      "observe": [
+        "실행계획의 estimate와 실제 row",
+        "lock wait와 transaction 경계",
+        "동일 입력의 결과 집합"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "인덱스는 write/storage 비용이 있고 복합 인덱스는 column 순서와 predicate 형태가 중요하다. hint로 계획 을 고정하기 전에 통계와 data skew를 확인한다."
+      ],
+      "sourceRefs": [
+        "SRC-009",
+        "SRC-008"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D13-P01",
+      "day": 13,
+      "chapterId": "CH07",
+      "title": "Oracle Tuning·Partition 재현·검증 Lab",
+      "goal": "오래된 시간 데이터를 대량 DELETE하면서 lock/undo 부하가 증가한다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: SELECT",
+        "optional/local: SELECT"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);",
+        "SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR(NULL,NULL,'ALLSTATS LAST'));"
+      ],
+      "steps": [
+        "range partition 생성",
+        "pruning plan 확인",
+        "가공 predicate 비교",
+        "DELETE와 partition 정리 비교",
+        "bind skew 학습"
+      ],
+      "guidedSteps": [
+        "range partition 생성",
+        "pruning plan 확인"
+      ],
+      "independentSteps": [
+        "가공 predicate 비교",
+        "DELETE와 partition 정리 비교",
+        "bind skew 학습"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "partition key 가공으로 pruning이 깨지거나 global index maintenance 문제가 생길 수 있다."
+      ],
+      "observe": [
+        "실행계획의 estimate와 실제 row",
+        "lock wait와 transaction 경계",
+        "동일 입력의 결과 집합"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "시간 기반 데이터에서 row-by-row DELETE 대신 partition 단위 정리가 유리할 수 있지만 FK/index/archive/운영정책을 함께 본다."
+      ],
+      "sourceRefs": [
+        "SRC-010",
+        "SRC-005"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D14-P01",
+      "day": 14,
+      "chapterId": "CH08",
+      "title": "Spring Batch 재현·검증 Lab",
+      "goal": "10건을 5건 chunk로 처리하다 7번째 item이 한 번 실패한다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: ./gradlew"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "./gradlew bootRun --args=\"run.id=1 businessDate=2026-08-26\""
+      ],
+      "steps": [
+        "10건 5개 chunk",
+        "transient retry",
+        "항상 실패 exhaustion",
+        "process restart",
+        "JobParameters에 따른 Instance 비교"
+      ],
+      "guidedSteps": [
+        "10건 5개 chunk",
+        "transient retry"
+      ],
+      "independentSteps": [
+        "항상 실패 exhaustion",
+        "process restart",
+        "JobParameters에 따른 Instance 비교"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "retry 가능한 transient 오류와 deterministic 오류를 구분하지 않으면 무한/불필요 재시도가 생긴다."
+      ],
+      "observe": [
+        "JobInstance·Execution 상태",
+        "처리 건수와 기준일",
+        "부분 실패·재처리 기록"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "chunk size를 키우면 round trip은 줄 수 있지만 transaction log, memory, rollback 범위가 커질 수 있다. ExecutionContext는 restart state이지 큰 business data 저장소가 아니다."
+      ],
+      "sourceRefs": [
+        "SRC-024",
+        "SRC-026",
+        "SRC-025"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D15-P01",
+      "day": 15,
+      "chapterId": "CH08",
+      "title": "EAI·File 연계·Control-M·정산 Batch 재현·검증 Lab",
+      "goal": "원천 batch는 성공했지만 외부 송신만 실패했다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: sha256sum",
+        "optional/local: wc"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "sha256sum sample.csv",
+        "wc -l sample.csv"
+      ],
+      "steps": [
+        "CSV staging/validation",
+        "partial file과 atomic rename",
+        "interface table 상태 machine",
+        "scheduler flow 모사",
+        "기준일 재실행/대사"
+      ],
+      "guidedSteps": [
+        "CSV staging/validation",
+        "partial file과 atomic rename"
+      ],
+      "independentSteps": [
+        "interface table 상태 machine",
+        "scheduler flow 모사",
+        "기준일 재실행/대사"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "partial file을 읽거나 원천 batch를 다시 돌려 이미 완료된 외부 송신까지 중복할 수 있다."
+      ],
+      "observe": [
+        "JobInstance·Execution 상태",
+        "처리 건수와 기준일",
+        "부분 실패·재처리 기록"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "DB-Link를 interface table/polling으로 분리하면 재처리와 상태 관리가 쉬워지지만 poison record, polling interval, retention 운영이 추가된다."
+      ],
+      "sourceRefs": [
+        "SRC-034",
+        "SRC-033"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D16-P01",
+      "day": 16,
+      "chapterId": "CH09",
+      "title": "Array·String·Hash·Two Pointer 재현·검증 Lab",
+      "goal": "정렬된 배열에서 target 합 pair를 찾는다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: ./gradlew"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "./gradlew test --tests \"*Day16*\""
+      ],
+      "steps": [
+        "빈도 집계",
+        "two-sum",
+        "고정/가변 window",
+        "brute force oracle",
+        "edge case/overflow"
+      ],
+      "guidedSteps": [
+        "빈도 집계",
+        "two-sum"
+      ],
+      "independentSteps": [
+        "고정/가변 window",
+        "brute force oracle",
+        "edge case/overflow"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "음수 때문에 window sum이 단조롭지 않으면 단순 sliding window가 잘못된 해를 낼 수 있다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "영문 소문자처럼 key 범위가 고정되면 배열이 Map보다 단순할 수 있고, 입력이 정렬되지 않았으면 정렬 비용과 HashMap 대안을 비교한다."
+      ],
+      "sourceRefs": [
+        "SRC-020"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D17-P01",
+      "day": 17,
+      "chapterId": "CH10",
+      "title": "Stack·Queue·Heap·Sort 재현·검증 Lab",
+      "goal": "실시간 점수 상위 K개를 유지한다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: ./gradlew"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "./gradlew test --tests \"*Day17*\""
+      ],
+      "steps": [
+        "괄호/stack",
+        "BFS queue",
+        "top-K heap",
+        "Comparator overflow",
+        "full sort vs heap"
+      ],
+      "guidedSteps": [
+        "괄호/stack",
+        "BFS queue"
+      ],
+      "independentSteps": [
+        "top-K heap",
+        "Comparator overflow",
+        "full sort vs heap"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "Comparator에서 a-b를 반환하면 integer overflow로 순서가 뒤집힐 수 있다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "상위 K처럼 K가 N보다 작고 streaming 유지가 필요하면 heap이 유리하지만 한 번 전체 결과가 필요하면 sort 가 더 단순할 수 있다."
+      ],
+      "sourceRefs": [
+        "SRC-018"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D18-P01",
+      "day": 18,
+      "chapterId": "CH11",
+      "title": "Binary Search·Greedy·Prefix·Interval 재현·검증 Lab",
+      "goal": "D일 안에 작업을 끝낼 최소 capacity를 구한다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: ./gradlew"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "./gradlew test --tests \"*Day18*\""
+      ],
+      "steps": [
+        "lower bound",
+        "answer-space search",
+        "interval greedy",
+        "prefix sum",
+        "brute force random 검증"
+      ],
+      "guidedSteps": [
+        "lower bound",
+        "answer-space search"
+      ],
+      "independentSteps": [
+        "interval greedy",
+        "prefix sum",
+        "brute force random 검증"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "off-by-one과 잘못된 greedy 선택은 작은 입력에서는 통과하고 큰/특수 입력에서만 실패하기 쉽다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "Binary search boundary는 inclusive/exclusive 규칙을 하나로 고정한다. Greedy 근거가 없으면 DP 후보를 비교한다."
+      ],
+      "sourceRefs": [
+        "SRC-015"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D19-P01",
+      "day": 19,
+      "chapterId": "CH12",
+      "title": "BFS·DFS·Graph·Union-Find 재현·검증 Lab",
+      "goal": "서버 연결 정보에서 component 수와 동적 연결 여부를 구한다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: ./gradlew"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "./gradlew test --tests \"*Day19*\""
+      ],
+      "steps": [
+        "grid BFS",
+        "components DFS/BFS",
+        "deep DFS iterative",
+        "Union-Find 최적화",
+        "dependency cycle"
+      ],
+      "guidedSteps": [
+        "grid BFS",
+        "components DFS/BFS"
+      ],
+      "independentSteps": [
+        "deep DFS iterative",
+        "Union-Find 최적화",
+        "dependency cycle"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "BFS에서 dequeue 시점에만 visited를 표시하면 같은 node가 queue에 여러 번 들어갈 수 있다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "DFS recursion은 깊은 graph에서 stack 위험이 있고 Union-Find는 실제 경로를 제공하지 않는다."
+      ],
+      "sourceRefs": [
+        "SRC-014"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D20-P01",
+      "day": 20,
+      "chapterId": "CH13",
+      "title": "DP·Backtracking·Brute Force 재현·검증 Lab",
+      "goal": "일반 coin set의 최소 동전 수를 구한다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: ./gradlew"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "./gradlew test --tests \"*Day20*\""
+      ],
+      "steps": [
+        "coin DP",
+        "memo/tabulation 비교",
+        "N-Queens pruning",
+        "brute force oracle",
+        "2D→1D memory 줄이기"
+      ],
+      "guidedSteps": [
+        "coin DP",
+        "memo/tabulation 비교"
+      ],
+      "independentSteps": [
+        "N-Queens pruning",
+        "brute force oracle",
+        "2D→1D memory 줄이기"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "정답 근거 없이 pruning하면 필요한 branch를 제거해 오답이 된다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "Memoization과 tabulation은 접근하는 state와 recursion depth에 따라 선택한다. greedy 근거가 없으면 DP를 검토한다."
+      ],
+      "sourceRefs": [
+        "SRC-015"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D21-P01",
+      "day": 21,
+      "chapterId": "CH14",
+      "title": "SQL 심화와 Java 구현 품질 재현·검증 Lab",
+      "goal": "고객별 최근 주문 1건을 반복 correlated subquery로 찾는다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: ./gradlew"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "./gradlew test"
+      ],
+      "steps": [
+        "ROW_NUMBER/RANK",
+        "NOT IN vs NOT EXISTS",
+        "outer join ON/WHERE",
+        "Java refactor",
+        "SQL3+Java2 self-review"
+      ],
+      "guidedSteps": [
+        "ROW_NUMBER/RANK",
+        "NOT IN vs NOT EXISTS"
+      ],
+      "independentSteps": [
+        "outer join ON/WHERE",
+        "Java refactor",
+        "SQL3+Java2 self-review"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "outer join 후 WHERE 조건을 잘못 두면 사실상 inner join처럼 결과가 줄어들 수 있다."
+      ],
+      "observe": [
+        "실행계획의 estimate와 실제 row",
+        "lock wait와 transaction 경계",
+        "동일 입력의 결과 집합"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "CTE는 가독성을 높이지만 DB/version별 optimizer 처리 차이를 확인한다. Java 구현도 naming, side effect, null/exception, test boundary를 함께 본다."
+      ],
+      "sourceRefs": [
+        "SRC-007"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D22-P01",
+      "day": 22,
+      "chapterId": "CH14",
+      "title": "통합 코딩 실습 재현·검증 Lab",
+      "goal": "90분 세트에서 마지막 문제의 해석에 25분을 사용한다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: ./gradlew"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "./gradlew test"
+      ],
+      "steps": [
+        "Java3+SQL2 120분",
+        "문제별 5분 분석",
+        "brute force 검증",
+        "오답 분류",
+        "24시간 뒤 재풀이"
+      ],
+      "guidedSteps": [
+        "Java3+SQL2 120분",
+        "문제별 5분 분석"
+      ],
+      "independentSteps": [
+        "brute force 검증",
+        "오답 분류",
+        "24시간 뒤 재풀이"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "문제 해석 없이 코딩부터 시작하면 알고리즘 지식이 있어도 시간을 잃는다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "정답을 본 직후 베끼는 대신 잠시 뒤나 다음 날 다시 구현해 retrieval을 만든다."
+      ],
+      "sourceRefs": [
+        "SRC-054"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D23-P01",
+      "day": 23,
+      "chapterId": "CH15",
+      "title": "Timeout·Retry·Backoff·Circuit Breaker 재현·검증 Lab",
+      "goal": "A→B→C 각 계층이 3회 retry하여 C 장애 시 요청이 폭증한다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: curl",
+        "optional/local: ./gradlew"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "curl --connect-timeout 1 --max-time 3 ...",
+        "./gradlew test --tests \"*Retry*\""
+      ],
+      "steps": [
+        "지연/실패 downstream",
+        "connect/read timeout",
+        "fixed vs jitter retry",
+        "POST idempotency",
+        "breaker state 모사"
+      ],
+      "guidedSteps": [
+        "지연/실패 downstream",
+        "connect/read timeout"
+      ],
+      "independentSteps": [
+        "fixed vs jitter retry",
+        "POST idempotency",
+        "breaker state 모사"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "deterministic 4xx까지 재시도하거나 write idempotency 없이 retry하면 부하와 중복 부수효과가 커진다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "retry와 breaker의 목적은 다르고 여러 계층이 각자 재시도하면 횟수가 곱셈으로 폭증할 수 있다."
+      ],
+      "sourceRefs": [
+        "SRC-001",
+        "SRC-048"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D24-P01",
+      "day": 24,
+      "chapterId": "CH16",
+      "title": "Kafka Architecture 재현·검증 Lab",
+      "goal": "같은 주문의 CREATED/CANCELLED가 key 없이 다른 partition으로 가 순서가 뒤섞인다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: kafka-topics.sh",
+        "optional/local: kafka-consumer-groups.sh"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "kafka-topics.sh --create --topic study-events --partitions 3 --bootstrap-server localhost:9092",
+        "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group study-group"
+      ],
+      "steps": [
+        "3-partition topic",
+        "key/no-key 분배",
+        "consumer 1/2/4 assignment",
+        "강제 rebalance",
+        "lag 발생"
+      ],
+      "guidedSteps": [
+        "3-partition topic",
+        "key/no-key 분배"
+      ],
+      "independentSteps": [
+        "consumer 1/2/4 assignment",
+        "강제 rebalance",
+        "lag 발생"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "offset commit이 business 처리 완료보다 먼저 되면 장애 시 처리 누락처럼 보일 수 있다."
+      ],
+      "observe": [
+        "partition·offset·consumer lag",
+        "producer acknowledgement와 retry 설정",
+        "중복 처리 방지 key"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "consumer만 늘려도 partition 수보다 많으면 idle이 생긴다. key ordering은 hot partition trade-off가 있 다."
+      ],
+      "sourceRefs": [
+        "SRC-039",
+        "SRC-037"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D25-P01",
+      "day": 25,
+      "chapterId": "CH16",
+      "title": "Kafka Reliability·Idempotence·Outbox 재현·검증 Lab",
+      "goal": "주문 DB commit 직후 process가 죽어 Kafka event가 없다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: kafka-console-consumer.sh"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "kafka-console-consumer.sh ... --property print.key=true"
+      ],
+      "steps": [
+        "order+outbox table",
+        "dual-write crash",
+        "publisher 상태",
+        "publish 후 crash 중복",
+        "processed_event unique"
+      ],
+      "guidedSteps": [
+        "order+outbox table",
+        "dual-write crash"
+      ],
+      "independentSteps": [
+        "publisher 상태",
+        "publish 후 crash 중복",
+        "processed_event unique"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "DB commit 후 Kafka publish 전 crash는 후속 서비스에 event가 전달되지 않는 gap을 만든다."
+      ],
+      "observe": [
+        "partition·offset·consumer lag",
+        "producer acknowledgement와 retry 설정",
+        "중복 처리 방지 key"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "Outbox publisher가 전송 후 status update 전에 죽으면 중복 publish가 가능하므로 consumer idempotency가 여전히 필요하다."
+      ],
+      "sourceRefs": [
+        "SRC-038",
+        "SRC-042"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D26-P01",
+      "day": 26,
+      "chapterId": "CH17",
+      "title": "결제·정산·대사·원장 재현·검증 Lab",
+      "goal": "승인 timeout 후 client가 같은 결제를 다시 요청한다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: --",
+        "optional/local: --"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "-- GROUP BY business_date, status",
+        "-- ledger debit/credit balance check"
+      ],
+      "steps": [
+        "payment state machine",
+        "중복 idempotency",
+        "double-entry invariant",
+        "settlement batch",
+        "누락/중복 대사 report"
+      ],
+      "guidedSteps": [
+        "payment state machine",
+        "중복 idempotency"
+      ],
+      "independentSteps": [
+        "double-entry invariant",
+        "settlement batch",
+        "누락/중복 대사 report"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "승인 요청 timeout을 곧바로 실패로 처리하면 실제 remote 성공 후 재요청으로 이중 승인이 생길 수 있다."
+      ],
+      "observe": [
+        "JobInstance·Execution 상태",
+        "처리 건수와 기준일",
+        "부분 실패·재처리 기록"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "실제 사업자별 용어가 다르므로 범용 상태 machine과 금액 invariant를 먼저 정의한다."
+      ],
+      "sourceRefs": [
+        "SRC-041"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D27-P01",
+      "day": 27,
+      "chapterId": "CH18",
+      "title": "System Design 재현·검증 Lab",
+      "goal": "대량 주문 조회 서비스를 설계한다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: --"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "-- whiteboard 또는 Mermaid/텍스트 diagram"
+      ],
+      "steps": [
+        "45분 설계",
+        "10분 요구/용량",
+        "API/data/index",
+        "failure 3개",
+        "trade-off/미측정 가정"
+      ],
+      "guidedSteps": [
+        "45분 설계",
+        "10분 요구/용량"
+      ],
+      "independentSteps": [
+        "API/data/index",
+        "failure 3개",
+        "trade-off/미측정 가정"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "정상 경로만 설계하면 DB down, cache miss storm, queue lag 같은 운영 실패를 다루지 못한다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "cache/queue/microservice를 기본값처럼 넣지 않고 latency, consistency, traffic, 운영비용이 실제 필요 성을 만든 경우에만 추가한다."
+      ],
+      "sourceRefs": [
+        "SRC-051",
+        "SRC-049"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D28-P01",
+      "day": 28,
+      "chapterId": "CH19",
+      "title": "JPA·Redis·Docker·Kubernetes·Security 재현·검증 Lab",
+      "goal": "목록 100건을 직렬화하면서 lazy association 100번이 추가 조회된다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: docker",
+        "optional/local: docker",
+        "optional/local: redis-cli",
+        "optional/local: kubectl"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "docker build -t backend-study .",
+        "docker run --rm -p 8080:8080 backend-study",
+        "redis-cli TTL sample:key",
+        "kubectl explain deployment.spec.template.spec.containers.readinessProbe"
+      ],
+      "steps": [
+        "JPA N+1",
+        "fetch/DTO 비교",
+        "Redis TTL/miss",
+        "Docker build/run",
+        "K8s probe 읽기",
+        "secret scan"
+      ],
+      "guidedSteps": [
+        "JPA N+1",
+        "fetch/DTO 비교"
+      ],
+      "independentSteps": [
+        "Redis TTL/miss",
+        "Docker build/run",
+        "K8s probe 읽기",
+        "secret scan"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "연관관계 로딩 정책과 캐시·probe·secret 경계를 구분하지 않으면 쿼리 폭증, stale data, 잘못된 재시작, 비 밀값 노출이 함께 발생할 수 있다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "모든 association EAGER, TTL 없는 cache, image에 secret 포함, readiness/liveness 혼동은 운영 복잡도 를 키운다."
+      ],
+      "sourceRefs": [
+        "SRC-027",
+        "SRC-047",
+        "SRC-003",
+        "SRC-040",
+        "SRC-045"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D29-P01",
+      "day": 29,
+      "chapterId": "CH20",
+      "title": "AI·RAG 를 사용하는 백엔드 재현·검증 Lab",
+      "goal": "운영 문서 질의 provider 장애 때문에 관리 화면 전체가 실패한다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: curl"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "curl -X POST http://localhost:8080/rag/search -H \"Content-Type: application/json\" -d \"{\"q\":\"transaction\"}\""
+      ],
+      "steps": [
+        "Markdown chunking",
+        "toy vector retrieval",
+        "source 포함 API",
+        "provider timeout/429",
+        "read-only/mutation tool 분리"
+      ],
+      "guidedSteps": [
+        "Markdown chunking",
+        "toy vector retrieval"
+      ],
+      "independentSteps": [
+        "source 포함 API",
+        "provider timeout/429",
+        "read-only/mutation tool 분리"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "provider 장애가 core admin request path에 강결합되면 AI 기능 하나 때문에 전체 서비스가 500이 될 수 있다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "AI 기능을 core transaction과 분리해 실패 시 부분 DEGRADED로 만들고 mutation tool에는 approval/audit/allowlist를 둔다."
+      ],
+      "sourceRefs": [
+        "SRC-023",
+        "SRC-046",
+        "SRC-035"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D30-P01",
+      "day": 30,
+      "chapterId": "CH21",
+      "title": "실무 장애·성능 사례 분석 재현·검증 Lab",
+      "goal": "반복 INSERT/DELETE와 대량 DELETE, thread/DB contention으로 대량 처리 지연이 커진다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: --"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "-- 처리량 = 처리건수 / 실행시간"
+      ],
+      "steps": [
+        "장애 3개 postmortem",
+        "throughput 계산",
+        "migration checklist",
+        "snapshot/correlation runbook",
+        "미측정/향후지표 분리"
+      ],
+      "guidedSteps": [
+        "장애 3개 postmortem",
+        "throughput 계산"
+      ],
+      "independentSteps": [
+        "migration checklist",
+        "snapshot/correlation runbook",
+        "미측정/향후지표 분리"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "최근 변경과 기준선을 남기지 않으면 원인과 개선을 증명하기 어렵고 재처리 시 중복을 만들 수 있다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "SQL 한 줄보다 데이터 lifecycle/write pattern 자체를 바꾸는 것이 필요한 문제도 있다. 환경/IDC 전환은 Java/DB/Batch/EAI/File/TLS/Nginx/데이터를 전수 확인한다."
+      ],
+      "sourceRefs": [
+        "SRC-050",
+        "SRC-049"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D31-P01",
+      "day": 31,
+      "chapterId": "CH21",
+      "title": "통합 역량 시험 재현·검증 Lab",
+      "goal": "정산 마감 batch가 느려지고 외부 송신도 지연된다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: --"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "-- 총 155분 timebox"
+      ],
+      "steps": [
+        "Java2 45분",
+        "SQL2 35분",
+        "System Design 45분",
+        "장애 시나리오 30분",
+        "자기채점/24시간 재시험"
+      ],
+      "guidedSteps": [
+        "Java2 45분",
+        "SQL2 35분"
+      ],
+      "independentSteps": [
+        "System Design 45분",
+        "장애 시나리오 30분",
+        "자기채점/24시간 재시험"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "한 영역의 정답만 고집하면 실제 원인이 DB lock, thread pool, EAI backlog처럼 다른 경계에 있을 수 있다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "모르는 부분은 추측으로 채우지 않고 현재 아는 범위와 확인 방법을 제시한다."
+      ],
+      "sourceRefs": [
+        "SRC-052"
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "D32-P01",
+      "day": 32,
+      "chapterId": "CH21",
+      "title": "누적 회상·약점 복구 재현·검증 Lab",
+      "goal": "Transaction 정의는 알지만 self-invocation과 propagation에서 반복 실패한다. 상황을 정상 기준선부터 재현하고 조치의 인과관계를 증명한다.",
+      "prerequisites": [
+        "실습 폴더를 만들고 현재 버전/환경을 notes.md에 기록합니다.",
+        "정상 결과를 먼저 저장한 뒤 실패를 의도적으로 만듭니다.",
+        "DB·파일·배포 변경은 원복 절차를 먼저 적습니다.",
+        "실패 시 첫 오류만 보지 않고 원인 후보를 2~3개로 분리합니다."
+      ],
+      "environment": [
+        "optional/local: --"
+      ],
+      "setup": [
+        "별도 실습 디렉터리와 notes.md를 만든다.",
+        "현재 버전·입력·예상 결과·rollback 절차를 기록한다.",
+        "production credential과 실제 업무 데이터는 사용하지 않는다."
+      ],
+      "commands": [
+        "-- notes/assessment 데이터 정리"
+      ],
+      "steps": [
+        "32개 핵심 1줄 회상",
+        "오답 Top20 tag",
+        "약점5 실습 재현",
+        "누적 30문항",
+        "4주 일정 작성"
+      ],
+      "guidedSteps": [
+        "32개 핵심 1줄 회상",
+        "오답 Top20 tag"
+      ],
+      "independentSteps": [
+        "약점5 실습 재현",
+        "누적 30문항",
+        "4주 일정 작성"
+      ],
+      "expectedInputs": [
+        "정상 입력",
+        "경계 입력",
+        "의도한 실패 입력"
+      ],
+      "expectedOutputs": [
+        "정상 invariant 증거",
+        "의도한 실패 로그 또는 상태",
+        "조치 후 재실행 및 rollback 증거"
+      ],
+      "failureInjection": [
+        "이미 아는 정의를 계속 읽는 대신 반복 실패하는 연결을 찾지 않으면 약점이 그대로 남는다."
+      ],
+      "observe": [
+        "입력과 예상 invariant",
+        "변경 전후 로그·metric·state",
+        "정상·경계·실패·재실행 결과"
+      ],
+      "verify": [
+        "정상 결과와 실패 결과를 각각 보관합니다.",
+        "변경 전후 동일한 입력 또는 정규화 기준으로 비교합니다.",
+        "원인과 조치의 인과관계를 말로 설명합니다.",
+        "재실행/rollback 후 상태가 기대한 invariant로 돌아오는지 확인합니다."
+      ],
+      "regression": [
+        "정상 입력을 다시 실행해 결과가 유지되는지 확인한다.",
+        "실패 주입을 제거한 뒤 상태가 기준선으로 돌아오는지 확인한다."
+      ],
+      "completionCriteria": [
+        "모든 단계의 입력과 결과가 notes.md에 남아 있다.",
+        "원인과 조치의 인과관계를 설명할 수 있다.",
+        "대안 하나와 적용하지 않을 조건을 말할 수 있다."
+      ],
+      "rubric": {
+        "correctness": 40,
+        "explanation": 20,
+        "failureReproduction": 15,
+        "implementationQuality": 10,
+        "evidence": 10,
+        "tradeoff": 5
+      },
+      "tradeoffs": [
+        "초기 학습은 worked example과 같은 유형 연습이 도움이 되고 숙련 후에는 interleaving으로 전략 선택 능력 을 키운다."
+      ],
+      "sourceRefs": [
+        "SRC-054",
+        "SRC-036"
+      ],
+      "reviewStatus": "reviewed"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "publicMode": "reviewed-only",
+  "requiredChapterCount": 21,
+  "requiredDayCount": 32,
+  "requiredPracticePerDay": 1,
+  "requiredQuizPerDay": 6,
+  "requiredDaySections": [
+    "purpose",
+    "objectives",
+    "prerequisites",
+    "diagnostic",
+    "terms",
+    "learn",
+    "workedExample",
+    "guidedPracticeIds",
+    "independentPracticeIds",
+    "verify",
+    "quizIds",
+    "weaknessTags",
+    "spacedReview",
+    "sourceRefs",
+    "reviewStatus"
+  ],
+  "requiredLearnSections": [
+    "definition",
+    "why",
+    "internals",
+    "choiceCriteria",
+    "comparisons",
+    "tradeoffs",
+    "failureConditions",
+    "observe",
+    "howToRead"
+  ],
+  "supportedQuizTypes": [
+    "recall",
+    "mcq",
+    "short-answer",
+    "oral",
+    "code",
+    "sql",
+    "debug",
+    "scenario",
+    "system-design"
+  ],
+  "forbiddenPublicPatterns": [
+    "@",
+    "password",
+    "api_key",
+    "service_role",
+    "ssh-rsa",
+    "BEGIN PRIVATE KEY",
+    "희망연봉",
+    "지원 현황"
+  ],
+  "reviewStatus": "reviewed"
+}

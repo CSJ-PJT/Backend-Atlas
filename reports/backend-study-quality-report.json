@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "counts": {
+    "chapters": 21,
+    "days": 32,
+    "practices": 32,
+    "questions": 192,
+    "sources": 55
+  },
+  "questionTypes": {
+    "code": 9,
+    "debug": 13,
+    "mcq": 32,
+    "oral": 32,
+    "recall": 32,
+    "scenario": 32,
+    "short-answer": 32,
+    "sql": 3,
+    "system-design": 7
+  },
+  "gates": {
+    "canonicalStructuredSource": true,
+    "reviewedOnly": true,
+    "officialSourcesConnected": true,
+    "answerTextExcludedFromState": true,
+    "standaloneRoute": true
+  }
+}
