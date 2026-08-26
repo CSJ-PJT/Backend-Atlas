@@ -1,0 +1,36 @@
+{
+  "observedAt": "2026-08-26T11:00:00+09:00",
+  "operatingUrl": "https://<ATLAS_PUBLIC_HOST>/learn/",
+  "title": "Backend Atlas",
+  "desktop": {
+    "viewport": "1440x900",
+    "headingVisible": true,
+    "interviewCtaVisible": true,
+    "publicQuestionCount": 15,
+    "horizontalOverflow": 0,
+    "consoleWarningsOrErrors": 0
+  },
+  "mobile": {
+    "viewport": "390x844",
+    "headingVisible": true,
+    "quizCtaVisible": true,
+    "bottomNavigationVisible": true,
+    "horizontalOverflow": 0,
+    "consoleWarningsOrErrors": 0
+  },
+  "currentIncruitHandoff": {
+    "query": "?job=qa-job-42&topic=LocalStorage",
+    "contextVisible": true,
+    "knowledgeViewVisible": true,
+    "resolvedConcept": "Web Storage API",
+    "consoleWarningsOrErrors": 0
+  },
+  "targetInterviewHandoffBaseline": {
+    "query": "?mode=interview&job=qa-job-42&topic=LocalStorage",
+    "contextVisible": true,
+    "knowledgeViewVisible": true,
+    "interviewSessionVisible": false,
+    "modeParameterHandled": false,
+    "consoleWarningsOrErrors": 0
+  }
+}
