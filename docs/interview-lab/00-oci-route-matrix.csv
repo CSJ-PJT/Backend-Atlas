@@ -1,0 +1,17 @@
+public_path,nginx_contract,target_or_upstream,phase0_http,redirect,protection_boundary
+/,root SPA,/usr/share/nginx/html,200,,Interview Lab must not replace root
+/learn,canonical redirect,/learn/,301,/learn/,Only redirect behavior may be verified
+/learn/,static alias,/usr/share/nginx/html/learn/,200,,Only approved Interview Lab deployment target
+/run,legacy redirect,/learn/,308,/learn/,Must remain redirect only
+/run/,legacy redirect,/learn/,308,/learn/,Must remain redirect only
+/jobs/,static alias,/usr/share/nginx/html/jobs/,200,,Incruit Atlas protected
+/health/,static alias,/usr/share/nginx/html/health/,200,,Health Atlas protected
+/travel/,static alias,/usr/share/nginx/html/travel/,200,,Travel Atlas protected
+/sketchfy/,static alias,/usr/share/nginx/html/sketchfy/,200,,Sketchfy Atlas protected
+/world/,static alias,/usr/share/nginx/html/world/,200,,World Atlas protected
+/archive/,static alias,/usr/share/nginx/html/archive/,200,,Archive protected
+/archiveos/,static alias,/srv/archiveos-edge/current-ui/,200,,ArchiveOS protected
+/api/,reverse proxy,127.0.0.1:3001,404,,Backend API root has no handler; upstream boundary protected
+/atlas-admin-api,reverse proxy,127.0.0.1:3002,NOT_MUTATED,,Atlas admin API protected
+/admin/,root SPA fallback,/usr/share/nginx/html/index.html,200,,Not a dedicated Interview Lab route
+

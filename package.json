@@ -6,9 +6,12 @@
   "scripts": {
     "build": "node scripts/build-web.mjs",
     "build:release": "node scripts/build-web.mjs --release",
-    "test": "node scripts/smoke-test.mjs && node scripts/test-education-quality-contract.mjs && node scripts/test-learning-runtime.mjs && node scripts/test-learning-visuals.mjs && node scripts/test-atlas-access-monitor.mjs",
+    "test": "node scripts/smoke-test.mjs && node scripts/test-education-quality-contract.mjs && node scripts/test-learning-runtime.mjs && node scripts/test-learning-visuals.mjs && node scripts/test-atlas-access-monitor.mjs && node scripts/test-learn-deploy-contract.mjs && npm run test:interview",
+    "test:interview": "node scripts/test-interview-schema.mjs && node scripts/test-interview-source-coverage.mjs && node scripts/test-interview-fact-consistency.mjs && node scripts/test-interview-duplicate.mjs && node scripts/test-interview-secret-scan.mjs && node scripts/test-interview-runtime.mjs",
+    "interview:data": "node scripts/build-interview-data.mjs",
+    "interview:audit": "node scripts/interview-quality-audit.mjs",
     "test:release": "npm run test && npm run quality:audit && node scripts/test-content-quality-audit.mjs && npm run build:release && node scripts/test-build-provenance.mjs --release",
-    "quality:audit": "node scripts/content-quality-audit.mjs",
+    "quality:audit": "node scripts/content-quality-audit.mjs && npm run interview:audit",
     "android:sync": "npm run build && cap sync android",
     "android:open": "cap open android",
     "android:apk": "npm run android:sync && cd android && gradlew.bat assembleDebug"

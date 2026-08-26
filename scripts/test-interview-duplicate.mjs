@@ -1,0 +1,3 @@
+import {readFile} from 'node:fs/promises';import {resolve} from 'node:path';
+const bank=JSON.parse(await readFile(resolve(import.meta.dirname,'../data/interview/generated/interview-question-bank.json'),'utf8'));const normalize=value=>String(value).normalize('NFKC').toLowerCase().replace(/[^a-z0-9가-힣]/g,'');const seen=new Map();const duplicates=[];
+for(const question of bank.questions){const key=normalize(question.question);if(seen.has(key))duplicates.push([seen.get(key),question.id]);else seen.set(key,question.id);}if(duplicates.length)throw new Error(`Duplicate questions: ${JSON.stringify(duplicates.slice(0,10))}`);console.log(`Interview duplicate check passed: ${seen.size} unique normalized questions.`);

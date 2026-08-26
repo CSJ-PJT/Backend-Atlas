@@ -56,6 +56,12 @@ assert.equal(new Set(paths).size, paths.length, 'manifest paths must be unique')
 for (const requiredAsset of ['curriculum-data.js', 'learning-visuals.js', 'app.js', 'learning-os.js']) {
   assert.ok(paths.includes(requiredAsset), `${requiredAsset} must be included in the release manifest`);
 }
+const builtWorker = await readFile(resolve(out, 'sw.js'), 'utf8');
+assert.doesNotMatch(builtWorker, /CACHE_VERSION = 'source-dev'|PRECACHE_ASSETS = \['\.\/'\]/, 'release worker placeholders must be replaced');
+assert.match(builtWorker, /const CACHE_VERSION = '[a-f0-9]{24}';/, 'release worker cache version must be deterministic');
+for (const requiredOfflineAsset of ['./index.html', './app.js', './interview/interview-lab.js', './interview/data/interview-data.js']) {
+  assert.ok(builtWorker.includes(JSON.stringify(requiredOfflineAsset)), `${requiredOfflineAsset} must be precached`);
+}
 for (const file of manifest.files) {
   assert.match(file.path, /^(?!\/|[A-Za-z]:|.*\.\.)(?:[A-Za-z0-9._ -]+\/)*[A-Za-z0-9._ -]+$/);
   assert.match(file.sha256, /^[0-9a-f]{64}$/);

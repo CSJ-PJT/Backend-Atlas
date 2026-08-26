@@ -12,9 +12,11 @@ const assert=(condition,message)=>{if(!condition)throw new Error(message)};
 const versionedAssets=[...dom.window.document.querySelectorAll('script[src],link[href],img[src]')]
   .map(node=>node.getAttribute('src')||node.getAttribute('href'))
   .filter(value=>value&&!value.startsWith('#'));
-assert(versionedAssets.every(value=>value.includes('?v=backend-atlas-v10-verified-contract')),'every release asset reference must use the verified-contract cache key');
+assert(versionedAssets.every(value=>value.includes('?v=backend-atlas-v10-verified-contract')||value.includes('?v=interview-lab-v1')),'every release asset reference must use an explicit reviewed release cache key');
 const serviceWorker=await readFile(resolve(root,'sw.js'),'utf8');
-assert(!serviceWorker.includes('caches.match'),'service worker must not hide stable-filename release assets');
+assert(serviceWorker.includes("const CACHE_PREFIX = 'backend-atlas-shell-';"),'service worker must isolate release caches');
+assert(serviceWorker.includes("fetch(event.request)")&&serviceWorker.includes("caches.match(event.request, { ignoreSearch: true })"),'service worker must prefer the network and provide an offline fallback');
+assert(serviceWorker.includes("names.filter(name => name.startsWith(CACHE_PREFIX) && name !== CACHE_NAME)"),'service worker must delete stale release caches');
 assert(dom.window.QUESTION_BANK_QUALITY_CONTRACT?.mode==='reviewed-only','public question bank must use the reviewed-only contract');
 assert(dom.window.QUESTION_BANK.length===dom.window.QUESTION_BANK_QUALITY_CONTRACT.publicQuestionCount,'public question count must match the quality contract');
 assert(dom.window.document.getElementById('totalStat').textContent===String(dom.window.QUESTION_BANK.length),'home total must display the reviewed public count');

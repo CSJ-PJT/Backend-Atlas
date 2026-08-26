@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-08-26T10:30:00+09:00",
+  "policy": "structured-summary-no-long-form-copy",
+  "snapshots": [
+    {"sourceRef":"line-careers-engineering","observed":"LINE Pay Server Engineer와 AI/Data Platform Engineer가 Engineering 목록에 채용시까지로 표시됨."},
+    {"sourceRef":"kakaomobility-careers-official","observed":"물류 & 에이전트 개발실 백엔드 개발자가 경력 3년 이상 정규직 수시채용으로 표시됨."},
+    {"sourceRef":"jyp-backend-official","observed":"Software Engineer / Backend 경력 역할의 공식 상세 페이지가 확인됨. 현재 모집 상태는 별도 확인 필요."},
+    {"sourceRef":"nhnkcp-java-backend-official","observed":"개발1팀 Java 백엔드 웹개발 담당이 경력 3~8년, 채용 시 마감으로 표시됨."},
+    {"sourceRef":"coupang-technology-official","observed":"Technology 직군에서 Staff Backend Engineer 공고가 확인되나 지원 직무 연결은 확인되지 않음."},
+    {"sourceRef":"kakaostyle-careers-official","observed":"공식 채용 목록은 확인되나 지원 직무 연결은 확인되지 않음."},
+    {"sourceRef":"kakaopaysec-careers-official","observed":"공식 채용 사이트는 확인되나 정확한 지원 직무 연결은 확인되지 않음."},
+    {"sourceRef":"cj-careers-official","observed":"공식 그룹 채용 목록은 확인되나 두 Backend 역할의 현재 공고 및 지원 연결은 확인되지 않음."}
+  ]
+}

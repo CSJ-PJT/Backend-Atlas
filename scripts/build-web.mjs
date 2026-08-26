@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
-import { cp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
+import { dirname, resolve } from 'node:path';
 import { promisify } from 'node:util';
 
 const execFileAsync = promisify(execFile);
@@ -9,11 +9,22 @@ const execFileAsync = promisify(execFile);
 const root = resolve(import.meta.dirname, '..');
 const out = resolve(root, 'www');
 const releaseMode = process.argv.slice(2).includes('--release');
-const assets = [
+const baseAssets = [
   'index.html', 'styles.css', 'learning-os.css', 'questions.js', 'question-expander.js',
   'ax-question-extension.js', 'learning-os-data.js', 'atlas-content.js', 'curriculum-data.js', 'developer-guide-data.js', 'learning-visuals.js', 'app.js', 'learning-os.js',
   'manifest.webmanifest', 'sw.js', 'assets/backend-atlas-icon.png'
 ];
+const listFiles = async directory => {
+  const absolute = resolve(root, directory);
+  const entries = await readdir(absolute, { withFileTypes: true });
+  const nested = await Promise.all(entries.map(entry => {
+    const child = `${directory}/${entry.name}`;
+    return entry.isDirectory() ? listFiles(child) : [child];
+  }));
+  return nested.flat();
+};
+const assets = [...baseAssets, ...(await listFiles('interview')), ...(await listFiles('data/interview'))]
+  .map(file => file.replaceAll('\\', '/')).sort();
 
 const sha256 = value => createHash('sha256').update(value).digest('hex');
 const json = value => `${JSON.stringify(value, null, 2)}\n`;
@@ -27,19 +38,20 @@ const git = async args => {
 };
 
 const readSourceState = async () => {
-  const [head, commitTime, status] = await Promise.all([
+  const [head, commitTime, unstaged, staged, untracked] = await Promise.all([
     git(['rev-parse', '--verify', 'HEAD']),
     git(['show', '-s', '--format=%cI', 'HEAD']),
-    git([
-      'status', '--porcelain=v1', '--untracked-files=all', '--', '.',
-      ':(exclude)www', ':(exclude)www/**'
-    ])
+    git(['diff', '--name-only', '--', '.', ':(exclude)www', ':(exclude)www/**']),
+    git(['diff', '--cached', '--name-only', '--', '.', ':(exclude)www', ':(exclude)www/**']),
+    git(['ls-files', '--others', '--exclude-standard', '--', '.', ':(exclude)www', ':(exclude)www/**'])
   ]);
+  const statusOk=unstaged.ok&&staged.ok&&untracked.ok;
+  const changes=statusOk?[unstaged.value,staged.value,untracked.value].filter(Boolean).join('\n'):null;
   return {
     head: head.ok ? head.value : 'unknown',
     commitTime: commitTime.ok && commitTime.value ? commitTime.value : null,
-    treeState: status.ok ? (status.value ? 'dirty' : 'clean') : 'unknown',
-    changes: status.ok ? status.value : null
+    treeState: statusOk ? (changes ? 'dirty' : 'clean') : 'unknown',
+    changes
   };
 };
 
@@ -62,8 +74,25 @@ if (releaseMode) assertReleaseSource(sourceAtStart, 'preflight');
 
 await rm(out, { recursive: true, force: true });
 await mkdir(out, { recursive: true });
-await mkdir(resolve(out, 'assets'), { recursive: true });
-await Promise.all(assets.map(file => cp(resolve(root, file), resolve(out, file))));
+await Promise.all(assets.map(async file => {
+  const target=resolve(out,file);
+  await mkdir(dirname(target),{recursive:true});
+  await cp(resolve(root,file),target);
+}));
+
+const swPath = resolve(out, 'sw.js');
+const cacheInputs = await Promise.all(assets.filter(file => file !== 'sw.js').sort().map(async file => {
+  const contents = await readFile(resolve(out, file));
+  return `${file}\0${sha256(contents)}`;
+}));
+const cacheVersion = sha256(cacheInputs.join('\n')).slice(0, 24);
+const precacheAssets = ['./index.html', ...assets.filter(file => file !== 'index.html' && file !== 'sw.js').map(file => `./${file}`)];
+const swSource = await readFile(swPath, 'utf8');
+const releaseWorker = swSource
+  .replace("const CACHE_VERSION = 'source-dev';", `const CACHE_VERSION = '${cacheVersion}';`)
+  .replace("const PRECACHE_ASSETS = ['./'];", `const PRECACHE_ASSETS = ${JSON.stringify(precacheAssets)};`);
+if (releaseWorker === swSource) throw new Error('Service worker release placeholders were not found');
+await writeFile(swPath, releaseWorker, 'utf8');
 
 if (releaseMode) {
   const sourceAtEnd = await readSourceState();

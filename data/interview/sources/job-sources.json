@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-08-26",
+  "sources": [
+    {"id":"line-careers-engineering","grade":"A","publisher":"LINE","title":"LINE Careers Engineering jobs","url":"https://careers.linecorp.com/ko/jobs?ca=Engineering&ci=Bundang%2CSeoul","status":"active-listing"},
+    {"id":"linepay-server-official","grade":"A","publisher":"LINE Pay Plus","title":"LINE Pay Server Engineer","url":"https://careers.linecorp.com/ko/jobs/?ca=Engineering&ci=Bundang","status":"active-listing"},
+    {"id":"linepay-ai-data-platform-official","grade":"A","publisher":"LINE Pay Plus","title":"AI/Data Platform Engineer","url":"https://careers.linecorp.com/ko/jobs?ca=Engineering&ci=Bundang%2CSeoul","status":"active-listing"},
+    {"id":"kakaomobility-careers-official","grade":"A","publisher":"Kakao Mobility","title":"카카오모빌리티 인재영입","url":"https://kakaomobility.career.greetinghr.com/en/guide","status":"active-listing"},
+    {"id":"jyp-backend-official","grade":"A","publisher":"JYP Entertainment","title":"Software Engineer / Backend (경력)","url":"https://recruit-apply.jype.com/ko/o/201132","status":"listing-found-current-state-unconfirmed"},
+    {"id":"nhnkcp-java-backend-official","grade":"A","publisher":"NHN KCP","title":"개발1팀 Java 백엔드 웹개발 담당","url":"https://kcp.career.greetinghr.com/ko/o/189770","status":"active-until-filled"},
+    {"id":"nhnkcp-careers-official","grade":"A","publisher":"NHN KCP","title":"NHN KCP Careers","url":"https://kcp.career.greetinghr.com/ko/home","status":"active-listing"},
+    {"id":"kakaopaysec-careers-official","grade":"A","publisher":"Kakao Pay Securities","title":"카카오페이증권 채용","url":"https://career.kakaopaysec.com/","status":"exact-role-unconfirmed"},
+    {"id":"coupang-technology-official","grade":"A","publisher":"Coupang","title":"Technology 채용정보","url":"https://www.coupang.jobs/kr/teams/technology/","status":"active-listing-exact-role-unconfirmed"},
+    {"id":"kakaostyle-careers-official","grade":"A","publisher":"Kakao Style","title":"카카오스타일 채용","url":"https://career.kakaostyle.com/jobs","status":"active-listing-exact-role-unconfirmed"},
+    {"id":"cj-careers-official","grade":"A","publisher":"CJ Group","title":"CJ그룹 인재채용","url":"https://recruit.cj.net/recruit/ko/main/main/main.fo?lang_cd=kor","status":"active-listing-exact-role-unconfirmed"},
+    {"id":"incruit-handoff-local","grade":"B","publisher":"Incruit Atlas","title":"Incruit Atlas job handoff contract","url":"/jobs/","status":"runtime-context-only"},
+    {"id":"java-language-spec","grade":"A","publisher":"Oracle","title":"Java Language Specification","url":"https://docs.oracle.com/javase/specs/","status":"technical-official"},
+    {"id":"spring-framework-reference","grade":"A","publisher":"Spring","title":"Spring Framework Reference Documentation","url":"https://docs.spring.io/spring-framework/reference/","status":"technical-official"},
+    {"id":"postgresql-current-docs","grade":"A","publisher":"PostgreSQL Global Development Group","title":"PostgreSQL Current Documentation","url":"https://www.postgresql.org/docs/current/","status":"technical-official"},
+    {"id":"rfc9110-http-semantics","grade":"A","publisher":"IETF","title":"RFC 9110 HTTP Semantics","url":"https://www.rfc-editor.org/rfc/rfc9110","status":"technical-official"},
+    {"id":"apache-kafka-docs","grade":"A","publisher":"Apache Software Foundation","title":"Apache Kafka Documentation","url":"https://kafka.apache.org/documentation/","status":"technical-official"}
+  ]
+}

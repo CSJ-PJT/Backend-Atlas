@@ -8,6 +8,7 @@
   <link rel="manifest" href="manifest.webmanifest?v=backend-atlas-v10-verified-contract" />
   <link rel="stylesheet" href="styles.css?v=backend-atlas-v10-verified-contract" />
   <link rel="stylesheet" href="learning-os.css?v=backend-atlas-v10-verified-contract" />
+  <link rel="stylesheet" href="interview/interview-lab.css?v=interview-lab-v1" />
   <link rel="icon" href="assets/backend-atlas-icon.png?v=backend-atlas-v10-verified-contract" />
   <title>Backend Atlas</title>
 </head>
@@ -166,6 +167,15 @@
         </article>
       </section>
 
+      <section id="interviewLabView" class="view interview-lab-view" aria-labelledby="interviewLabTitle">
+        <nav class="quiz-nav interview-lab-nav">
+          <button id="interviewBackBtn" class="icon-btn" type="button" aria-label="홈으로">←</button>
+          <strong>Interview Lab</strong>
+          <span id="interviewSaveStatus" role="status" aria-live="polite">이 기기에만 저장</span>
+        </nav>
+        <div id="interviewLabRoot"></div>
+      </section>
+
       <section id="knowledgeView" class="view knowledge-view">
         <nav class="quiz-nav"><button id="knowledgeBackBtn" class="icon-btn" aria-label="홈으로">←</button><strong>지식 검색</strong></nav>
         <div class="search-hero">
@@ -209,6 +219,7 @@
       <button id="navHomeBtn" class="bottom-nav-item active" type="button" aria-current="page">홈</button>
       <button id="navStudyBtn" class="bottom-nav-item" type="button">학습</button>
       <button id="navQuizBtn" class="bottom-nav-item" type="button">문제</button>
+      <button id="navInterviewBtn" class="bottom-nav-item" type="button">면접</button>
       <button id="navSearchBtn" class="bottom-nav-item" type="button">검색</button>
       <button id="navArchitectureBtn" class="bottom-nav-item" type="button">설계</button>
     </nav>
@@ -224,5 +235,13 @@
   <script src="learning-visuals.js?v=backend-atlas-v10-verified-contract"></script>
   <script src="app.js?v=backend-atlas-v10-verified-contract"></script>
   <script src="learning-os.js?v=backend-atlas-v10-verified-contract"></script>
+  <script src="interview/data/interview-data.js?v=interview-lab-v1"></script>
+  <script src="interview/interview-schema.js?v=interview-lab-v1"></script>
+  <script src="interview/interview-state.js?v=interview-lab-v1"></script>
+  <script src="interview/interview-score.js?v=interview-lab-v1"></script>
+  <script src="interview/interview-import.js?v=interview-lab-v1"></script>
+  <script src="interview/interview-router.js?v=interview-lab-v1"></script>
+  <script src="interview/interview-render.js?v=interview-lab-v1"></script>
+  <script src="interview/interview-lab.js?v=interview-lab-v1"></script>
 </body>
 </html>
