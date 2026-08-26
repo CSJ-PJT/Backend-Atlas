@@ -1,4 +1,4 @@
-import { createHash, createHmac, randomBytes } from 'node:crypto';
+import { createHmac, randomBytes } from 'node:crypto';
 import { createReadStream, existsSync } from 'node:fs';
 import { chmod, mkdir, readFile, readdir, rename, writeFile } from 'node:fs/promises';
 import { isIP } from 'node:net';
@@ -96,10 +96,6 @@ function identity(ip, salt) {
   return createHmac('sha256', salt).update(mappedIpv4(ip)).digest('hex');
 }
 
-function alias(digest) {
-  return `접속-${digest.slice(0, 10).toUpperCase()}`;
-}
-
 export function buildBaseline({ events, previousBaseline = null, salt, startDate = DEFAULT_START_DATE }) {
   requiredDate(startDate, 'startDate');
   const cutoff = Date.parse(`${startDate}T00:00:00+09:00`);
@@ -162,7 +158,6 @@ export function buildDailyReport({ events, baselineIdentities, cohort = {}, salt
     for (const [key, count] of Object.entries(item.statuses)) statusCounts[key] += count;
     for (const [key, count] of Object.entries(item.services)) serviceCounts[key] = (serviceCounts[key] || 0) + count;
   }
-  const topIdentities = [...grouped.entries()].map(([digest, item]) => ({ alias: alias(digest), requests: item.requests, pageRequests: item.pageRequests, firstSeenToday: !priorPostStart.has(digest) })).sort((a, b) => b.requests - a.requests || a.alias.localeCompare(b.alias)).slice(0, 10);
   return {
     schemaVersion: 1,
     targetDate,
@@ -178,26 +173,42 @@ export function buildDailyReport({ events, baselineIdentities, cohort = {}, salt
     ignoredPrivateRequests,
     statusCounts,
     serviceCounts: Object.fromEntries(Object.entries(serviceCounts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))),
-    topIdentities,
     identityDigests: [...grouped.keys()].sort(),
   };
 }
 
 export function buildSlackMessage(report) {
   const services = Object.entries(report.serviceCounts).map(([name, count]) => `${name} ${count}건`).join(' · ') || '기준 외 접속 없음';
-  const top = report.topIdentities.length ? report.topIdentities.slice(0, 5).map(item => `• ${item.alias}: ${item.requests}건${item.firstSeenToday ? ' · 오늘 첫 등장' : ' · 재방문'}`).join('\n') : '• 기준 외 식별자 0건';
   return [
     '🛡️ [Archive Alert] Atlas 비식별 접속 일일 모니터링',
     `기준일: ${report.targetDate} KST`,
-    `기준: ${report.baselineCutoff} 이전 관측 IP ${report.baselineIdentityCount}개 제외`,
-    `기준 외 식별자: ${report.monitoredUniqueIdentities}개 · 오늘 첫 등장 ${report.firstSeenToday}개 · 재방문 ${report.returningPostStart}개`,
-    `요청: ${report.monitoredRequests}건 · 페이지 요청 ${report.monitoredPageRequests}건 · 기존 기준 IP 요청 ${report.baselineRequests}건`,
+    `기준: ${report.baselineCutoff} 이전 관측 IP 제외`,
+    `고유 비식별 접속: ${report.monitoredUniqueIdentities}개`,
+    `요청: ${report.monitoredRequests}건`,
     `응답: 2xx ${report.statusCounts['2xx']} · 3xx ${report.statusCounts['3xx']} · 4xx ${report.statusCounts['4xx']} · 5xx ${report.statusCounts['5xx']}`,
     `서비스: ${services}`,
-    '상위 비식별 접속:',
-    top,
-    '개인정보 보호: 원 IP는 Slack·일일 보고서에 저장/전송하지 않으며 서버 내부 HMAC 비교에만 사용합니다.',
+    '개인정보 보호: 원 IP와 비식별 식별값은 Slack·일일 보고서에 저장하거나 전송하지 않습니다.',
   ].join('\n');
+}
+
+function publicDailyReport(report, { delivered, deliveredAt = null, generatedAt = new Date().toISOString() }) {
+  return {
+    schemaVersion: report.schemaVersion,
+    targetDate: report.targetDate,
+    baselineCutoff: report.baselineCutoff,
+    monitoredUniqueIdentities: report.monitoredUniqueIdentities,
+    monitoredRequests: report.monitoredRequests,
+    serviceCounts: report.serviceCounts,
+    statusCounts: {
+      '2xx': report.statusCounts['2xx'],
+      '3xx': report.statusCounts['3xx'],
+      '4xx': report.statusCounts['4xx'],
+      '5xx': report.statusCounts['5xx'],
+    },
+    delivered,
+    deliveredAt,
+    generatedAt,
+  };
 }
 
 async function atomicJson(path, value) {
@@ -317,7 +328,7 @@ async function main() {
   const cohortState = await loadJson(cohortPath, { schemaVersion: 1, identities: {} });
   const report = buildDailyReport({ events, baselineIdentities: new Set(baseline.identities), cohort: cohortState.identities, salt, targetDate, startDate });
   const message = buildSlackMessage(report);
-  const publicReport = { ...report, identityDigests: undefined, malformedLines, messageSha256: createHash('sha256').update(message).digest('hex'), delivered: false, generatedAt: new Date().toISOString() };
+  const publicReport = publicDailyReport(report, { delivered: false });
   if (dryRun) {
     console.log(JSON.stringify({ mode: 'report', dryRun: true, report: publicReport, message }, null, 2));
     return;

@@ -58,9 +58,10 @@ assert.equal(nextDay.serviceCounts['Sketchfy Atlas'], 1);
 assert.equal(nextDay.serviceCounts['Incruit Atlas'], 1);
 
 const message = buildSlackMessage(firstDay);
-assert.match(message, /원 IP는 Slack·일일 보고서에 저장\/전송하지 않으며/);
+assert.match(message, /원 IP와 비식별 식별값은 Slack·일일 보고서에 저장하거나 전송하지 않습니다/);
 assert.match(message, /Health Atlas 2건/);
 assert.doesNotMatch(message, /198\.51\.100\.10|203\.0\.113\.20/);
-assert.match(message, /접속-[A-F0-9]{10}/);
+assert.doesNotMatch(message, /접속-[A-F0-9]{10}/);
+assert.doesNotMatch(message, /오늘 첫 등장|재방문|상위 비식별 접속/);
 
 console.log('Atlas access monitor privacy and daily aggregation: PASS');
