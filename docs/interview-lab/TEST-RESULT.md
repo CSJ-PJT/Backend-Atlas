@@ -1,6 +1,6 @@
 # Test Result
 
-상태: LOCAL GATES PASS, RELEASE GATE PENDING CLEAN COMMIT
+상태: LOCAL RELEASE GATES PASS, OCI DEPLOYMENT PENDING USER APPROVAL
 
 - 기존 smoke: PASS — 공개 reviewed 객관식 15개
 - education quality contract: PASS
@@ -39,4 +39,4 @@
 11. 공통 모드에서 D-Day가 사용자가 선택하지 않은 첫 번째 회사를 암묵적으로 사용함
 12. Incruit 공고 handoff 뒤 역할·전형·공개 안전 경력 근거·학습 큐·공식 링크가 한 화면에 연결되지 않음
 
-clean commit 후 `npm run test:release` 결과와 exact manifest는 이 문서와 최종 보고서에 추가한다.
+clean 기능 브랜치에서 `npm run test:release` 전체 PASS와 44개 공개 asset provenance를 확인했다. exact 최종 SHA·manifest는 커밋 이후 생성되는 `www/build-info.json`과 사전 배포 보고를 단일 권위로 사용한다.

@@ -14,12 +14,12 @@
 - `/learn` 한정 SHA/manifest 검증·backup·rollback 배포 helper
 - 기존 기능과 Interview Lab 자동 회귀
 - 390×844, 412×915, 768×1024, 1440×900 및 서버 중단 offline/PWA 실브라우저 smoke
+- clean 기능 브랜치의 `npm run test:release` 전체 PASS와 44개 공개 asset provenance 검증
+- Incruit handoff에서 역할·전형·공개 안전 경력 근거·학습 큐·공식 공고 링크 연결
 
 ## 미완료
 
-- clean commit SHA 확정
-- `npm run test:release`
 - remote push/PR
 - 사용자 승인 이후 OCI backup·stage·atomic deploy·public smoke
 
-운영 `/learn/`은 변경하지 않았다. release commit과 manifest가 확정된 뒤 사전 배포 보고를 하고 사용자 승인을 기다린다.
+운영 `/learn/`은 변경하지 않았다. 최종 release commit에서 생성되는 exact SHA·manifest는 `www/build-info.json`과 사전 배포 보고를 단일 권위로 사용하고, 사용자 승인을 기다린다.
