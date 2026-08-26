@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { buildDailyReport, buildSlackMessage, classifyService, isPublicAddress, parseNginxLine } from '../ops/atlas-access-monitor.mjs';
+import { buildBaseline, buildDailyReport, buildSlackMessage, classifyService, isPublicAddress, parseNginxLine } from '../ops/atlas-access-monitor.mjs';
 
 const line = (ip, timestamp, path, status = 200) => `${ip} - - [${timestamp}] "GET ${path} HTTP/1.1" ${status} 123 "-" "fixture"`;
 const parsed = [
@@ -27,6 +27,13 @@ assert.equal(classifyService('/run'), 'Learn Atlas');
 assert.equal(classifyService('/sketchfy/room'), 'Sketchfy Atlas');
 
 const salt = 'fixture-only-monitor-key';
+const oldLogs = parsed.filter(event => event.timestamp < Date.parse('2026-08-26T00:00:00+09:00'));
+const oldBaseline = buildBaseline({ events: oldLogs, salt, startDate: '2026-08-26' });
+const rotatedLogs = parsed.filter(event => event.ip !== '198.51.100.10');
+const preservedBaseline = buildBaseline({ events: rotatedLogs, previousBaseline: oldBaseline, salt, startDate: '2026-08-27' });
+assert.equal(oldBaseline.identities.every(digest => preservedBaseline.identities.includes(digest)), true, 'rotated-out historical identities must remain excluded');
+assert.equal(preservedBaseline.previousIdentityCount, oldBaseline.identities.length);
+
 const preliminary = buildDailyReport({ events: parsed, baselineIdentities: new Set(), salt, targetDate: '2026-08-26', startDate: '2026-08-27' });
 const baselineIdentities = new Set(preliminary.identityDigests);
 assert.equal(baselineIdentities.size, 2, 'all identities observed before the start date must form the baseline');

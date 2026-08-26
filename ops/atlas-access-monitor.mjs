@@ -100,6 +100,27 @@ function alias(digest) {
   return `접속-${digest.slice(0, 10).toUpperCase()}`;
 }
 
+export function buildBaseline({ events, previousBaseline = null, salt, startDate = DEFAULT_START_DATE }) {
+  requiredDate(startDate, 'startDate');
+  const cutoff = Date.parse(`${startDate}T00:00:00+09:00`);
+  const previousCutoff = previousBaseline?.cutoff ? Date.parse(previousBaseline.cutoff) : Number.NaN;
+  if (Number.isFinite(previousCutoff) && previousCutoff > cutoff) {
+    throw new Error('Existing baseline cutoff is later than the requested cutoff.');
+  }
+  const previousIdentities = Array.isArray(previousBaseline?.identities)
+    ? previousBaseline.identities.filter(value => /^[a-f0-9]{64}$/i.test(value))
+    : [];
+  const identities = new Set(previousIdentities);
+  for (const event of events) {
+    if (event.timestamp < cutoff && isPublicAddress(event.ip)) identities.add(identity(event.ip, salt));
+  }
+  return {
+    cutoff: `${startDate}T00:00:00+09:00`,
+    previousIdentityCount: previousIdentities.length,
+    identities: [...identities].sort(),
+  };
+}
+
 export function buildDailyReport({ events, baselineIdentities, cohort = {}, salt, targetDate, startDate = DEFAULT_START_DATE }) {
   requiredDate(targetDate, 'targetDate');
   requiredDate(startDate, 'startDate');
@@ -263,11 +284,20 @@ async function main() {
   const salt = await loadOrCreateSalt(saltPath, !dryRun);
   const { events, malformedLines } = await readEvents(logDir);
   if (command === 'baseline') {
-    const cutoff = Date.parse(`${startDate}T00:00:00+09:00`);
-    const identities = [...new Set(events.filter(event => event.timestamp < cutoff && isPublicAddress(event.ip)).map(event => identity(event.ip, salt)))].sort();
-    const baseline = { schemaVersion: 1, cutoff: `${startDate}T00:00:00+09:00`, identityCount: identities.length, identities, source: 'retained nginx access logs', malformedLines, createdAt: new Date().toISOString() };
+    const previousBaseline = await loadJson(baselinePath, null);
+    const next = buildBaseline({ events, previousBaseline, salt, startDate });
+    const baseline = {
+      schemaVersion: 1,
+      cutoff: next.cutoff,
+      identityCount: next.identities.length,
+      identities: next.identities,
+      source: previousBaseline ? 'previous baseline union retained nginx access logs' : 'retained nginx access logs',
+      previousIdentityCount: next.previousIdentityCount,
+      malformedLines,
+      createdAt: new Date().toISOString(),
+    };
     if (!dryRun) await atomicJson(baselinePath, baseline);
-    console.log(JSON.stringify({ mode: 'baseline', dryRun, cutoff: baseline.cutoff, identityCount: baseline.identityCount, malformedLines }, null, 2));
+    console.log(JSON.stringify({ mode: 'baseline', dryRun, cutoff: baseline.cutoff, previousIdentityCount: baseline.previousIdentityCount, identityCount: baseline.identityCount, malformedLines }, null, 2));
     return;
   }
   if (command !== 'report') throw new Error(`Unknown command: ${command}`);
