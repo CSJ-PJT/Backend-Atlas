@@ -57,6 +57,7 @@ for (const requiredAsset of ['curriculum-data.js', 'learning-visuals.js', 'subje
   assert.ok(paths.includes(requiredAsset), `${requiredAsset} must be included in the release manifest`);
 }
 assert.ok(!paths.some(path => path.startsWith('interview/') || path.startsWith('data/interview/')), 'private interview assets must not enter the public release manifest');
+assert.ok(!paths.includes('developer-guide-data.js'), 'private architecture data must not enter the public release manifest');
 const builtWorker = await readFile(resolve(out, 'sw.js'), 'utf8');
 assert.doesNotMatch(builtWorker, /CACHE_VERSION = 'source-dev'|PRECACHE_ASSETS = \['\.\/'\]/, 'release worker placeholders must be replaced');
 assert.match(builtWorker, /const CACHE_VERSION = '[a-f0-9]{24}';/, 'release worker cache version must be deterministic');
