@@ -2,6 +2,7 @@ import { createHash, createHmac, randomBytes } from 'node:crypto';
 import { createReadStream, existsSync } from 'node:fs';
 import { chmod, mkdir, readFile, readdir, rename, writeFile } from 'node:fs/promises';
 import { isIP } from 'node:net';
+import { request as httpsRequest } from 'node:https';
 import { basename, join } from 'node:path';
 import { createGunzip } from 'node:zlib';
 import { createInterface } from 'node:readline';
@@ -296,17 +297,38 @@ async function loadOrCreateSalt(path, persist) {
   return salt;
 }
 
+function postJson(url, headers, body) {
+  const payload = JSON.stringify(body);
+  return new Promise((resolve, reject) => {
+    const request = httpsRequest(url, {
+      method: 'POST',
+      headers: { ...headers, 'Content-Length': Buffer.byteLength(payload) },
+    }, response => {
+      let raw = '';
+      response.setEncoding('utf8');
+      response.on('data', chunk => { raw += chunk; });
+      response.on('end', () => {
+        let data = {};
+        try { data = raw ? JSON.parse(raw) : {}; }
+        catch { data = {}; }
+        resolve({ ok: response.statusCode >= 200 && response.statusCode < 300, status: response.statusCode || 0, data });
+      });
+    });
+    request.setTimeout(20_000, () => request.destroy(new Error('HTTPS request timed out.')));
+    request.on('error', reject);
+    request.end(payload);
+  });
+}
+
 async function sendSlack(text, env = process.env) {
   const token = String(env.SLACK_BOT_TOKEN || '').trim();
   const channel = String(env.SLACK_CHANNEL || '').trim();
   if (!token || !channel) throw new Error('Archive Alert Slack configuration is missing.');
-  const response = await fetch('https://slack.com/api/chat.postMessage', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json; charset=utf-8' },
-    body: JSON.stringify({ channel, text, unfurl_links: false, unfurl_media: false }),
-  });
+  const response = await postJson('https://slack.com/api/chat.postMessage',
+    { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json; charset=utf-8' },
+    { channel, text, unfurl_links: false, unfurl_media: false });
   if (!response.ok) throw new Error(`Archive Alert HTTP ${response.status}.`);
-  const body = await response.json();
+  const body = response.data;
   if (!body?.ok) throw new Error(`Archive Alert rejected: ${body?.error || 'unknown_error'}.`);
 }
 
@@ -314,17 +336,13 @@ async function postArchiveOs(path, body, env = process.env) {
   const baseUrl = String(env.ARCHIVEOS_USAGE_IMPORT_BASE_URL || 'https://archiveos.kr/api/audit/usage').replace(/\/$/, '');
   const token = String(env.ARCHIVEOS_ADMIN_OPERATOR_TOKEN || '').trim();
   if (!token) throw new Error('ArchiveOS usage import credential is missing.');
-  const response = await fetch(`${baseUrl}/${path}`, {
-    method: 'POST',
-    headers: {
+  const response = await postJson(`${baseUrl}/${path}`, {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
       'X-Archive-Source-System': 'archive-os',
       'X-Archive-Service-Scope': 'admin:operate',
-    },
-    body: JSON.stringify(body),
-  });
-  const payload = await response.json().catch(() => ({}));
+    }, body);
+  const payload = response.data;
   if (!response.ok) throw new Error(`ArchiveOS usage import failed with HTTP ${response.status}.`);
   return payload?.data || {};
 }
