@@ -75,11 +75,29 @@ assert(directSearchBackDom.window.location.hash==='#home','direct search back fa
 
 const subjectiveDom=await boot('https://runtime.local/learn/#subjective');
 const subjectiveDocument=subjectiveDom.window.document;
-assert(!subjectiveDocument.getElementById('navInterviewBtn'),'subjective navigation must not reserve a public layout slot while under review');
-assert(!subjectiveDocument.getElementById('subjectiveView').classList.contains('active'),'direct subjective routes must not activate the under-review view');
-assert(subjectiveDocument.getElementById('homeView').classList.contains('active'),'direct subjective routes must fall back to home');
+assert(subjectiveDocument.getElementById('navInterviewBtn'),'reviewed subjective navigation must be public');
+assert(subjectiveDocument.getElementById('subjectiveView').classList.contains('active'),'direct subjective routes must activate the reviewed view');
 assert(subjectiveDom.window.normalizeShortAnswer('트랜잭셔널 아웃박스')===subjectiveDom.window.normalizeShortAnswer('트랜잭셔널아웃박스'),'Korean spacing differences must be accepted');
 assert(subjectiveDom.window.normalizeShortAnswer('transactional outbox')===subjectiveDom.window.normalizeShortAnswer('Transactional-Outbox'),'English case, spacing, and hyphen differences must be accepted');
+const findRenderedSubjective=()=>subjectiveDom.window.ATLAS_SUBJECTIVE_QUESTIONS.questions.find(question=>question.question===subjectiveDocument.getElementById('subjectiveQuestion').textContent);
+let renderedSubjective=findRenderedSubjective();
+subjectiveDocument.getElementById('subjectiveAnswer').value=renderedSubjective.koreanAnswers[0].split('').join(' ');
+subjectiveDocument.getElementById('subjectiveRevealBtn').click();
+assert(subjectiveDocument.getElementById('subjectiveStatus').textContent==='정답입니다.','Korean answer with loose spacing must pass');
+subjectiveDocument.getElementById('subjectiveNextBtn').click();
+renderedSubjective=findRenderedSubjective();
+subjectiveDocument.getElementById('subjectiveAnswer').value=renderedSubjective.englishAnswers[0].toLocaleUpperCase('en-US').replace(/\s+/g,'-');
+subjectiveDocument.getElementById('subjectiveRevealBtn').click();
+assert(subjectiveDocument.getElementById('subjectiveStatus').textContent==='정답입니다.','English answer with case and hyphen differences must pass');
+subjectiveDocument.getElementById('subjectiveNextBtn').click();
+subjectiveDocument.getElementById('subjectiveAnswer').value='관련 없는 답';
+subjectiveDocument.getElementById('subjectiveRevealBtn').click();
+assert(subjectiveDocument.getElementById('subjectiveGuide').hidden,'first wrong attempt must not reveal the answer');
+assert(subjectiveDocument.getElementById('subjectiveGiveUpBtn').hidden,'answer reveal must remain hidden after one wrong attempt');
+subjectiveDocument.getElementById('subjectiveRevealBtn').click();
+assert(!subjectiveDocument.getElementById('subjectiveGiveUpBtn').hidden,'answer reveal must become available only after two wrong attempts');
+subjectiveDocument.getElementById('subjectiveGiveUpBtn').click();
+assert(!subjectiveDocument.getElementById('subjectiveGuide').hidden,'explicit answer reveal must show the explanation');
 
 const directArchitectureBackDom=await boot('https://runtime.local/learn/#architecture');
 directArchitectureBackDom.window.document.getElementById('architectureBackBtn').click();

@@ -10,12 +10,12 @@ if (!bundle?.questions?.length) throw new Error('Interview question bundle is un
 const topic = (answer, clue, aliases = []) => ({ answer, clue, aliases });
 const TOPICS = {
   'payment-ledger': topic('원장', '승인과 취소 이력을 덮어쓰지 않고 차변·대변 또는 증감 내역으로 보존하는 기록 구조', ['ledger', '결제 원장']),
-  'shipment-state': topic('상태 머신', '배송 단계와 허용되는 전이 규칙을 명시해 잘못된 순서의 변경을 막는 모델', ['state machine', '유한 상태 머신']),
+  'shipment-state': topic('상태 머신', '처리 단계와 허용되는 전이 규칙을 명시해 잘못된 순서의 변경을 막는 모델', ['state machine', '유한 상태 머신']),
   'ad-budget': topic('페이싱', '한정된 광고 예산이 특정 시간대에 조기 소진되지 않도록 집행 속도를 조절하는 기법', ['pacing']),
   'batch-settlement': topic('파티셔닝', '대규모 데이터 작업을 날짜나 키 범위로 나누어 병렬 처리하는 기법', ['partitioning', '분할 처리']),
   'cache-degradation': topic('캐시 스탬피드', '캐시 만료 순간 다수 요청이 동시에 원본 저장소로 몰리는 현상', ['cache stampede', '스탬피드']),
   'event-outbox': topic('트랜잭셔널 아웃박스', 'DB 변경과 발행할 이벤트를 같은 트랜잭션에 기록한 뒤 별도 릴레이가 전달하는 패턴', ['transactional outbox', 'outbox', '아웃박스']),
-  'api-gateway': topic('API 게이트웨이', '여러 백엔드 앞에서 인증·라우팅·호출 제한을 공통 처리하는 진입 계층', ['api gateway', '게이트웨이']),
+  'api-gateway': topic('API 게이트웨이', '여러 백엔드 앞에서 인증·라우팅·호출 제한을 공통 처리하는 진입 계층', ['api gateway']),
   'rag-agent': topic('RAG', '검색한 근거 문서를 생성 모델의 입력에 결합해 답변의 근거성을 높이는 방식', ['retrieval augmented generation', '검색 증강 생성']),
   'migration-cutover': topic('섀도 리드', '새 저장소의 응답을 사용자에게 노출하지 않고 기존 응답과 비교하는 전환 검증 기법', ['shadow read', 'shadow reading']),
   observability: topic('관측성', '로그·메트릭·트레이스로 시스템 내부 상태를 외부 출력에서 추론할 수 있는 능력', ['observability']),
@@ -35,7 +35,7 @@ const TOPICS = {
   '우선순위-작업': topic('힙', '최댓값이나 최솟값을 반복해서 빠르게 꺼내는 완전 이진 트리 기반 자료구조', ['heap']),
   '로그-구간-병합': topic('구간 병합', '시작점을 기준으로 정렬한 뒤 겹치는 시간 범위를 하나로 합치는 기법', ['interval merge', 'merge intervals']),
   '상위-k-오류': topic('최소 힙', '전체를 정렬하지 않고 가장 빈번한 K개만 유지할 때 사용하는 자료구조', ['min heap', 'min-heap']),
-  '재시도-일정': topic('지수 백오프', '실패가 반복될수록 재시도 대기 시간을 지수적으로 늘리는 전략', ['exponential backoff', '백오프']),
+  '재시도-일정': topic('지수 백오프', '실패가 반복될수록 재시도 대기 시간을 지수적으로 늘리는 전략', ['exponential backoff']),
   '문자열-정규화': topic('유니코드 정규화', '조합 방식이 다른 문자를 동일한 코드 표현 규칙으로 맞추는 처리', ['unicode normalization', 'NFC', 'NFKC']),
   'lru-cache': topic('LRU', '가장 오랫동안 사용되지 않은 항목을 먼저 제거하는 캐시 교체 정책', ['least recently used', 'LRU cache', '최근 최소 사용']),
   '시간순-이벤트': topic('타임스탬프', '서로 다른 이벤트의 발생 순서를 비교하기 위해 기록하는 시간 값', ['timestamp']),
@@ -46,8 +46,8 @@ const TOPICS = {
   '동시-집계': topic('LongAdder', '경합이 많은 다중 스레드 카운터를 여러 셀로 분산해 합산하는 자바 타입', ['long adder', '롱 애더']),
   '취소-전파': topic('구조적 동시성', '부모 작업의 생명주기에 자식 작업의 완료와 취소를 묶는 동시성 모델', ['structured concurrency']),
   'lock-순서': topic('데드락', '둘 이상의 작업이 서로 가진 자원을 기다리며 영원히 진행하지 못하는 상태', ['deadlock', '교착 상태']),
-  'completablefuture-timeout': topic('orTimeout', 'CompletableFuture가 지정 시간 안에 끝나지 않으면 예외로 완료시키는 메서드', ['or timeout', '완료 시간 제한']),
-  '일별-결제-대사': topic('GROUP BY', '날짜별 결제 금액처럼 같은 키의 행을 묶어 집계하는 SQL 절', ['groupby', '그룹 바이']),
+  'completablefuture-timeout': topic('비동기 타임아웃', '비동기 작업이 지정 시간 안에 끝나지 않으면 예외로 완료시키는 시간 제한', ['asynchronous timeout', 'async timeout', '비동기 시간 제한']),
+  '일별-결제-대사': topic('GROUP BY', '같은 키를 가진 여러 행을 하나의 그룹으로 묶어 집계하는 SQL 절', ['groupby', '그룹 바이']),
   '중복-승인-탐지': topic('윈도 함수', '행을 축약하지 않고 파티션 안의 순번·합계 등을 계산하는 SQL 기능', ['window function', 'window 함수']),
   '배치-실행시간': topic('LAG', '같은 파티션에서 현재 행보다 이전 행의 값을 가져오는 SQL 윈도 함수', ['lag function', '이전 행 함수']),
   '배송-상태-전이': topic('재귀 CTE', '이전 단계의 결과를 다시 참조해 계층이나 연속 상태를 탐색하는 SQL 구문', ['recursive cte', 'WITH RECURSIVE']),
@@ -58,7 +58,7 @@ const TOPICS = {
   '결제-원장': topic('복식부기', '하나의 거래를 차변과 대변에 같은 금액으로 기록하는 회계 모델', ['double-entry bookkeeping', 'double entry']),
   '정산-상태': topic('상태 전이', '현재 상태와 이벤트에 따라 다음 상태를 제한하는 모델링 방식', ['state transition']),
   '배송-이벤트': topic('이벤트 소싱', '현재값 대신 상태를 바꾼 사건의 연속을 원본 데이터로 저장하는 패턴', ['event sourcing']),
-  '광고-노출': topic('팩트 테이블', '노출·클릭처럼 측정 가능한 사건을 차원 키와 함께 저장하는 분석 모델의 중심 테이블', ['fact table']),
+  '광고-노출': topic('팩트 테이블', '측정 가능한 사건을 차원 키와 함께 저장하는 분석 모델의 중심 테이블', ['fact table']),
   '배치-실행': topic('체크포인트', '긴 작업의 중간 진행 상태를 저장해 실패 후 그 지점부터 재개하게 하는 기록', ['checkpoint']),
   'n-1': topic('N+1', '목록 한 번 조회 뒤 각 행마다 추가 쿼리가 반복되는 데이터 접근 문제', ['n plus one', 'n+1 query', '엔 플러스 원']),
   '누락된-timeout': topic('타임아웃', '외부 호출이 정해진 시간 안에 끝나지 않으면 중단하는 제한', ['timeout']),
@@ -71,9 +71,9 @@ const TOPICS = {
   'retry-policy': topic('지터', '동시 재시도를 피하려고 백오프 대기 시간에 더하는 임의의 흔들림', ['jitter']),
   'settlement-comparator': topic('대사', '두 원장의 거래를 비교해 누락·중복·금액 차이를 찾는 작업', ['reconciliation', '정산 대사']),
   '거대-service-분리': topic('단일 책임 원칙', '하나의 모듈이 하나의 변경 이유만 가져야 한다는 설계 원칙', ['SRP', 'single responsibility principle']),
-  '조건문-정책화': topic('전략 패턴', '교체 가능한 알고리즘을 공통 인터페이스 뒤의 객체로 캡슐화하는 패턴', ['strategy pattern', 'strategy']),
+  '조건문-정책화': topic('전략 패턴', '교체 가능한 알고리즘을 공통 인터페이스 뒤의 객체로 캡슐화하는 패턴', ['strategy pattern']),
   '시간-의존성-제거': topic('Clock', '현재 시각을 직접 호출하지 않고 주입해 시간 의존 코드를 테스트 가능하게 하는 자바 추상화', ['java clock', '시계 추상화']),
-  '외부-연계-adapter': topic('어댑터 패턴', '외부 시스템의 인터페이스를 내부에서 기대하는 계약으로 변환하는 패턴', ['adapter pattern', 'adapter']),
+  '외부-연계-adapter': topic('어댑터 패턴', '외부 시스템의 인터페이스를 내부에서 기대하는 계약으로 변환하는 패턴', ['adapter pattern']),
   '오류-모델-표준화': topic('문제 상세', 'HTTP API 오류를 type·title·status·detail 같은 표준 필드로 표현하는 형식', ['problem details', 'RFC 9457', 'RFC 7807']),
 };
 
@@ -88,16 +88,16 @@ const excludedTopics = new Set([
 ]);
 const technicalSources = sourceQuestions.filter(question => !excludedTopics.has(question.tags?.[1]));
 const frames = [
-  clue => `다음 설명에 맞는 백엔드 용어는 무엇인가요? ${clue}`,
-  clue => `코드 리뷰에서 다음 특성을 확인했습니다. 이를 나타내는 용어는 무엇인가요? ${clue}`,
-  clue => `설계 문서에서 다음 설명을 나타내는 기술 용어는 무엇인가요? ${clue}`,
-  clue => `장애 진단 중 다음 현상을 분류하려고 합니다. 알맞은 용어는 무엇인가요? ${clue}`,
-  clue => `운영 기준에서 다음 원리를 지칭하는 용어는 무엇인가요? ${clue}`,
-  clue => `테스트 이름으로 가장 알맞은 기술 용어를 쓰세요. ${clue}`,
-  clue => `성능 점검에서 다음 동작을 설명하는 용어는 무엇인가요? ${clue}`,
-  clue => `데이터 정합성을 검토할 때 다음 설명에 해당하는 용어는 무엇인가요? ${clue}`,
-  clue => `API 구현 검토에서 다음 개념을 무엇이라고 하나요? ${clue}`,
-  clue => `백엔드 학습 노트에서 다음 정의의 제목이 될 용어는 무엇인가요? ${clue}`,
+  clue => `다음 설명에 맞는 백엔드 기술 용어는 무엇인가요? ${clue}`,
+  clue => `다음 정의가 가리키는 백엔드 개념을 쓰세요. ${clue}`,
+  clue => `다음 특징을 가진 기술을 한국어 또는 영어로 쓰세요. ${clue}`,
+  clue => `다음 동작을 설명하는 백엔드 용어는 무엇인가요? ${clue}`,
+  clue => `다음 문장의 핵심 기술 용어를 쓰세요. ${clue}`,
+  clue => `다음 설명에 해당하는 개념의 이름은 무엇인가요? ${clue}`,
+  clue => `다음 내용을 가장 정확하게 나타내는 용어를 쓰세요. ${clue}`,
+  clue => `다음 원리를 지칭하는 백엔드 기술 용어는 무엇인가요? ${clue}`,
+  clue => `다음 설명의 제목으로 알맞은 기술 용어를 쓰세요. ${clue}`,
+  clue => `다음 개념을 한글 또는 영문 용어로 답하세요. ${clue}`,
 ];
 const questions = [];
 const makeQuestion = (question, variant) => {
@@ -122,18 +122,18 @@ const makeQuestion = (question, variant) => {
   };
 };
 
-for (const [index, question] of technicalSources.entries()) {
-  questions.push(makeQuestion(question, index % frames.length));
-  questions.push(makeQuestion(question, (index + 5) % frames.length));
+const sourceByAnswer = new Map();
+for (const question of technicalSources) {
+  const definition = TOPICS[question.tags?.[1]];
+  if (definition && !sourceByAnswer.has(definition.answer)) sourceByAnswer.set(definition.answer, question);
 }
-for (let index = 0; questions.length < 500; index += 1) {
-  const question = technicalSources[index % technicalSources.length];
-  questions.push(makeQuestion(question, (index + 2) % frames.length));
+for (const question of sourceByAnswer.values()) {
+  for (let variant = 0; variant < frames.length; variant += 1) questions.push(makeQuestion(question, variant));
 }
 
 if (questions.length !== 500) throw new Error(`Backend short-answer bank must contain exactly 500 questions: ${questions.length}`);
 if (questions.some(question => !question.answer || !question.acceptedAnswers.length)) throw new Error('Every public question must have a canonical short answer');
-const serialized = JSON.stringify({ schemaVersion: 2, generatedAt: bundle.generatedAt, answerType: 'single-term', questions });
+const serialized = JSON.stringify({ schemaVersion: 3, generatedAt: bundle.generatedAt, answerType: 'single-term-bilingual', reviewStatus: 'public-reviewed', questions });
 for (const value of forbidden) {
   if (value && serialized.toLocaleLowerCase('ko-KR').includes(value.toLocaleLowerCase('ko-KR'))) {
     throw new Error(`Employer-specific value leaked into public short-answer data: ${value}`);

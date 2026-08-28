@@ -25,7 +25,7 @@ if(!educationContractValid) window.QUESTION_BANK=[];
 window.EDUCATION_RELEASE_VALID=educationContractValid;
 const bank = window.QUESTION_BANK;
 const subjectiveBank = Array.isArray(window.ATLAS_SUBJECTIVE_QUESTIONS?.questions) ? window.ATLAS_SUBJECTIVE_QUESTIONS.questions : [];
-const SUBJECTIVE_PUBLIC_ENABLED = false;
+const SUBJECTIVE_PUBLIC_ENABLED = true;
 let subjectivePool = [];
 let subjectiveIndex = 0;
 let subjectiveAttempts = 0;
@@ -537,7 +537,7 @@ window.addEventListener('popstate',event=>{
     if(renderConceptDetail(state.category,state.sectionIndex,state.conceptIndex,false))return restoreUi(state.ui);
     return fallbackToHome();
   }
-  if(state.route==='subjective')return fallbackToHome();
+  if(state.route==='subjective'){openSubjectivePractice(false);return restoreUi(state.ui);}
   if(state.route==='architecture'||state.route==='project')return fallbackToHome();
   if(state.route==='search'){const query=safeString(state.query||state.ui?.search,'',180);show('knowledgeView',false);$('knowledgeSearchInput').value=query;window.renderKnowledgeSearch?.(query);return restoreUi(state.ui);}
   if(state.route!=='view'||!$(state.name)?.classList.contains('view'))return fallbackToHome();
@@ -813,7 +813,7 @@ function restoreInitialRoute(){
     }
   }
   if(route==='search'){const query=parts.join('/');const initial={route,query,atlasDepth:0};history.replaceState(initial,'',stateHash(initial));show('knowledgeView',false);$('knowledgeSearchInput').value=query;setTimeout(()=>window.renderKnowledgeSearch?.(query),0);return;}
-  if(route==='subjective')return fallbackToHome();
+  if(route==='subjective'){const initial={route,atlasDepth:0};history.replaceState(initial,'',stateHash(initial));openSubjectivePractice(false);return;}
   if(route==='architecture'||route==='project')return fallbackToHome();
   if(route==='view'&&$(parts[0])?.classList.contains('view')){const initial={route,name:parts[0],atlasDepth:0};history.replaceState(initial,'',stateHash(initial));show(initial.name,false);return;}
   fallbackToHome();
