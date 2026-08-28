@@ -78,6 +78,8 @@ const subjectiveDocument=subjectiveDom.window.document;
 assert(!subjectiveDocument.getElementById('navInterviewBtn'),'subjective navigation must not reserve a public layout slot while under review');
 assert(!subjectiveDocument.getElementById('subjectiveView').classList.contains('active'),'direct subjective routes must not activate the under-review view');
 assert(subjectiveDocument.getElementById('homeView').classList.contains('active'),'direct subjective routes must fall back to home');
+assert(subjectiveDom.window.normalizeShortAnswer('트랜잭셔널 아웃박스')===subjectiveDom.window.normalizeShortAnswer('트랜잭셔널아웃박스'),'Korean spacing differences must be accepted');
+assert(subjectiveDom.window.normalizeShortAnswer('transactional outbox')===subjectiveDom.window.normalizeShortAnswer('Transactional-Outbox'),'English case, spacing, and hyphen differences must be accepted');
 
 const directArchitectureBackDom=await boot('https://runtime.local/learn/#architecture');
 directArchitectureBackDom.window.document.getElementById('architectureBackBtn').click();

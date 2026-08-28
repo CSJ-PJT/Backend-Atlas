@@ -37,30 +37,30 @@ const TOPICS = {
   '상위-k-오류': topic('최소 힙', '전체를 정렬하지 않고 가장 빈번한 K개만 유지할 때 사용하는 자료구조', ['min heap', 'min-heap']),
   '재시도-일정': topic('지수 백오프', '실패가 반복될수록 재시도 대기 시간을 지수적으로 늘리는 전략', ['exponential backoff', '백오프']),
   '문자열-정규화': topic('유니코드 정규화', '조합 방식이 다른 문자를 동일한 코드 표현 규칙으로 맞추는 처리', ['unicode normalization', 'NFC', 'NFKC']),
-  'lru-cache': topic('LRU', '가장 오랫동안 사용되지 않은 항목을 먼저 제거하는 캐시 교체 정책', ['least recently used', 'LRU cache']),
+  'lru-cache': topic('LRU', '가장 오랫동안 사용되지 않은 항목을 먼저 제거하는 캐시 교체 정책', ['least recently used', 'LRU cache', '최근 최소 사용']),
   '시간순-이벤트': topic('타임스탬프', '서로 다른 이벤트의 발생 순서를 비교하기 위해 기록하는 시간 값', ['timestamp']),
-  '중복-없는-순서': topic('LinkedHashSet', '중복은 제거하면서 입력 순서는 유지하는 자바 컬렉션', ['linked hash set']),
-  '범위-조회': topic('TreeMap', '정렬된 키를 유지하며 특정 키 구간을 조회할 수 있는 자바 맵', ['tree map']),
-  '우선순위-큐': topic('PriorityQueue', '우선순위가 가장 높은 원소를 먼저 꺼내도록 구성된 자바 컬렉션', ['priority queue']),
+  '중복-없는-순서': topic('LinkedHashSet', '중복은 제거하면서 입력 순서는 유지하는 자바 컬렉션', ['linked hash set', '연결 해시 집합']),
+  '범위-조회': topic('TreeMap', '정렬된 키를 유지하며 특정 키 구간을 조회할 수 있는 자바 맵', ['tree map', '트리 맵']),
+  '우선순위-큐': topic('PriorityQueue', '우선순위가 가장 높은 원소를 먼저 꺼내도록 구성된 자바 컬렉션', ['priority queue', '우선순위 큐']),
   'bounded-executor': topic('백프레셔', '처리 속도보다 입력이 빠를 때 생산자에게 지연이나 거부를 전달하는 제어', ['backpressure', 'back pressure']),
-  '동시-집계': topic('LongAdder', '경합이 많은 다중 스레드 카운터를 여러 셀로 분산해 합산하는 자바 타입', ['long adder']),
+  '동시-집계': topic('LongAdder', '경합이 많은 다중 스레드 카운터를 여러 셀로 분산해 합산하는 자바 타입', ['long adder', '롱 애더']),
   '취소-전파': topic('구조적 동시성', '부모 작업의 생명주기에 자식 작업의 완료와 취소를 묶는 동시성 모델', ['structured concurrency']),
   'lock-순서': topic('데드락', '둘 이상의 작업이 서로 가진 자원을 기다리며 영원히 진행하지 못하는 상태', ['deadlock', '교착 상태']),
-  'completablefuture-timeout': topic('orTimeout', 'CompletableFuture가 지정 시간 안에 끝나지 않으면 예외로 완료시키는 메서드', ['or timeout']),
+  'completablefuture-timeout': topic('orTimeout', 'CompletableFuture가 지정 시간 안에 끝나지 않으면 예외로 완료시키는 메서드', ['or timeout', '완료 시간 제한']),
   '일별-결제-대사': topic('GROUP BY', '날짜별 결제 금액처럼 같은 키의 행을 묶어 집계하는 SQL 절', ['groupby', '그룹 바이']),
   '중복-승인-탐지': topic('윈도 함수', '행을 축약하지 않고 파티션 안의 순번·합계 등을 계산하는 SQL 기능', ['window function', 'window 함수']),
-  '배치-실행시간': topic('LAG', '같은 파티션에서 현재 행보다 이전 행의 값을 가져오는 SQL 윈도 함수', ['lag function']),
+  '배치-실행시간': topic('LAG', '같은 파티션에서 현재 행보다 이전 행의 값을 가져오는 SQL 윈도 함수', ['lag function', '이전 행 함수']),
   '배송-상태-전이': topic('재귀 CTE', '이전 단계의 결과를 다시 참조해 계층이나 연속 상태를 탐색하는 SQL 구문', ['recursive cte', 'WITH RECURSIVE']),
   '광고-클릭률': topic('CTR', '광고 노출 수 대비 클릭 수의 비율을 뜻하는 지표', ['click through rate', '클릭률']),
   '미정산-거래': topic('안티 조인', '한쪽에는 있고 다른 쪽에는 대응 행이 없는 데이터만 찾는 조인 패턴', ['anti join', 'anti-join']),
   '기관별-오차': topic('FULL OUTER JOIN', '양쪽의 일치 행뿐 아니라 어느 한쪽에만 있는 행도 모두 보존하는 조인', ['full join', '풀 아우터 조인']),
-  '재처리-대상': topic('SKIP LOCKED', '다른 트랜잭션이 잠근 행을 기다리지 않고 건너뛰는 SQL 잠금 옵션', ['skiplocked']),
+  '재처리-대상': topic('SKIP LOCKED', '다른 트랜잭션이 잠근 행을 기다리지 않고 건너뛰는 SQL 잠금 옵션', ['skiplocked', '잠긴 행 건너뛰기']),
   '결제-원장': topic('복식부기', '하나의 거래를 차변과 대변에 같은 금액으로 기록하는 회계 모델', ['double-entry bookkeeping', 'double entry']),
   '정산-상태': topic('상태 전이', '현재 상태와 이벤트에 따라 다음 상태를 제한하는 모델링 방식', ['state transition']),
   '배송-이벤트': topic('이벤트 소싱', '현재값 대신 상태를 바꾼 사건의 연속을 원본 데이터로 저장하는 패턴', ['event sourcing']),
   '광고-노출': topic('팩트 테이블', '노출·클릭처럼 측정 가능한 사건을 차원 키와 함께 저장하는 분석 모델의 중심 테이블', ['fact table']),
   '배치-실행': topic('체크포인트', '긴 작업의 중간 진행 상태를 저장해 실패 후 그 지점부터 재개하게 하는 기록', ['checkpoint']),
-  'n-1': topic('N+1', '목록 한 번 조회 뒤 각 행마다 추가 쿼리가 반복되는 데이터 접근 문제', ['n plus one', 'n+1 query']),
+  'n-1': topic('N+1', '목록 한 번 조회 뒤 각 행마다 추가 쿼리가 반복되는 데이터 접근 문제', ['n plus one', 'n+1 query', '엔 플러스 원']),
   '누락된-timeout': topic('타임아웃', '외부 호출이 정해진 시간 안에 끝나지 않으면 중단하는 제한', ['timeout']),
   '중복-retry': topic('재시도 폭풍', '다수 요청이 동시에 반복 재시도하면서 장애 시스템의 부하를 더 키우는 현상', ['retry storm']),
   '잘못된-transaction-경계': topic('트랜잭션 경계', '원자적으로 성공하거나 실패해야 하는 작업 묶음의 시작과 끝', ['transaction boundary']),
@@ -72,7 +72,7 @@ const TOPICS = {
   'settlement-comparator': topic('대사', '두 원장의 거래를 비교해 누락·중복·금액 차이를 찾는 작업', ['reconciliation', '정산 대사']),
   '거대-service-분리': topic('단일 책임 원칙', '하나의 모듈이 하나의 변경 이유만 가져야 한다는 설계 원칙', ['SRP', 'single responsibility principle']),
   '조건문-정책화': topic('전략 패턴', '교체 가능한 알고리즘을 공통 인터페이스 뒤의 객체로 캡슐화하는 패턴', ['strategy pattern', 'strategy']),
-  '시간-의존성-제거': topic('Clock', '현재 시각을 직접 호출하지 않고 주입해 시간 의존 코드를 테스트 가능하게 하는 자바 추상화', ['java clock']),
+  '시간-의존성-제거': topic('Clock', '현재 시각을 직접 호출하지 않고 주입해 시간 의존 코드를 테스트 가능하게 하는 자바 추상화', ['java clock', '시계 추상화']),
   '외부-연계-adapter': topic('어댑터 패턴', '외부 시스템의 인터페이스를 내부에서 기대하는 계약으로 변환하는 패턴', ['adapter pattern', 'adapter']),
   '오류-모델-표준화': topic('문제 상세', 'HTTP API 오류를 type·title·status·detail 같은 표준 필드로 표현하는 형식', ['problem details', 'RFC 9457', 'RFC 7807']),
 };
@@ -86,29 +86,52 @@ const excludedTopics = new Set([
   'payment-ledger', 'ad-budget', '광고-클릭률', '결제-원장', 'settlement-comparator',
   'conflict', 'failure', 'ambiguity', 'pressure', 'incident', 'security', 'mentoring', 'feedback', 'ownership', 'motivation',
 ]);
+const technicalSources = sourceQuestions.filter(question => !excludedTopics.has(question.tags?.[1]));
+const frames = [
+  clue => `다음 설명에 맞는 백엔드 용어는 무엇인가요? ${clue}`,
+  clue => `코드 리뷰에서 다음 특성을 확인했습니다. 이를 나타내는 용어는 무엇인가요? ${clue}`,
+  clue => `설계 문서에서 다음 설명을 나타내는 기술 용어는 무엇인가요? ${clue}`,
+  clue => `장애 진단 중 다음 현상을 분류하려고 합니다. 알맞은 용어는 무엇인가요? ${clue}`,
+  clue => `운영 기준에서 다음 원리를 지칭하는 용어는 무엇인가요? ${clue}`,
+  clue => `테스트 이름으로 가장 알맞은 기술 용어를 쓰세요. ${clue}`,
+  clue => `성능 점검에서 다음 동작을 설명하는 용어는 무엇인가요? ${clue}`,
+  clue => `데이터 정합성을 검토할 때 다음 설명에 해당하는 용어는 무엇인가요? ${clue}`,
+  clue => `API 구현 검토에서 다음 개념을 무엇이라고 하나요? ${clue}`,
+  clue => `백엔드 학습 노트에서 다음 정의의 제목이 될 용어는 무엇인가요? ${clue}`,
+];
 const questions = [];
-const seenTopics = new Set();
-const seenAnswers = new Set();
-for (const question of sourceQuestions) {
+const makeQuestion = (question, variant) => {
   const key = question.tags?.[1];
   const definition = TOPICS[key];
   if (!definition) throw new Error(`Missing short-answer definition for topic: ${key}`);
-  if (excludedTopics.has(key) || seenTopics.has(key) || seenAnswers.has(definition.answer)) continue;
-  seenTopics.add(key);
-  seenAnswers.add(definition.answer);
-  questions.push({
-    id: question.id,
+  const acceptedAnswers = [...new Set([definition.answer, ...definition.aliases])];
+  const koreanAnswers = acceptedAnswers.filter(answer => /[가-힣]/.test(answer));
+  const englishAnswers = acceptedAnswers.filter(answer => /[A-Za-z]/.test(answer));
+  if (!koreanAnswers.length || !englishAnswers.length) throw new Error(`Bilingual answers are incomplete for topic: ${key}`);
+  return {
+    id: `${question.id}-term-${variant + 1}`,
     category: question.category,
     difficulty: question.difficulty,
-    question: `다음 설명에 맞는 용어는 무엇인가요? ${definition.clue}`,
+    question: frames[variant % frames.length](definition.clue),
     answer: definition.answer,
-    acceptedAnswers: [definition.answer, ...definition.aliases],
+    acceptedAnswers,
+    koreanAnswers,
+    englishAnswers,
     explanation: `${definition.answer}: ${definition.clue}`,
     tags: [question.category],
-  });
+  };
+};
+
+for (const [index, question] of technicalSources.entries()) {
+  questions.push(makeQuestion(question, index % frames.length));
+  questions.push(makeQuestion(question, (index + 5) % frames.length));
+}
+for (let index = 0; questions.length < 500; index += 1) {
+  const question = technicalSources[index % technicalSources.length];
+  questions.push(makeQuestion(question, (index + 2) % frames.length));
 }
 
-if (questions.length < 45) throw new Error(`Too few focused backend short-answer questions: ${questions.length}`);
+if (questions.length !== 500) throw new Error(`Backend short-answer bank must contain exactly 500 questions: ${questions.length}`);
 if (questions.some(question => !question.answer || !question.acceptedAnswers.length)) throw new Error('Every public question must have a canonical short answer');
 const serialized = JSON.stringify({ schemaVersion: 2, generatedAt: bundle.generatedAt, answerType: 'single-term', questions });
 for (const value of forbidden) {
@@ -119,4 +142,4 @@ for (const value of forbidden) {
 
 const output = `window.ATLAS_SUBJECTIVE_QUESTIONS=${serialized};\n`;
 await writeFile(resolve(import.meta.dirname, '..', 'subjective-questions.js'), output, 'utf8');
-console.log(`Backend short-answer review data built: ${questions.length} unique technical terms; business-domain, employer, candidate, and behavior scopes excluded.`);
+console.log(`Backend short-answer review data built: ${questions.length} bilingual questions; business-domain, employer, candidate, and behavior scopes excluded.`);

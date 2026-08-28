@@ -488,7 +488,7 @@ function openSubjectivePractice(record=true){
   if(!subjectivePool.length)resetSubjectivePool();
   renderSubjectiveQuestion();
 }
-function normalizeShortAnswer(value){return String(value||'').normalize('NFKC').toLocaleLowerCase('ko-KR').replace(/[\s_\-+]/g,'').replace(/[()·.]/g,'');}
+function normalizeShortAnswer(value){return String(value||'').normalize('NFKC').toLocaleLowerCase('ko-KR').replace(/[\s\u00a0\u2000-\u200b\u3000_+\-]/g,'').replace(/[()·.]/g,'');}
 function revealSubjectiveGuide(){
   const answer=$('subjectiveAnswer').value.trim();
   if(!answer){$('subjectiveStatus').textContent='기술 용어를 입력해 주세요.';$('subjectiveAnswer').focus();return;}
