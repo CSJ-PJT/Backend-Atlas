@@ -1,0 +1,11 @@
+[Unit]
+Description=Scan Atlas access logs for security threats every minute
+
+[Timer]
+OnCalendar=*-*-* *:*:00
+Persistent=true
+AccuracySec=1s
+Unit=atlas-threat-monitor.service
+
+[Install]
+WantedBy=timers.target

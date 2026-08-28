@@ -1,0 +1,30 @@
+[Unit]
+Description=Send aggregate-only Atlas threat alerts to Archive Alert Slack
+Wants=network-online.target
+After=network-online.target nginx.service
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+EnvironmentFile=/etc/incruit-atlas-crawl.env
+StateDirectory=atlas-threat-monitor
+StateDirectoryMode=0700
+RuntimeDirectory=atlas-threat-monitor
+RuntimeDirectoryMode=0700
+ExecStart=/usr/bin/flock -n /run/atlas-threat-monitor/run.lock /usr/bin/node /usr/local/libexec/atlas-threat-monitor.mjs --send
+UMask=0077
+NoNewPrivileges=yes
+PrivateDevices=yes
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=strict
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+ReadOnlyPaths=/var/log/nginx /etc/incruit-atlas-crawl.env
+ReadWritePaths=/var/lib/atlas-threat-monitor /run/atlas-threat-monitor
+RestrictAddressFamilies=AF_INET AF_INET6
+
+[Install]
+WantedBy=multi-user.target
