@@ -1,4 +1,4 @@
-import { createHmac, randomBytes } from 'node:crypto';
+import { createHash, createHmac, randomBytes } from 'node:crypto';
 import { createReadStream, existsSync } from 'node:fs';
 import { chmod, mkdir, readFile, readdir, rename, writeFile } from 'node:fs/promises';
 import { isIP } from 'node:net';
@@ -40,7 +40,7 @@ function parseNginxTime(value) {
 }
 
 export function parseNginxLine(line) {
-  const match = /^(\S+) \S+ \S+ \[([^\]]+)] "([^"]*)" (\d{3}) (\S+)/.exec(line);
+  const match = /^(\S+) \S+ \S+ \[([^\]]+)] "([^"]*)" (\d{3}) (\S+) "([^"]*)" "([^"]*)"/.exec(line);
   if (!match) return null;
   const timestamp = parseNginxTime(match[2]);
   if (!Number.isFinite(timestamp)) return null;
@@ -51,6 +51,7 @@ export function parseNginxLine(line) {
     method: request[0] || 'UNKNOWN',
     path: request[1]?.startsWith('/') ? request[1] : '/__unparsed-request__',
     status: Number(match[4]),
+    userAgent: match[7] && match[7] !== '-' ? match[7] : null,
   };
 }
 
@@ -74,14 +75,56 @@ export function isPublicAddress(value) {
 
 export function classifyService(pathname) {
   const path = String(pathname || '').split('?')[0].toLowerCase();
+  if (path === '/archiveos' || path.startsWith('/archiveos/')) return 'ArchiveOS';
+  if (path === '/market' || path.startsWith('/market/')) return 'Archive-Market';
+  if (path === '/nexus' || path.startsWith('/nexus/')) return 'Archive-Nexus';
+  if (path === '/logistics' || path.startsWith('/logistics/')) return 'Archive-Logistics';
+  if (path === '/ledger' || path.startsWith('/ledger/')) return 'Archive-Ledger';
+  if (path === '/archive-world' || path.startsWith('/archive-world/') || path === '/archive-world-mini' || path.startsWith('/archive-world-mini/')) return 'Archive-World';
   if (path === '/run' || path.startsWith('/learn')) return 'Learn Atlas';
   if (path.startsWith('/sketchfy')) return 'Sketchfy Atlas';
   if (path.startsWith('/jobs')) return 'Incruit Atlas';
   if (path.startsWith('/health')) return 'Health Atlas';
   if (path.startsWith('/travel')) return 'Travel Atlas';
   if (path.startsWith('/world')) return 'World Atlas';
-  if (path.startsWith('/archive')) return 'Archive';
   return 'Atlas Home/Other';
+}
+
+const AUTOMATED_AGENT = /bot|crawler|spider|curl|wget|python|uptime|healthcheck|monitor|zgrab|masscan|go-http-client|java\//i;
+
+export function buildHumanPageEvents({ events, targetDate }) {
+  requiredDate(targetDate, 'targetDate');
+  const start = Date.parse(`${targetDate}T00:00:00+09:00`);
+  const end = start + DAY_MS;
+  return events.filter(event => {
+    const path = String(event.path || '').split('?')[0];
+    return event.timestamp >= start && event.timestamp < end
+      && isPublicAddress(event.ip)
+      && (event.method === 'GET' || event.method === 'HEAD')
+      && event.status >= 200 && event.status < 400
+      && path !== '/__unparsed-request__'
+      && !STATIC_ASSET.test(path)
+      && !path.startsWith('/api/')
+      && !path.startsWith('/.well-known/')
+      && path !== '/edge-healthz'
+      && event.userAgent
+      && !AUTOMATED_AGENT.test(event.userAgent);
+  }).map(event => {
+    const route = String(event.path).split('?')[0].slice(0, 512) || '/';
+    const sourceId = createHash('sha256').update([
+      event.ip, event.timestamp, event.method, route, event.status, event.userAgent,
+    ].join('\n')).digest('hex');
+    return {
+      sourceId,
+      occurredAt: new Date(event.timestamp).toISOString(),
+      project: classifyService(route),
+      route,
+      method: event.method,
+      status: event.status,
+      clientIp: event.ip,
+      userAgent: String(event.userAgent).slice(0, 512),
+    };
+  });
 }
 
 function statusBucket(status) {
@@ -267,6 +310,41 @@ async function sendSlack(text, env = process.env) {
   if (!body?.ok) throw new Error(`Archive Alert rejected: ${body?.error || 'unknown_error'}.`);
 }
 
+async function postArchiveOs(path, body, env = process.env) {
+  const baseUrl = String(env.ARCHIVEOS_USAGE_IMPORT_BASE_URL || 'https://archiveos.kr/api/audit/usage').replace(/\/$/, '');
+  const token = String(env.ARCHIVEOS_ADMIN_OPERATOR_TOKEN || '').trim();
+  if (!token) throw new Error('ArchiveOS usage import credential is missing.');
+  const response = await fetch(`${baseUrl}/${path}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'X-Archive-Source-System': 'archive-os',
+      'X-Archive-Service-Scope': 'admin:operate',
+    },
+    body: JSON.stringify(body),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(`ArchiveOS usage import failed with HTTP ${response.status}.`);
+  return payload?.data || {};
+}
+
+async function importArchiveOsUsage(report, events, env = process.env) {
+  const reportResult = await postArchiveOs('atlas-report', report, env);
+  let imported = 0;
+  let duplicates = 0;
+  for (let index = 0; index < events.length; index += 100) {
+    const result = await postArchiveOs('atlas-events', {
+      schemaVersion: 1,
+      generatedAt: new Date().toISOString(),
+      events: events.slice(index, index + 100),
+    }, env);
+    imported += Number(result.imported || 0);
+    duplicates += Number(result.duplicates || 0);
+  }
+  return { reportImported: Boolean(reportResult.imported), eventsAccepted: events.length, eventsImported: imported, duplicates };
+}
+
 function flags(argv) {
   const values = new Map();
   for (let index = 0; index < argv.length; index += 1) {
@@ -284,6 +362,7 @@ async function main() {
   const options = flags(process.argv.slice(3));
   const dryRun = options.has('dry-run');
   const send = options.has('send');
+  const importUsage = options.has('import-archiveos');
   const stateDir = process.env.ATLAS_ACCESS_STATE_DIR || '/var/lib/atlas-access-monitor';
   const logDir = process.env.ATLAS_NGINX_LOG_DIR || '/var/log/nginx';
   const startDate = requiredDate(process.env.ATLAS_ACCESS_START_DATE || DEFAULT_START_DATE, 'ATLAS_ACCESS_START_DATE');
@@ -327,12 +406,14 @@ async function main() {
   if (!baseline || baseline.cutoff !== `${startDate}T00:00:00+09:00`) throw new Error('Finalized baseline is missing or has the wrong cutoff.');
   const cohortState = await loadJson(cohortPath, { schemaVersion: 1, identities: {} });
   const report = buildDailyReport({ events, baselineIdentities: new Set(baseline.identities), cohort: cohortState.identities, salt, targetDate, startDate });
+  const humanPageEvents = buildHumanPageEvents({ events, targetDate });
   const message = buildSlackMessage(report);
   const publicReport = publicDailyReport(report, { delivered: false });
   if (dryRun) {
     console.log(JSON.stringify({ mode: 'report', dryRun: true, report: publicReport, message }, null, 2));
     return;
   }
+  const importResult = importUsage ? await importArchiveOsUsage(publicReport, humanPageEvents) : null;
   if (send) await sendSlack(message);
   const nextCohort = { ...cohortState.identities };
   for (const digest of report.identityDigests) if (!nextCohort[digest]) nextCohort[digest] = { firstSeenDate: targetDate };
@@ -340,7 +421,7 @@ async function main() {
   publicReport.delivered = send;
   publicReport.deliveredAt = send ? new Date().toISOString() : null;
   await atomicJson(reportPath, publicReport);
-  console.log(JSON.stringify({ mode: 'report', targetDate, delivered: send, monitoredUniqueIdentities: report.monitoredUniqueIdentities, monitoredRequests: report.monitoredRequests, malformedLines }, null, 2));
+  console.log(JSON.stringify({ mode: 'report', targetDate, delivered: send, monitoredUniqueIdentities: report.monitoredUniqueIdentities, monitoredRequests: report.monitoredRequests, humanPageEvents: humanPageEvents.length, archiveOsImported: Boolean(importResult), importedEvents: importResult?.eventsImported || 0, duplicateEvents: importResult?.duplicates || 0, malformedLines }, null, 2));
 }
 
 const isCli = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];

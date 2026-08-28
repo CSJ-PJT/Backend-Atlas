@@ -1,5 +1,5 @@
 [Unit]
-Description=Send the daily pseudonymized Atlas access report to Archive Alert Slack
+Description=Store the daily Atlas and Archive access report and notify Archive Alert Slack
 Wants=network-online.target
 After=network-online.target nginx.service atlas-access-baseline.service
 
@@ -8,12 +8,12 @@ Type=oneshot
 User=root
 Group=root
 Environment=ATLAS_ACCESS_START_DATE=2026-08-27
-EnvironmentFile=/etc/incruit-atlas-crawl.env
+EnvironmentFile=/etc/atlas-access-monitor.env
 StateDirectory=atlas-access-monitor
 StateDirectoryMode=0700
 RuntimeDirectory=atlas-access-monitor
 RuntimeDirectoryMode=0700
-ExecStart=/usr/bin/flock -n /run/atlas-access-monitor/run.lock /usr/bin/node /usr/local/libexec/atlas-access-monitor.mjs report --send
+ExecStart=/usr/bin/flock -n /run/atlas-access-monitor/run.lock /usr/bin/node /usr/local/libexec/atlas-access-monitor.mjs report --send --import-archiveos
 UMask=0077
 NoNewPrivileges=yes
 PrivateDevices=yes
@@ -23,7 +23,7 @@ ProtectSystem=strict
 ProtectKernelModules=yes
 ProtectKernelTunables=yes
 ProtectControlGroups=yes
-ReadOnlyPaths=/var/log/nginx /etc/incruit-atlas-crawl.env
+ReadOnlyPaths=/var/log/nginx /etc/atlas-access-monitor.env
 ReadWritePaths=/var/lib/atlas-access-monitor /run/atlas-access-monitor
 RestrictAddressFamilies=AF_INET AF_INET6
 

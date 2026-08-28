@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { buildBaseline, buildDailyReport, buildSlackMessage, classifyService, isPublicAddress, parseNginxLine } from '../ops/atlas-access-monitor.mjs';
+import { buildBaseline, buildDailyReport, buildHumanPageEvents, buildSlackMessage, classifyService, isPublicAddress, parseNginxLine } from '../ops/atlas-access-monitor.mjs';
 
 const line = (ip, timestamp, path, status = 200) => `${ip} - - [${timestamp}] "GET ${path} HTTP/1.1" ${status} 123 "-" "fixture"`;
 const parsed = [
@@ -25,6 +25,19 @@ assert.equal(isPublicAddress('127.0.0.1'), false);
 assert.equal(isPublicAddress('10.0.0.1'), false);
 assert.equal(classifyService('/run'), 'Learn Atlas');
 assert.equal(classifyService('/sketchfy/room'), 'Sketchfy Atlas');
+assert.equal(classifyService('/archiveos/'), 'ArchiveOS');
+assert.equal(classifyService('/market/orders'), 'Archive-Market');
+assert.equal(classifyService('/nexus/production'), 'Archive-Nexus');
+assert.equal(classifyService('/logistics/routes'), 'Archive-Logistics');
+assert.equal(classifyService('/ledger/settlements'), 'Archive-Ledger');
+assert.equal(classifyService('/archive-world/'), 'Archive-World');
+
+const humanEvents = buildHumanPageEvents({ events: parsed, targetDate: '2026-08-28' });
+assert.equal(humanEvents.length, 2, 'successful non-static browser page requests must be imported');
+assert.equal(humanEvents[0].project, 'Sketchfy Atlas');
+assert.equal(humanEvents[0].clientIp, '203.0.113.30');
+assert.equal(humanEvents[0].userAgent, 'fixture');
+assert.match(humanEvents[0].sourceId, /^[a-f0-9]{64}$/);
 
 const salt = 'fixture-only-monitor-key';
 const oldLogs = parsed.filter(event => event.timestamp < Date.parse('2026-08-26T00:00:00+09:00'));
