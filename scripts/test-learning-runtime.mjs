@@ -75,7 +75,7 @@ assert(directSearchBackDom.window.location.hash==='#home','direct search back fa
 
 const subjectiveDom=await boot('https://runtime.local/learn/#subjective');
 const subjectiveDocument=subjectiveDom.window.document;
-assert(subjectiveDocument.getElementById('navInterviewBtn').hidden,'subjective navigation must remain hidden while the bank is under review');
+assert(!subjectiveDocument.getElementById('navInterviewBtn'),'subjective navigation must not reserve a public layout slot while under review');
 assert(!subjectiveDocument.getElementById('subjectiveView').classList.contains('active'),'direct subjective routes must not activate the under-review view');
 assert(subjectiveDocument.getElementById('homeView').classList.contains('active'),'direct subjective routes must fall back to home');
 

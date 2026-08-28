@@ -7,11 +7,13 @@ const assert = (value, message) => { if (!value) throw new Error(message); };
 const context = { window: {} };
 vm.runInNewContext(await readFile(resolve(root, 'subjective-questions.js'), 'utf8'), context);
 const publicBundle = context.window.ATLAS_SUBJECTIVE_QUESTIONS;
-assert(publicBundle?.questions?.length >= 300, 'public subjective bank must contain the reviewed shared questions');
+assert(publicBundle?.questions?.length >= 45, 'review bank must contain a focused backend term set');
 assert(publicBundle.questions.every(question => !('companies' in question) && !('roles' in question)), 'public questions must omit employer fields');
 assert(publicBundle.answerType === 'single-term', 'public subjective bank must use short answers');
 assert(publicBundle.questions.every(question => question.answer && question.acceptedAnswers?.length && question.explanation), 'every public question must have a canonical term and explanation');
 assert(publicBundle.questions.every(question => !('answerOutline' in question) && !('followUps' in question)), 'essay-answer fields must not remain in public questions');
+assert(new Set(publicBundle.questions.map(question => question.answer)).size === publicBundle.questions.length, 'review bank must not repeat the same answer term');
+assert(publicBundle.questions.every(question => !/원장|페이싱|광고 예산|지원 동기|STAR/.test(`${question.answer} ${question.question}`)), 'business-domain and behavioral prompts must not remain in the backend term bank');
 assert(publicBundle.questions.every(question => question.question.startsWith('다음 설명에 맞는 용어는 무엇인가요? ')), 'short-answer prompts must use one natural instruction');
 assert(publicBundle.questions.every(question => !/한 개의 기술 용어|빈칸에 들어갈/.test(question.question)), 'awkward generated prompt variants must not remain');
 const normalize = value => String(value).normalize('NFKC').toLocaleLowerCase('ko-KR').replace(/[\s_+().·-]/g, '');
@@ -27,7 +29,7 @@ for (const job of privateBundle.jobs || []) {
 }
 
 const html = await readFile(resolve(root, 'index.html'), 'utf8');
-assert(/id="navInterviewBtn"[^>]*hidden[^>]*aria-hidden="true"[^>]*>주관식 문제</.test(html), 'subjective navigation must stay private while the bank is under review');
+assert(!html.includes('id="navInterviewBtn"'), 'under-review subjective navigation must not reserve a public layout slot');
 assert(/id="navQuizBtn"[^>]*>객관식 문제</.test(html), 'objective navigation must be clearly named');
 assert(/id="subjectiveView"[^>]*hidden[^>]*aria-hidden="true"/.test(html), 'subjective view must stay hidden while the bank is under review');
 assert(/id="subjectiveAnswer"[^>]*type="text"/.test(html), 'subjective answer must be a single-line text input');

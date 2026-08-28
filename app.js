@@ -766,7 +766,7 @@ $('knowledgeBackBtn').onclick = window.safeAtlasBack;
 $('navHomeBtn').onclick = () => show('homeView');
 $('navStudyBtn').onclick = () => { show('studyView'); renderAtlasStudy(); };
 $('navQuizBtn').onclick = () => start();
-$('navInterviewBtn').onclick = () => openSubjectivePractice();
+if($('navInterviewBtn'))$('navInterviewBtn').onclick = () => openSubjectivePractice();
 $('navSearchBtn').onclick = () => show('knowledgeView');
 $('navArchitectureBtn').onclick = () => { show('architectureView'); renderArchitectureHome(false); };
 $('architectureBackBtn').onclick = window.safeAtlasBack;

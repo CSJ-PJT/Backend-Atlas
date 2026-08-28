@@ -12,7 +12,7 @@ const TOPICS = {
   'payment-ledger': topic('원장', '승인과 취소 이력을 덮어쓰지 않고 차변·대변 또는 증감 내역으로 보존하는 기록 구조', ['ledger', '결제 원장']),
   'shipment-state': topic('상태 머신', '배송 단계와 허용되는 전이 규칙을 명시해 잘못된 순서의 변경을 막는 모델', ['state machine', '유한 상태 머신']),
   'ad-budget': topic('페이싱', '한정된 광고 예산이 특정 시간대에 조기 소진되지 않도록 집행 속도를 조절하는 기법', ['pacing']),
-  'batch-settlement': topic('파티셔닝', '대규모 정산 작업을 기준일이나 키 범위로 나누어 병렬 처리하는 기법', ['partitioning', '분할 처리']),
+  'batch-settlement': topic('파티셔닝', '대규모 데이터 작업을 날짜나 키 범위로 나누어 병렬 처리하는 기법', ['partitioning', '분할 처리']),
   'cache-degradation': topic('캐시 스탬피드', '캐시 만료 순간 다수 요청이 동시에 원본 저장소로 몰리는 현상', ['cache stampede', '스탬피드']),
   'event-outbox': topic('트랜잭셔널 아웃박스', 'DB 변경과 발행할 이벤트를 같은 트랜잭션에 기록한 뒤 별도 릴레이가 전달하는 패턴', ['transactional outbox', 'outbox', '아웃박스']),
   'api-gateway': topic('API 게이트웨이', '여러 백엔드 앞에서 인증·라우팅·호출 제한을 공통 처리하는 진입 계층', ['api gateway', '게이트웨이']),
@@ -82,11 +82,21 @@ const sourceQuestions = bundle.questions
   .filter(question => question.scope === 'shared')
   .filter(question => !(question.companies || []).length && !(question.roles || []).length);
 
-const questions = sourceQuestions.map(question => {
+const excludedTopics = new Set([
+  'payment-ledger', 'ad-budget', '광고-클릭률', '결제-원장', 'settlement-comparator',
+  'conflict', 'failure', 'ambiguity', 'pressure', 'incident', 'security', 'mentoring', 'feedback', 'ownership', 'motivation',
+]);
+const questions = [];
+const seenTopics = new Set();
+const seenAnswers = new Set();
+for (const question of sourceQuestions) {
   const key = question.tags?.[1];
   const definition = TOPICS[key];
   if (!definition) throw new Error(`Missing short-answer definition for topic: ${key}`);
-  return {
+  if (excludedTopics.has(key) || seenTopics.has(key) || seenAnswers.has(definition.answer)) continue;
+  seenTopics.add(key);
+  seenAnswers.add(definition.answer);
+  questions.push({
     id: question.id,
     category: question.category,
     difficulty: question.difficulty,
@@ -94,11 +104,11 @@ const questions = sourceQuestions.map(question => {
     answer: definition.answer,
     acceptedAnswers: [definition.answer, ...definition.aliases],
     explanation: `${definition.answer}: ${definition.clue}`,
-    tags: (question.tags || []).slice(0, 6),
-  };
-});
+    tags: [question.category],
+  });
+}
 
-if (questions.length < 300) throw new Error(`Too few public short-answer questions: ${questions.length}`);
+if (questions.length < 45) throw new Error(`Too few focused backend short-answer questions: ${questions.length}`);
 if (questions.some(question => !question.answer || !question.acceptedAnswers.length)) throw new Error('Every public question must have a canonical short answer');
 const serialized = JSON.stringify({ schemaVersion: 2, generatedAt: bundle.generatedAt, answerType: 'single-term', questions });
 for (const value of forbidden) {
@@ -109,4 +119,4 @@ for (const value of forbidden) {
 
 const output = `window.ATLAS_SUBJECTIVE_QUESTIONS=${serialized};\n`;
 await writeFile(resolve(import.meta.dirname, '..', 'subjective-questions.js'), output, 'utf8');
-console.log(`Public short-answer data built: ${questions.length} single-term questions across ${Object.keys(TOPICS).length} topics; employer and candidate scopes excluded.`);
+console.log(`Backend short-answer review data built: ${questions.length} unique technical terms; business-domain, employer, candidate, and behavior scopes excluded.`);
