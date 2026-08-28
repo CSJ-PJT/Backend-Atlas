@@ -82,20 +82,15 @@ const sourceQuestions = bundle.questions
   .filter(question => question.scope === 'shared')
   .filter(question => !(question.companies || []).length && !(question.roles || []).length);
 
-const questions = sourceQuestions.map((question, index) => {
+const questions = sourceQuestions.map(question => {
   const key = question.tags?.[1];
   const definition = TOPICS[key];
   if (!definition) throw new Error(`Missing short-answer definition for topic: ${key}`);
-  const prompts = [
-    `다음 설명에 해당하는 기술 용어는 무엇인가요? ${definition.clue}`,
-    `빈칸에 들어갈 핵심 용어를 쓰세요. 이것은 ${definition.clue}을 뜻합니다.`,
-    `한 개의 기술 용어로 답하세요. ${definition.clue}`,
-  ];
   return {
     id: question.id,
     category: question.category,
     difficulty: question.difficulty,
-    question: prompts[index % prompts.length],
+    question: `다음 설명에 맞는 용어는 무엇인가요? ${definition.clue}`,
     answer: definition.answer,
     acceptedAnswers: [definition.answer, ...definition.aliases],
     explanation: `${definition.answer}: ${definition.clue}`,

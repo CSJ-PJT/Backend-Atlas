@@ -28,6 +28,8 @@ const subjectiveBank = Array.isArray(window.ATLAS_SUBJECTIVE_QUESTIONS?.question
 const SUBJECTIVE_PUBLIC_ENABLED = false;
 let subjectivePool = [];
 let subjectiveIndex = 0;
+let subjectiveAttempts = 0;
+const subjectiveCategoryNames={behavior:'협업과 판단','data-modeling':'데이터 모델링','data-structure':'자료구조','debug-code-review':'디버깅과 리뷰','java-algorithm':'Java 알고리즘','java-concurrency':'Java 동시성','live-coding':'구현',refactoring:'리팩터링',sql:'SQL','system-design':'시스템 설계'};
 const knownQuestionIds=new Set(bank.map(question=>question.id));
 const knownCategories=new Set(bank.map(question=>question.category));
 const state = { session: [], index: 0, score: 0, answers: [], mode: 'all', count: 10 };
@@ -460,14 +462,16 @@ function renderSubjectiveQuestion(){
     $('subjectiveNextBtn').disabled=true;
     return;
   }
-  $('subjectiveCategoryLabel').textContent=question.category||'공통 백엔드';
-  $('subjectiveDifficulty').textContent=question.difficulty||'reviewed';
+  $('subjectiveCategoryLabel').textContent=subjectiveCategoryNames[question.category]||'공통 백엔드';
+  $('subjectiveDifficulty').textContent={basic:'기초',medium:'응용',deep:'심화'}[question.difficulty]||'검수됨';
   $('subjectiveQuestion').textContent=question.question;
   $('subjectiveAnswer').value='';
   $('subjectiveStatus').className='hint';
   $('subjectiveStatus').textContent=`${subjectiveIndex+1} / ${subjectivePool.length} · 정답은 서버로 전송하거나 저장하지 않습니다.`;
   $('subjectiveGuide').hidden=true;
   $('subjectiveExplanation').textContent='';
+  $('subjectiveGiveUpBtn').hidden=true;
+  subjectiveAttempts=0;
   $('subjectiveRevealBtn').disabled=false;
   $('subjectiveNextBtn').disabled=false;
   $('subjectiveAnswer').focus();
@@ -478,7 +482,7 @@ function openSubjectivePractice(record=true){
   if(record)pushNavigation({route:'subjective'});
   if($('subjectiveCategory').options.length===1){
     [...new Set(subjectiveBank.map(question=>question.category).filter(Boolean))].sort().forEach(category=>{
-      const option=document.createElement('option');option.value=category;option.textContent=category;$('subjectiveCategory').append(option);
+      const option=document.createElement('option');option.value=category;option.textContent=subjectiveCategoryNames[category]||category;$('subjectiveCategory').append(option);
     });
   }
   if(!subjectivePool.length)resetSubjectivePool();
@@ -491,12 +495,20 @@ function revealSubjectiveGuide(){
   const question=subjectivePool[subjectiveIndex];if(!question)return;
   const accepted=(question.acceptedAnswers||[question.answer]).map(normalizeShortAnswer);
   const correct=accepted.includes(normalizeShortAnswer(answer));
-  $('subjectiveExplanation').textContent=question.explanation;
-  $('subjectiveGuide').hidden=false;
-  $('subjectiveGuide').focus();
+  subjectiveAttempts+=1;
+  if(correct){
+    $('subjectiveExplanation').textContent=question.explanation;
+    $('subjectiveGuide').hidden=false;
+    $('subjectiveGuide').focus();
+  }else{
+    $('subjectiveGuide').hidden=true;
+    if(subjectiveAttempts>=2)$('subjectiveGiveUpBtn').hidden=false;
+    $('subjectiveAnswer').focus();
+  }
   $('subjectiveStatus').className=`hint ${correct?'answer-correct':'answer-incorrect'}`;
-  $('subjectiveStatus').textContent=correct?'정답입니다.':'다시 기억해 보세요. 정답과 해설을 확인했습니다.';
+  $('subjectiveStatus').textContent=correct?'정답입니다.':subjectiveAttempts>=2?'아직 정답이 아닙니다. 다시 입력하거나 정답 보기를 선택하세요.':'정답이 아닙니다. 한 번 더 생각해 보세요.';
 }
+function revealSubjectiveAnswer(){const question=subjectivePool[subjectiveIndex];if(!question)return;$('subjectiveExplanation').textContent=question.explanation;$('subjectiveGuide').hidden=false;$('subjectiveGuide').focus();$('subjectiveStatus').className='hint';$('subjectiveStatus').textContent='정답과 해설을 확인했습니다.';}
 window.openSubjectivePractice=openSubjectivePractice;
 
 function renderArchitectureHome(record=false){
@@ -761,6 +773,7 @@ $('architectureBackBtn').onclick = window.safeAtlasBack;
 $('subjectiveBackBtn').onclick = window.safeAtlasBack;
 $('subjectiveCategory').onchange = () => {resetSubjectivePool();renderSubjectiveQuestion();};
 $('subjectiveRevealBtn').onclick = revealSubjectiveGuide;
+$('subjectiveGiveUpBtn').onclick = revealSubjectiveAnswer;
 $('subjectiveAnswer').onkeydown = event => {if(event.key==='Enter'){event.preventDefault();revealSubjectiveGuide();}};
 $('subjectiveNextBtn').onclick = () => {if(!subjectivePool.length)return;subjectiveIndex=(subjectiveIndex+1)%subjectivePool.length;renderSubjectiveQuestion();};
 $('retryWrongBtn').onclick = () => {

@@ -12,6 +12,8 @@ assert(publicBundle.questions.every(question => !('companies' in question) && !(
 assert(publicBundle.answerType === 'single-term', 'public subjective bank must use short answers');
 assert(publicBundle.questions.every(question => question.answer && question.acceptedAnswers?.length && question.explanation), 'every public question must have a canonical term and explanation');
 assert(publicBundle.questions.every(question => !('answerOutline' in question) && !('followUps' in question)), 'essay-answer fields must not remain in public questions');
+assert(publicBundle.questions.every(question => question.question.startsWith('다음 설명에 맞는 용어는 무엇인가요? ')), 'short-answer prompts must use one natural instruction');
+assert(publicBundle.questions.every(question => !/한 개의 기술 용어|빈칸에 들어갈/.test(question.question)), 'awkward generated prompt variants must not remain');
 const normalize = value => String(value).normalize('NFKC').toLocaleLowerCase('ko-KR').replace(/[\s_+().·-]/g, '');
 assert(publicBundle.questions.every(question => question.acceptedAnswers.every(answer => normalize(answer).length <= 2 || !normalize(question.question).includes(normalize(answer)))), 'a prompt must not reveal an accepted answer');
 
