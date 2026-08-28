@@ -53,15 +53,17 @@ assert.equal(buildInfo.releaseId, `${buildInfo.sourceHead.slice(0, 12)}-${buildI
 const paths = manifest.files.map(file => file.path);
 assert.deepEqual(paths, [...paths].sort(), 'manifest paths must use a stable sort order');
 assert.equal(new Set(paths).size, paths.length, 'manifest paths must be unique');
-for (const requiredAsset of ['curriculum-data.js', 'learning-visuals.js', 'app.js', 'learning-os.js']) {
+for (const requiredAsset of ['curriculum-data.js', 'learning-visuals.js', 'subjective-questions.js', 'app.js', 'learning-os.js']) {
   assert.ok(paths.includes(requiredAsset), `${requiredAsset} must be included in the release manifest`);
 }
+assert.ok(!paths.some(path => path.startsWith('interview/') || path.startsWith('data/interview/')), 'private interview assets must not enter the public release manifest');
 const builtWorker = await readFile(resolve(out, 'sw.js'), 'utf8');
 assert.doesNotMatch(builtWorker, /CACHE_VERSION = 'source-dev'|PRECACHE_ASSETS = \['\.\/'\]/, 'release worker placeholders must be replaced');
 assert.match(builtWorker, /const CACHE_VERSION = '[a-f0-9]{24}';/, 'release worker cache version must be deterministic');
-for (const requiredOfflineAsset of ['./index.html', './app.js', './interview/interview-lab.js', './interview/data/interview-data.js']) {
+for (const requiredOfflineAsset of ['./index.html', './app.js', './subjective-questions.js']) {
   assert.ok(builtWorker.includes(JSON.stringify(requiredOfflineAsset)), `${requiredOfflineAsset} must be precached`);
 }
+assert.doesNotMatch(builtWorker, /interview\/interview-lab|interview\/data\/interview-data/, 'private interview assets must not be precached');
 for (const file of manifest.files) {
   assert.match(file.path, /^(?!\/|[A-Za-z]:|.*\.\.)(?:[A-Za-z0-9._ -]+\/)*[A-Za-z0-9._ -]+$/);
   assert.match(file.sha256, /^[0-9a-f]{64}$/);
