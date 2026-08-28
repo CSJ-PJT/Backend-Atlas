@@ -65,6 +65,7 @@ export function buildThreatMessage(report) {
     `유형: ${categories}`,
     `서비스: ${services}`,
     `응답: 2xx ${report.statusCounts['2xx']} · 3xx ${report.statusCounts['3xx']} · 4xx ${report.statusCounts['4xx']} · 5xx ${report.statusCounts['5xx']}`,
+    `처리 해석: 차단 ${report.statusCounts['4xx']} · 리다이렉트 ${report.statusCounts['3xx']} · 2xx 응답 ${report.statusCounts['2xx']} · 서버 오류 ${report.statusCounts['5xx']}`,
     '개인정보 보호: 원 IP와 비식별 식별값은 Slack·상태 파일에 저장하거나 전송하지 않습니다.',
   ].join('\n');
 }
