@@ -10,8 +10,8 @@ const publicBundle = context.window.ATLAS_SUBJECTIVE_QUESTIONS;
 assert(publicBundle?.questions?.length === 500, 'review bank must contain exactly 500 backend questions');
 assert(publicBundle.questions.every(question => !('companies' in question) && !('roles' in question)), 'public questions must omit employer fields');
 assert(publicBundle.answerType === 'single-term-bilingual', 'review bank must use bilingual short answers');
-assert(publicBundle.reviewStatus === 'public-reviewed', 'public bank must carry the reviewed release status');
-assert(publicBundle.questions.every(question => question.answer && question.acceptedAnswers?.length && question.explanation), 'every public question must have a canonical term and explanation');
+assert(publicBundle.reviewStatus === 'public-reviewed-with-learning-aids', 'public bank must carry the reviewed learning-aid release status');
+assert(publicBundle.questions.every(question => question.answer && question.acceptedAnswers?.length && question.explanation && question.hint && question.example && question.sourceUrl), 'every public question must have a canonical term, hint, example, explanation, and source');
 assert(publicBundle.questions.every(question => !('answerOutline' in question) && !('followUps' in question)), 'essay-answer fields must not remain in public questions');
 assert(new Set(publicBundle.questions.map(question => question.id)).size === publicBundle.questions.length, 'all review question ids must be unique');
 assert(new Set(publicBundle.questions.map(question => question.answer)).size === 50, 'the 500-question bank must cover exactly 50 audited backend terms');
@@ -20,11 +20,18 @@ for (const question of publicBundle.questions) answerCounts.set(question.answer,
 assert([...answerCounts.values()].every(count => count === 10), 'each audited backend term must have exactly ten question formulations');
 assert(publicBundle.questions.every(question => question.koreanAnswers?.some(answer => /[가-힣]/.test(answer))), 'every question must accept a Korean answer');
 assert(publicBundle.questions.every(question => question.englishAnswers?.some(answer => /[A-Za-z]/.test(answer))), 'every question must accept an English answer');
-assert(publicBundle.questions.every(question => ['system-design','java-algorithm','data-structure','java-concurrency','sql','data-modeling','debug-code-review','live-coding','refactoring'].includes(question.category)), 'every question must belong to an approved backend technical category');
+assert(publicBundle.questions.every(question => ['web-network','database-sql','java-spring','architecture-operations'].includes(question.category)), 'every question must belong to an approved common backend interview category');
+assert(publicBundle.questions.every(question => ['basic','medium'].includes(question.difficulty)), 'public short answers must stay within beginner and applied difficulty');
+assert(publicBundle.questions.filter(question => question.difficulty === 'basic').length >= 300, 'at least 60% of the bank must be beginner-friendly');
+assert(publicBundle.questions.every(question => /^https:\/\//.test(question.sourceUrl)), 'every learning source must use HTTPS');
+for (const expected of ['HTTP','트랜잭션','인덱스','JVM','DI','JPA','캐시','Docker']) assert(publicBundle.questions.some(question => question.answer === expected), `common interview topic is missing: ${expected}`);
 assert(publicBundle.questions.every(question => !/원장|페이싱|광고|결제 금액|배송 단계|정산|지원 동기|STAR/.test(`${question.answer} ${question.question}`)), 'business-domain and behavioral prompts must not remain in the backend term bank');
 assert(publicBundle.questions.every(question => !/한 개의 기술 용어|빈칸에 들어갈/.test(question.question)), 'awkward generated prompt variants must not remain');
 const normalize = value => String(value).normalize('NFKC').toLocaleLowerCase('ko-KR').replace(/[\s_+().·-]/g, '');
-assert(publicBundle.questions.every(question => question.acceptedAnswers.every(answer => normalize(answer).length <= 2 || !normalize(question.question).includes(normalize(answer)))), 'a prompt must not reveal an accepted answer');
+const promptLeaks = publicBundle.questions.filter(question => question.acceptedAnswers.some(answer => normalize(answer).length > 2 && normalize(question.question).includes(normalize(answer))));
+assert(!promptLeaks.length, `a prompt must not reveal an accepted answer: ${promptLeaks.map(question => question.id).join(', ')}`);
+const learningAidLeaks = publicBundle.questions.filter(question => question.acceptedAnswers.some(answer => normalize(answer).length > 2 && (normalize(question.hint).includes(normalize(answer)) || normalize(question.example).includes(normalize(answer)))));
+assert(!learningAidLeaks.length, `hints and examples must not reveal accepted answers: ${learningAidLeaks.map(question => question.id).join(', ')}`);
 for (const question of publicBundle.questions) {
   for (const answer of question.acceptedAnswers) {
     assert(normalize(answer) === normalize(answer.replace(/[\s-]/g, '')), `spacing or hyphen normalization failed: ${question.id}`);
@@ -48,5 +55,8 @@ assert(!/id="subjectiveView"[^>]*hidden/.test(html), 'reviewed subjective view m
 assert(html.indexOf('id="navQuizBtn"') < html.indexOf('id="navInterviewBtn"') && html.indexOf('id="navInterviewBtn"') < html.indexOf('id="navSearchBtn"'), 'objective and subjective navigation must appear without a blank slot before search');
 assert(/id="subjectiveAnswer"[^>]*type="text"/.test(html), 'subjective answer must be a single-line text input');
 assert(!/id="subjectiveAnswer"[^>]*textarea/.test(html), 'essay textarea must be removed');
+assert(/id="subjectiveHintBtn"/.test(html) && /id="subjectiveExampleBtn"/.test(html), 'progressive hint and example controls must be public');
+assert(/id="subjectiveLevel"/.test(html), 'subjective difficulty filter must be public');
+assert(/id="subjectiveSource"[^>]*rel="noopener noreferrer"/.test(html), 'primary source links must be opened safely');
 assert(/id="interviewLabView"[^>]*hidden/.test(html), 'private Interview Lab must remain hidden');
 console.log(`Public question modes PASS: ${publicBundle.questions.length} single-term short-answer questions plus the existing objective bank.`);

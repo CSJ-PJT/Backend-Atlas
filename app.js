@@ -29,7 +29,7 @@ const SUBJECTIVE_PUBLIC_ENABLED = true;
 let subjectivePool = [];
 let subjectiveIndex = 0;
 let subjectiveAttempts = 0;
-const subjectiveCategoryNames={behavior:'협업과 판단','data-modeling':'데이터 모델링','data-structure':'자료구조','debug-code-review':'디버깅과 리뷰','java-algorithm':'Java 알고리즘','java-concurrency':'Java 동시성','live-coding':'구현',refactoring:'리팩터링',sql:'SQL','system-design':'시스템 설계'};
+const subjectiveCategoryNames={'web-network':'웹·네트워크','database-sql':'데이터베이스·SQL','java-spring':'Java·Spring','architecture-operations':'아키텍처·운영',behavior:'협업과 판단','data-modeling':'데이터 모델링','data-structure':'자료구조','debug-code-review':'디버깅과 리뷰','java-algorithm':'Java 알고리즘','java-concurrency':'Java 동시성','live-coding':'구현',refactoring:'리팩터링',sql:'SQL','system-design':'시스템 설계'};
 const knownQuestionIds=new Set(bank.map(question=>question.id));
 const knownCategories=new Set(bank.map(question=>question.category));
 const state = { session: [], index: 0, score: 0, answers: [], mode: 'all', count: 10 };
@@ -450,8 +450,10 @@ function renderConceptDetail(category,sectionIndex,conceptIndex,record=true){
 
 function resetSubjectivePool(){
   const category=$('subjectiveCategory').value;
-  const candidates=category?subjectiveBank.filter(question=>question.category===category):subjectiveBank;
-  subjectivePool=shuffle(candidates);
+  const level=$('subjectiveLevel').value;
+  const candidates=subjectiveBank.filter(question=>(!category||question.category===category)&&(!level||question.difficulty===level));
+  const rank={basic:0,medium:1,deep:2};
+  subjectivePool=shuffle(candidates).sort((a,b)=>(rank[a.difficulty]??9)-(rank[b.difficulty]??9));
   subjectiveIndex=0;
 }
 function renderSubjectiveQuestion(){
@@ -465,11 +467,18 @@ function renderSubjectiveQuestion(){
   $('subjectiveCategoryLabel').textContent=subjectiveCategoryNames[question.category]||'공통 백엔드';
   $('subjectiveDifficulty').textContent={basic:'기초',medium:'응용',deep:'심화'}[question.difficulty]||'검수됨';
   $('subjectiveQuestion').textContent=question.question;
+  $('subjectiveHintText').textContent=question.hint||'문제의 분야와 핵심 동작을 먼저 구분해 보세요.';
+  $('subjectiveExampleText').textContent=question.example||'실제 요청이나 데이터 흐름에 적용한 장면을 떠올려 보세요.';
+  $('subjectiveHintPanel').hidden=true;
+  $('subjectiveExamplePanel').hidden=true;
+  $('subjectiveHintBtn').textContent='힌트 보기';
+  $('subjectiveExampleBtn').textContent='실무 예시 보기';
   $('subjectiveAnswer').value='';
   $('subjectiveStatus').className='hint';
   $('subjectiveStatus').textContent=`${subjectiveIndex+1} / ${subjectivePool.length} · 정답은 서버로 전송하거나 저장하지 않습니다.`;
   $('subjectiveGuide').hidden=true;
   $('subjectiveExplanation').textContent='';
+  $('subjectiveSource').removeAttribute('href');
   $('subjectiveGiveUpBtn').hidden=true;
   subjectiveAttempts=0;
   $('subjectiveRevealBtn').disabled=false;
@@ -489,6 +498,7 @@ function openSubjectivePractice(record=true){
   renderSubjectiveQuestion();
 }
 function normalizeShortAnswer(value){return String(value||'').normalize('NFKC').toLocaleLowerCase('ko-KR').replace(/[\s\u00a0\u2000-\u200b\u3000_+\-]/g,'').replace(/[()·.]/g,'');}
+function prepareSubjectiveGuide(question){$('subjectiveExplanation').textContent=question.explanation;$('subjectiveSource').href=question.sourceUrl;$('subjectiveSource').hidden=!question.sourceUrl;}
 function revealSubjectiveGuide(){
   const answer=$('subjectiveAnswer').value.trim();
   if(!answer){$('subjectiveStatus').textContent='기술 용어를 입력해 주세요.';$('subjectiveAnswer').focus();return;}
@@ -497,7 +507,7 @@ function revealSubjectiveGuide(){
   const correct=accepted.includes(normalizeShortAnswer(answer));
   subjectiveAttempts+=1;
   if(correct){
-    $('subjectiveExplanation').textContent=question.explanation;
+    prepareSubjectiveGuide(question);
     $('subjectiveGuide').hidden=false;
     $('subjectiveGuide').focus();
   }else{
@@ -508,7 +518,8 @@ function revealSubjectiveGuide(){
   $('subjectiveStatus').className=`hint ${correct?'answer-correct':'answer-incorrect'}`;
   $('subjectiveStatus').textContent=correct?'정답입니다.':subjectiveAttempts>=2?'아직 정답이 아닙니다. 다시 입력하거나 정답 보기를 선택하세요.':'정답이 아닙니다. 한 번 더 생각해 보세요.';
 }
-function revealSubjectiveAnswer(){const question=subjectivePool[subjectiveIndex];if(!question)return;$('subjectiveExplanation').textContent=question.explanation;$('subjectiveGuide').hidden=false;$('subjectiveGuide').focus();$('subjectiveStatus').className='hint';$('subjectiveStatus').textContent='정답과 해설을 확인했습니다.';}
+function revealSubjectiveAnswer(){const question=subjectivePool[subjectiveIndex];if(!question)return;prepareSubjectiveGuide(question);$('subjectiveGuide').hidden=false;$('subjectiveGuide').focus();$('subjectiveStatus').className='hint';$('subjectiveStatus').textContent='정답과 해설을 확인했습니다.';}
+function toggleSubjectiveHelp(panelId,buttonId,openLabel,closeLabel){const panel=$(panelId);panel.hidden=!panel.hidden;$(buttonId).textContent=panel.hidden?openLabel:closeLabel;if(!panel.hidden)panel.scrollIntoView({block:'nearest'});}
 window.openSubjectivePractice=openSubjectivePractice;
 
 function renderArchitectureHome(record=false){
@@ -768,6 +779,9 @@ if($('navArchitectureBtn'))$('navArchitectureBtn').onclick = () => { show('archi
 $('architectureBackBtn').onclick = window.safeAtlasBack;
 $('subjectiveBackBtn').onclick = window.safeAtlasBack;
 $('subjectiveCategory').onchange = () => {resetSubjectivePool();renderSubjectiveQuestion();};
+$('subjectiveLevel').onchange = () => {resetSubjectivePool();renderSubjectiveQuestion();};
+$('subjectiveHintBtn').onclick = () => toggleSubjectiveHelp('subjectiveHintPanel','subjectiveHintBtn','힌트 보기','힌트 닫기');
+$('subjectiveExampleBtn').onclick = () => toggleSubjectiveHelp('subjectiveExamplePanel','subjectiveExampleBtn','실무 예시 보기','실무 예시 닫기');
 $('subjectiveRevealBtn').onclick = revealSubjectiveGuide;
 $('subjectiveGiveUpBtn').onclick = revealSubjectiveAnswer;
 $('subjectiveAnswer').onkeydown = event => {if(event.key==='Enter'){event.preventDefault();revealSubjectiveGuide();}};

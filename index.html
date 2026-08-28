@@ -181,17 +181,23 @@
         <div class="subjective-hero">
           <p class="eyebrow">BACKEND SHORT ANSWER</p>
           <h1 id="subjectiveTitle">핵심 기술 용어를<br>짧게 답해 보세요.</h1>
-          <p>설명을 읽고 정답이 되는 기술 용어 하나를 입력하세요.</p>
-          <label class="subjective-filter" for="subjectiveCategory"><span>분야</span><select id="subjectiveCategory"><option value="">전체 분야</option></select></label>
+          <p>기초 문제부터 풀고, 막히면 힌트와 실무 예시를 단계적으로 확인하세요.</p>
+          <div class="subjective-filters">
+            <label class="subjective-filter" for="subjectiveCategory"><span>분야</span><select id="subjectiveCategory"><option value="">전체 분야</option></select></label>
+            <label class="subjective-filter" for="subjectiveLevel"><span>난이도</span><select id="subjectiveLevel"><option value="">기초부터 전체</option><option value="basic">기초만</option><option value="medium">응용만</option></select></label>
+          </div>
         </div>
         <article class="subjective-card">
           <div class="question-meta"><span id="subjectiveCategoryLabel"></span><span id="subjectiveDifficulty"></span></div>
           <h2 id="subjectiveQuestion"></h2>
+          <div class="subjective-help-actions"><button id="subjectiveHintBtn" class="text-btn" type="button">힌트 보기</button><button id="subjectiveExampleBtn" class="text-btn" type="button">실무 예시 보기</button></div>
+          <section id="subjectiveHintPanel" class="subjective-help-panel" hidden><strong>힌트</strong><p id="subjectiveHintText"></p></section>
+          <section id="subjectiveExamplePanel" class="subjective-help-panel" hidden><strong>실무 예시</strong><p id="subjectiveExampleText"></p></section>
           <label for="subjectiveAnswer">정답</label>
           <input id="subjectiveAnswer" type="text" maxlength="60" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="기술 용어 입력">
           <p id="subjectiveStatus" class="hint" role="status" aria-live="polite"></p>
           <div class="subjective-actions"><button id="subjectiveRevealBtn" class="primary" type="button">채점하기</button><button id="subjectiveGiveUpBtn" class="secondary" type="button" hidden>정답 보기</button><button id="subjectiveNextBtn" class="secondary" type="button">다음 문제</button></div>
-          <section id="subjectiveGuide" class="subjective-guide" hidden tabindex="-1"><h3>정답과 해설</h3><p id="subjectiveExplanation"></p></section>
+          <section id="subjectiveGuide" class="subjective-guide" hidden tabindex="-1"><h3>정답과 해설</h3><p id="subjectiveExplanation"></p><a id="subjectiveSource" class="subjective-source" target="_blank" rel="noopener noreferrer" hidden>공식 문서에서 더 보기 →</a></section>
         </article>
       </section>
 

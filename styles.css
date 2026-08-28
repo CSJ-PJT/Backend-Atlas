@@ -88,10 +88,13 @@ body .encyclopedia-heading>div h2{min-width:0;max-width:100%}
 .subjective-hero{padding:28px 4px 20px}
 .subjective-hero h1{margin:8px 0 12px;font-size:clamp(2rem,6vw,4rem);line-height:1.08}
 .subjective-hero>p{max-width:620px;color:var(--muted)}
-.subjective-filter{display:flex;align-items:center;gap:12px;max-width:360px;margin-top:22px;font-weight:700}
+.subjective-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:680px;margin-top:22px}
+.subjective-filter{display:flex;align-items:center;gap:12px;font-weight:700}
 .subjective-filter select{flex:1;min-width:0;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--white);color:var(--ink)}
 .subjective-card{padding:24px;border:1px solid var(--line);border-radius:24px;background:var(--white);box-shadow:0 16px 42px #1018280d}
 .subjective-card h2{margin:18px 0 22px;font-size:clamp(1.35rem,4vw,2rem);line-height:1.45}
+.subjective-help-actions{display:flex;gap:8px;flex-wrap:wrap;margin:-6px 0 18px}.subjective-help-actions button{padding:9px 12px;border:1px solid #c7d7fe;border-radius:12px;background:#eef4ff;color:#2e5aac}
+.subjective-help-panel{margin:0 0 14px;padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid var(--line)}.subjective-help-panel strong{display:block;margin-bottom:6px}.subjective-help-panel p{margin:0;color:#475467;line-height:1.65}
 .subjective-card>label{display:block;margin-bottom:8px;font-weight:800}
 .subjective-card>input{width:100%;min-height:52px;padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:var(--paper);color:var(--ink);font:inherit;font-size:1.05rem;font-weight:700}
 .subjective-card>input:focus{outline:3px solid color-mix(in srgb,var(--accent) 24%,transparent);border-color:var(--accent)}
@@ -99,11 +102,13 @@ body .encyclopedia-heading>div h2{min-width:0;max-width:100%}
 .subjective-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}.subjective-actions button{min-height:50px}
 .subjective-guide{margin-top:20px;padding:20px;border-radius:18px;background:#ecfdf3;border-left:4px solid var(--accent)}
 .subjective-guide h3{margin:0 0 10px}.subjective-guide p{margin:0;line-height:1.65}
+.subjective-source{display:inline-block;margin-top:12px;color:#067647;font-weight:800;text-decoration:none}.subjective-source:hover{text-decoration:underline}
 
 @media(max-width:560px){
   .subjective-view{padding-bottom:110px}
   .subjective-hero{padding:20px 0 14px}
   .subjective-card{padding:18px;border-radius:20px}
+  .subjective-filters{grid-template-columns:1fr}.subjective-filter{align-items:flex-start;flex-direction:column;gap:6px}.subjective-filter select{width:100%}
   .subjective-actions{grid-template-columns:1fr}
   .bottom-nav-item{font-size:.78rem;padding-inline:6px}
 }
