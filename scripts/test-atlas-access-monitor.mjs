@@ -23,6 +23,8 @@ assert.equal(new Date(parsed[1].timestamp).toISOString(), '2026-08-25T15:00:01.0
 assert.equal(isPublicAddress('198.51.100.10'), true);
 assert.equal(isPublicAddress('127.0.0.1'), false);
 assert.equal(isPublicAddress('10.0.0.1'), false);
+assert.equal(isPublicAddress('172.2.3.4'), false);
+assert.equal(isPublicAddress('106.101.6.52'), false);
 assert.equal(classifyService('/run'), 'Learn Atlas');
 assert.equal(classifyService('/sketchfy/room'), 'Sketchfy Atlas');
 assert.equal(classifyService('/archiveos/'), 'ArchiveOS');
@@ -31,6 +33,12 @@ assert.equal(classifyService('/nexus/production'), 'Archive-Nexus');
 assert.equal(classifyService('/logistics/routes'), 'Archive-Logistics');
 assert.equal(classifyService('/ledger/settlements'), 'Archive-Ledger');
 assert.equal(classifyService('/archive-world/'), 'Archive-World');
+assert.equal(classifyService('/api/geocode', 'https://161.33.17.84/travel/'), 'Travel Atlas');
+
+const apiEvent = parseNginxLine('203.0.113.60 - - [27/Aug/2026:15:04:00 +0000] "GET /api/geocode HTTP/1.1" 200 123 "https://161.33.17.84/travel/" "fixture"');
+const importedApiEvents = buildHumanPageEvents({ events: [apiEvent], targetDate: '2026-08-28' });
+assert.equal(importedApiEvents.length, 1, 'browser API reads must be imported');
+assert.equal(importedApiEvents[0].project, 'Travel Atlas');
 
 const humanEvents = buildHumanPageEvents({ events: parsed, targetDate: '2026-08-28' });
 assert.equal(humanEvents.length, 2, 'successful non-static browser page requests must be imported');

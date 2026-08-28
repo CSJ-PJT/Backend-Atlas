@@ -1,0 +1,12 @@
+[Unit]
+Description=Import current Atlas and Archive access events every five minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+Persistent=true
+AccuracySec=10s
+Unit=atlas-access-current.service
+
+[Install]
+WantedBy=timers.target

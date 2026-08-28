@@ -51,8 +51,9 @@ export function parseNginxLine(line) {
     timestamp,
     method: request[0] || 'UNKNOWN',
     path: request[1]?.startsWith('/') ? request[1] : '/__unparsed-request__',
-    status: Number(match[4]),
-    userAgent: match[7] && match[7] !== '-' ? match[7] : null,
+      status: Number(match[4]),
+      referrer: match[6] && match[6] !== '-' ? match[6] : null,
+      userAgent: match[7] && match[7] !== '-' ? match[7] : null,
   };
 }
 
@@ -65,7 +66,9 @@ export function isPublicAddress(value) {
   const version = isIP(ip);
   if (version === 4) {
     const [a, b] = ip.split('.').map(Number);
-    return !(a === 0 || a === 10 || a === 127 || (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168) || a >= 224);
+    return !(a === 0 || a === 10 || a === 127 || a === 172 || (a === 169 && b === 254)
+      || (a === 192 && b === 168) || (a === 100 && b >= 64 && b <= 127)
+      || (a === 106 && b === 101) || a >= 224);
   }
   if (version === 6) {
     const normalized = ip.toLowerCase();
@@ -74,8 +77,12 @@ export function isPublicAddress(value) {
   return false;
 }
 
-export function classifyService(pathname) {
-  const path = String(pathname || '').split('?')[0].toLowerCase();
+export function classifyService(pathname, referrer = null) {
+  let path = String(pathname || '').split('?')[0].toLowerCase();
+  if (path.startsWith('/api/') && referrer) {
+    try { path = new URL(referrer).pathname.toLowerCase(); }
+    catch { }
+  }
   if (path === '/archiveos' || path.startsWith('/archiveos/')) return 'ArchiveOS';
   if (path === '/market' || path.startsWith('/market/')) return 'Archive-Market';
   if (path === '/nexus' || path.startsWith('/nexus/')) return 'Archive-Nexus';
@@ -105,7 +112,6 @@ export function buildHumanPageEvents({ events, targetDate }) {
       && event.status >= 200 && event.status < 400
       && path !== '/__unparsed-request__'
       && !STATIC_ASSET.test(path)
-      && !path.startsWith('/api/')
       && !path.startsWith('/.well-known/')
       && path !== '/edge-healthz'
       && event.userAgent
@@ -120,7 +126,7 @@ export function buildHumanPageEvents({ events, targetDate }) {
     return {
       sourceId,
       occurredAt: new Date(event.timestamp).toISOString(),
-      project: classifyService(route),
+      project: classifyService(route, event.referrer),
       route,
       method: event.method,
       status: event.status,
@@ -417,7 +423,8 @@ async function main() {
     return;
   }
   if (command !== 'report') throw new Error(`Unknown command: ${command}`);
-  const targetDate = requiredDate(String(options.get('date') || dateBefore(kstDate(Date.now()))), '--date');
+    const defaultDate = options.has('current') ? kstDate(Date.now()) : dateBefore(kstDate(Date.now()));
+    const targetDate = requiredDate(String(options.get('date') || defaultDate), '--date');
   if (targetDate < startDate) {
     console.log(JSON.stringify({ mode: 'report', skipped: true, reason: 'before monitoring start', targetDate, startDate }, null, 2));
     return;
