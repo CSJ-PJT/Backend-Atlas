@@ -38,6 +38,12 @@ assert.equal(humanEvents[0].project, 'Sketchfy Atlas');
 assert.equal(humanEvents[0].clientIp, '203.0.113.30');
 assert.equal(humanEvents[0].userAgent, 'fixture');
 assert.match(humanEvents[0].sourceId, /^[a-f0-9]{64}$/);
+const repeated = [parseNginxLine(line('203.0.113.50', '27/Aug/2026:15:03:00 +0000', '/learn/')), parseNginxLine(line('203.0.113.50', '27/Aug/2026:15:03:00 +0000', '/learn/'))];
+repeated[0].sourceOccurrence = 0;
+repeated[1].sourceOccurrence = 1;
+const repeatedEvents = buildHumanPageEvents({ events: repeated, targetDate: '2026-08-28' });
+assert.equal(repeatedEvents.length, 2);
+assert.notEqual(repeatedEvents[0].sourceId, repeatedEvents[1].sourceId, 'same-second human visits must remain distinct');
 
 const salt = 'fixture-only-monitor-key';
 const oldLogs = parsed.filter(event => event.timestamp < Date.parse('2026-08-26T00:00:00+09:00'));

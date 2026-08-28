@@ -112,9 +112,11 @@ export function buildHumanPageEvents({ events, targetDate }) {
       && !AUTOMATED_AGENT.test(event.userAgent);
   }).map(event => {
     const route = String(event.path).split('?')[0].slice(0, 512) || '/';
-    const sourceId = createHash('sha256').update([
+    const identityParts = [
       event.ip, event.timestamp, event.method, route, event.status, event.userAgent,
-    ].join('\n')).digest('hex');
+    ].join('\n');
+    const sourceInput = event.sourceOccurrence > 0 ? `${identityParts}\n#${event.sourceOccurrence}` : identityParts;
+    const sourceId = createHash('sha256').update(sourceInput).digest('hex');
     return {
       sourceId,
       occurredAt: new Date(event.timestamp).toISOString(),
@@ -275,13 +277,19 @@ async function logFiles(logDir) {
 async function readEvents(logDir) {
   const events = [];
   let malformedLines = 0;
+  const occurrences = new Map();
   for (const path of await logFiles(logDir)) {
     const source = createReadStream(path);
     const input = path.endsWith('.gz') ? source.pipe(createGunzip()) : source;
     const lines = createInterface({ input, crlfDelay: Infinity });
     for await (const line of lines) {
       const event = parseNginxLine(line);
-      if (event) events.push(event); else malformedLines += 1;
+      if (event) {
+        const identityParts = [event.ip, event.timestamp, event.method, String(event.path).split('?')[0].slice(0, 512) || '/', event.status, event.userAgent].join('\n');
+        const occurrence = occurrences.get(identityParts) || 0;
+        occurrences.set(identityParts, occurrence + 1);
+        events.push({ ...event, sourceOccurrence: occurrence });
+      } else malformedLines += 1;
     }
   }
   return { events, malformedLines };
