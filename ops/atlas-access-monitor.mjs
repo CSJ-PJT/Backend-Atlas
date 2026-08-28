@@ -79,6 +79,9 @@ export function isPublicAddress(value) {
 
 export function classifyService(pathname, referrer = null) {
   let path = String(pathname || '').split('?')[0].toLowerCase();
+  if (path === '/api/geocode' || path === '/api/google-maps-config') return 'Travel Atlas';
+  if (path === '/api/mcp') return 'Learn Atlas';
+  if (path === '/api/health') return 'Health Atlas';
   if (path.startsWith('/api/') && referrer) {
     try { path = new URL(referrer).pathname.toLowerCase(); }
     catch { }

@@ -34,6 +34,8 @@ assert.equal(classifyService('/logistics/routes'), 'Archive-Logistics');
 assert.equal(classifyService('/ledger/settlements'), 'Archive-Ledger');
 assert.equal(classifyService('/archive-world/'), 'Archive-World');
 assert.equal(classifyService('/api/geocode', 'https://161.33.17.84/travel/'), 'Travel Atlas');
+assert.equal(classifyService('/api/geocode'), 'Travel Atlas');
+assert.equal(classifyService('/api/mcp'), 'Learn Atlas');
 
 const apiEvent = parseNginxLine('203.0.113.60 - - [27/Aug/2026:15:04:00 +0000] "GET /api/geocode HTTP/1.1" 200 123 "https://161.33.17.84/travel/" "fixture"');
 const importedApiEvents = buildHumanPageEvents({ events: [apiEvent], targetDate: '2026-08-28' });
