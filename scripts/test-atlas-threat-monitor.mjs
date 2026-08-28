@@ -38,6 +38,7 @@ assert.match(message, /처리 해석: 차단 3 · 리다이렉트 1 · 2xx 응�
 assert.doesNotMatch(message, /203\.0\.113|접속-[A-F0-9]+|[a-f0-9]{64}/i);
 assert.doesNotMatch(message, /\/\.env|wp-login|passwd/);
 
+assert.match(hiddenLocationConfig, /location = \/\.env[\s\S]*return 404/);
 assert.match(hiddenLocationConfig, /location \^~ \/\.env[\s\S]*return 404/);
 assert.match(hiddenLocationConfig, /location \^~ \/\.git[\s\S]*return 404/);
 assert.match(httpServerConfig, /include \/etc\/nginx\/snippets\/atlas-deny-hidden-locations\.conf/);
