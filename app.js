@@ -538,11 +538,7 @@ window.addEventListener('popstate',event=>{
     return fallbackToHome();
   }
   if(state.route==='subjective')return fallbackToHome();
-  if(state.route==='architecture'){renderArchitectureHome(false);return restoreUi(state.ui);}
-  if(state.route==='project'){
-    if(window.ATLAS_PROJECTS?.[state.project]){renderProjectGuide(state.project,false);return restoreUi(state.ui);}
-    return fallbackToHome();
-  }
+  if(state.route==='architecture'||state.route==='project')return fallbackToHome();
   if(state.route==='search'){const query=safeString(state.query||state.ui?.search,'',180);show('knowledgeView',false);$('knowledgeSearchInput').value=query;window.renderKnowledgeSearch?.(query);return restoreUi(state.ui);}
   if(state.route!=='view'||!$(state.name)?.classList.contains('view'))return fallbackToHome();
   show(state.name,false);
@@ -768,7 +764,7 @@ $('navStudyBtn').onclick = () => { show('studyView'); renderAtlasStudy(); };
 $('navQuizBtn').onclick = () => start();
 if($('navInterviewBtn'))$('navInterviewBtn').onclick = () => openSubjectivePractice();
 $('navSearchBtn').onclick = () => show('knowledgeView');
-$('navArchitectureBtn').onclick = () => { show('architectureView'); renderArchitectureHome(false); };
+if($('navArchitectureBtn'))$('navArchitectureBtn').onclick = () => { show('architectureView'); renderArchitectureHome(false); };
 $('architectureBackBtn').onclick = window.safeAtlasBack;
 $('subjectiveBackBtn').onclick = window.safeAtlasBack;
 $('subjectiveCategory').onchange = () => {resetSubjectivePool();renderSubjectiveQuestion();};
@@ -818,8 +814,7 @@ function restoreInitialRoute(){
   }
   if(route==='search'){const query=parts.join('/');const initial={route,query,atlasDepth:0};history.replaceState(initial,'',stateHash(initial));show('knowledgeView',false);$('knowledgeSearchInput').value=query;setTimeout(()=>window.renderKnowledgeSearch?.(query),0);return;}
   if(route==='subjective')return fallbackToHome();
-  if(route==='architecture'){const initial={route,atlasDepth:0};history.replaceState(initial,'',stateHash(initial));show('architectureView',false);renderArchitectureHome(false);return;}
-  if(route==='project'&&parts[0]&&window.ATLAS_PROJECTS?.[parts[0]]){const initial={route,project:parts[0],atlasDepth:0};history.replaceState(initial,'',stateHash(initial));renderProjectGuide(parts[0],false);return;}
+  if(route==='architecture'||route==='project')return fallbackToHome();
   if(route==='view'&&$(parts[0])?.classList.contains('view')){const initial={route,name:parts[0],atlasDepth:0};history.replaceState(initial,'',stateHash(initial));show(initial.name,false);return;}
   fallbackToHome();
 }

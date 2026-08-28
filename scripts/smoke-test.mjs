@@ -56,12 +56,9 @@ assert(dom.window.document.querySelector('.learning-visual svg[role="img"][aria-
 assert(dom.window.history.state.route==='concept','concept navigation must be stored in browser history');
 dom.window.dispatchEvent(new dom.window.PopStateEvent('popstate',{state:{route:'study-category',category:'Java & Spring'}}));
 assert(dom.window.document.querySelectorAll('.section-card').length>=6,'history restoration must return to previous study category');
-dom.window.document.getElementById('navArchitectureBtn').click();
-assert(dom.window.document.querySelectorAll('.project-guide-card').length===3,'developer guide must list three projects');
-Array.from(dom.window.document.querySelectorAll('[data-project]')).find(node=>node.dataset.project==='Archive Nexus').click();
-assert(dom.window.document.querySelectorAll('.guide-section').length>=8,'project guide must cover architecture concerns');
-assert(dom.window.document.querySelectorAll('.guide-node').length>=10,'project guide must render responsive interactive flow nodes');
-dom.window.document.querySelector('.guide-node').click();assert(!dom.window.document.querySelector('.node-detail').hidden,'guide node must expose role, input and output');
+assert(!dom.window.document.getElementById('navArchitectureBtn'),'private developer guide must not reserve a public navigation slot');
+dom.window.dispatchEvent(new dom.window.PopStateEvent('popstate',{state:{route:'architecture'}}));
+assert(dom.window.document.getElementById('homeView').classList.contains('active'),'private architecture history must fall back to home');
 dom.window.localStorage.removeItem('backendAtlasQuizSession');
 dom.window.document.getElementById('startBtn').click();
 const option=dom.window.document.querySelector('.option');assert(option,'quiz option must render');option.click();
