@@ -66,7 +66,7 @@
               <button id="weakTopicBtn" class="secondary" type="button">약점 문제 풀기</button>
             </div>
           </article>
-          <article class="review-card">
+          <article class="review-card" data-public-interview-entry hidden aria-hidden="true" style="display:none !important">
             <div class="section-title compact">
               <div><p class="eyebrow">INTERVIEW MODE</p><h2>질문 하나씩 답변</h2></div>
               <button id="interviewModeBtn" class="text-btn" type="button">시작</button>
@@ -177,7 +177,7 @@
         </article>
       </section>
 
-      <section id="interviewLabView" class="view interview-lab-view" aria-labelledby="interviewLabTitle">
+      <section id="interviewLabView" class="view interview-lab-view" aria-labelledby="interviewLabTitle" hidden aria-hidden="true" style="display:none !important">
         <nav class="quiz-nav interview-lab-nav">
           <button id="interviewBackBtn" class="icon-btn" type="button" aria-label="홈으로">←</button>
           <strong>Interview Lab</strong>
@@ -229,7 +229,7 @@
       <button id="navHomeBtn" class="bottom-nav-item active" type="button" aria-current="page">홈</button>
       <button id="navStudyBtn" class="bottom-nav-item" type="button">학습</button>
       <button id="navQuizBtn" class="bottom-nav-item" type="button">문제</button>
-      <button id="navInterviewBtn" class="bottom-nav-item" type="button">면접</button>
+      <button id="navInterviewBtn" class="bottom-nav-item" type="button" hidden aria-hidden="true" tabindex="-1" style="display:none !important">면접</button>
       <button id="navSearchBtn" class="bottom-nav-item" type="button">검색</button>
       <button id="navArchitectureBtn" class="bottom-nav-item" type="button">설계</button>
     </nav>
