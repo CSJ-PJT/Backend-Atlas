@@ -76,12 +76,15 @@ assert(directSearchBackDom.window.location.hash==='#home','direct search back fa
 const subjectiveDom=await boot('https://runtime.local/learn/#home');
 const subjectiveDocument=subjectiveDom.window.document;
 subjectiveDocument.getElementById('navInterviewBtn').click();
-assert(subjectiveDocument.getElementById('subjectiveView').classList.contains('active'),'subjective navigation must open the anonymous writing practice');
+assert(subjectiveDocument.getElementById('subjectiveView').classList.contains('active'),'subjective navigation must open the anonymous short-answer practice');
 assert(subjectiveDocument.getElementById('subjectiveQuestion').textContent.trim().length>10,'subjective practice must render a reviewed question');
-subjectiveDocument.getElementById('subjectiveAnswer').value='핵심 원리와 선택 기준, 실패 조건을 순서대로 설명합니다.';
+const renderedQuestion=subjectiveDom.window.ATLAS_SUBJECTIVE_QUESTIONS.questions.find(question=>question.question===subjectiveDocument.getElementById('subjectiveQuestion').textContent);
+assert(renderedQuestion?.answer,'rendered subjective question must have a canonical short answer');
+subjectiveDocument.getElementById('subjectiveAnswer').value=renderedQuestion.answer;
 subjectiveDocument.getElementById('subjectiveRevealBtn').click();
-assert(!subjectiveDocument.getElementById('subjectiveGuide').hidden,'subjective guide must require and then reveal after an original response');
-assert(subjectiveDocument.querySelectorAll('#subjectiveOutline li').length>=2,'subjective guide must provide a useful answer outline');
+assert(!subjectiveDocument.getElementById('subjectiveGuide').hidden,'short-answer guide must reveal after an answer');
+assert(subjectiveDocument.getElementById('subjectiveStatus').textContent==='정답입니다.','canonical technical term must be accepted');
+assert(subjectiveDocument.getElementById('subjectiveExplanation').textContent.includes(renderedQuestion.answer),'short-answer guide must provide the answer and explanation');
 
 const directArchitectureBackDom=await boot('https://runtime.local/learn/#architecture');
 directArchitectureBackDom.window.document.getElementById('architectureBackBtn').click();

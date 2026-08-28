@@ -179,19 +179,19 @@
       <section id="subjectiveView" class="view subjective-view" aria-labelledby="subjectiveTitle">
         <nav class="quiz-nav"><button id="subjectiveBackBtn" class="icon-btn" type="button" aria-label="홈으로">←</button><strong>주관식 문제</strong></nav>
         <div class="subjective-hero">
-          <p class="eyebrow">BACKEND WRITING PRACTICE</p>
-          <h1 id="subjectiveTitle">답을 고르지 말고<br>직접 설명해 보세요.</h1>
-          <p>회사·지원자 정보가 없는 공통 기술 문제만 제공합니다.</p>
+          <p class="eyebrow">BACKEND SHORT ANSWER</p>
+          <h1 id="subjectiveTitle">핵심 기술 용어를<br>짧게 답해 보세요.</h1>
+          <p>설명을 읽고 정답이 되는 기술 용어 하나를 입력하세요.</p>
           <label class="subjective-filter" for="subjectiveCategory"><span>분야</span><select id="subjectiveCategory"><option value="">전체 분야</option></select></label>
         </div>
         <article class="subjective-card">
           <div class="question-meta"><span id="subjectiveCategoryLabel"></span><span id="subjectiveDifficulty"></span></div>
           <h2 id="subjectiveQuestion"></h2>
-          <label for="subjectiveAnswer">내 답변</label>
-          <textarea id="subjectiveAnswer" rows="7" maxlength="3000" placeholder="핵심 원리, 선택 기준, 실패 조건을 순서대로 적어 보세요."></textarea>
+          <label for="subjectiveAnswer">정답</label>
+          <input id="subjectiveAnswer" type="text" maxlength="60" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="기술 용어 입력">
           <p id="subjectiveStatus" class="hint" role="status" aria-live="polite"></p>
-          <div class="subjective-actions"><button id="subjectiveRevealBtn" class="primary" type="button">답안 비교</button><button id="subjectiveNextBtn" class="secondary" type="button">다음 문제</button></div>
-          <section id="subjectiveGuide" class="subjective-guide" hidden tabindex="-1"><h3>답안에 들어갈 핵심</h3><ul id="subjectiveOutline"></ul><h3>더 생각할 질문</h3><ul id="subjectiveFollowUps"></ul></section>
+          <div class="subjective-actions"><button id="subjectiveRevealBtn" class="primary" type="button">정답 확인</button><button id="subjectiveNextBtn" class="secondary" type="button">다음 문제</button></div>
+          <section id="subjectiveGuide" class="subjective-guide" hidden tabindex="-1"><h3>정답과 해설</h3><p id="subjectiveExplanation"></p></section>
         </article>
       </section>
 
@@ -246,8 +246,8 @@
     <nav class="bottom-nav" aria-label="학습 탐색">
       <button id="navHomeBtn" class="bottom-nav-item active" type="button" aria-current="page">홈</button>
       <button id="navStudyBtn" class="bottom-nav-item" type="button">학습</button>
-      <button id="navInterviewBtn" class="bottom-nav-item" type="button">주관식 문제</button>
       <button id="navQuizBtn" class="bottom-nav-item" type="button">객관식 문제</button>
+      <button id="navInterviewBtn" class="bottom-nav-item" type="button">주관식 문제</button>
       <button id="navSearchBtn" class="bottom-nav-item" type="button">검색</button>
       <button id="navArchitectureBtn" class="bottom-nav-item" type="button" hidden aria-hidden="true" tabindex="-1" style="display:none !important">설계</button>
     </nav>

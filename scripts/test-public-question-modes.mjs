@@ -9,6 +9,11 @@ vm.runInNewContext(await readFile(resolve(root, 'subjective-questions.js'), 'utf
 const publicBundle = context.window.ATLAS_SUBJECTIVE_QUESTIONS;
 assert(publicBundle?.questions?.length >= 300, 'public subjective bank must contain the reviewed shared questions');
 assert(publicBundle.questions.every(question => !('companies' in question) && !('roles' in question)), 'public questions must omit employer fields');
+assert(publicBundle.answerType === 'single-term', 'public subjective bank must use short answers');
+assert(publicBundle.questions.every(question => question.answer && question.acceptedAnswers?.length && question.explanation), 'every public question must have a canonical term and explanation');
+assert(publicBundle.questions.every(question => !('answerOutline' in question) && !('followUps' in question)), 'essay-answer fields must not remain in public questions');
+const normalize = value => String(value).normalize('NFKC').toLocaleLowerCase('ko-KR').replace(/[\s_+().·-]/g, '');
+assert(publicBundle.questions.every(question => question.acceptedAnswers.every(answer => normalize(answer).length <= 2 || !normalize(question.question).includes(normalize(answer)))), 'a prompt must not reveal an accepted answer');
 
 const sourceContext = { window: {} };
 vm.runInNewContext(await readFile(resolve(root, 'interview/data/interview-data.js'), 'utf8'), sourceContext);
@@ -22,6 +27,8 @@ for (const job of privateBundle.jobs || []) {
 const html = await readFile(resolve(root, 'index.html'), 'utf8');
 assert(/id="navInterviewBtn"[^>]*>주관식 문제</.test(html), 'subjective navigation must be public');
 assert(/id="navQuizBtn"[^>]*>객관식 문제</.test(html), 'objective navigation must be clearly named');
-assert(html.indexOf('id="navInterviewBtn"') < html.indexOf('id="navQuizBtn"') && html.indexOf('id="navQuizBtn"') < html.indexOf('id="navSearchBtn"'), 'question modes must sit together before search');
+assert(html.indexOf('id="navQuizBtn"') < html.indexOf('id="navInterviewBtn"') && html.indexOf('id="navInterviewBtn"') < html.indexOf('id="navSearchBtn"'), 'objective must precede subjective before search');
+assert(/id="subjectiveAnswer"[^>]*type="text"/.test(html), 'subjective answer must be a single-line text input');
+assert(!/id="subjectiveAnswer"[^>]*textarea/.test(html), 'essay textarea must be removed');
 assert(/id="interviewLabView"[^>]*hidden/.test(html), 'private Interview Lab must remain hidden');
-console.log(`Public question modes PASS: ${publicBundle.questions.length} anonymous subjective questions plus the existing objective bank.`);
+console.log(`Public question modes PASS: ${publicBundle.questions.length} single-term short-answer questions plus the existing objective bank.`);
