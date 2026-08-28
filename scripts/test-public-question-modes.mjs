@@ -25,9 +25,9 @@ for (const job of privateBundle.jobs || []) {
 }
 
 const html = await readFile(resolve(root, 'index.html'), 'utf8');
-assert(/id="navInterviewBtn"[^>]*>주관식 문제</.test(html), 'subjective navigation must be public');
+assert(/id="navInterviewBtn"[^>]*hidden[^>]*aria-hidden="true"[^>]*>주관식 문제</.test(html), 'subjective navigation must stay private while the bank is under review');
 assert(/id="navQuizBtn"[^>]*>객관식 문제</.test(html), 'objective navigation must be clearly named');
-assert(html.indexOf('id="navQuizBtn"') < html.indexOf('id="navInterviewBtn"') && html.indexOf('id="navInterviewBtn"') < html.indexOf('id="navSearchBtn"'), 'objective must precede subjective before search');
+assert(/id="subjectiveView"[^>]*hidden[^>]*aria-hidden="true"/.test(html), 'subjective view must stay hidden while the bank is under review');
 assert(/id="subjectiveAnswer"[^>]*type="text"/.test(html), 'subjective answer must be a single-line text input');
 assert(!/id="subjectiveAnswer"[^>]*textarea/.test(html), 'essay textarea must be removed');
 assert(/id="interviewLabView"[^>]*hidden/.test(html), 'private Interview Lab must remain hidden');

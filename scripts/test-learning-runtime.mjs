@@ -73,18 +73,11 @@ directSearchBackDom.window.document.getElementById('knowledgeBackBtn').click();
 assert(directSearchBackDom.window.document.getElementById('homeView').classList.contains('active'),'direct search back must fall back to home when there is no previous SPA route');
 assert(directSearchBackDom.window.location.hash==='#home','direct search back fallback must restore the canonical home URL');
 
-const subjectiveDom=await boot('https://runtime.local/learn/#home');
+const subjectiveDom=await boot('https://runtime.local/learn/#subjective');
 const subjectiveDocument=subjectiveDom.window.document;
-subjectiveDocument.getElementById('navInterviewBtn').click();
-assert(subjectiveDocument.getElementById('subjectiveView').classList.contains('active'),'subjective navigation must open the anonymous short-answer practice');
-assert(subjectiveDocument.getElementById('subjectiveQuestion').textContent.trim().length>10,'subjective practice must render a reviewed question');
-const renderedQuestion=subjectiveDom.window.ATLAS_SUBJECTIVE_QUESTIONS.questions.find(question=>question.question===subjectiveDocument.getElementById('subjectiveQuestion').textContent);
-assert(renderedQuestion?.answer,'rendered subjective question must have a canonical short answer');
-subjectiveDocument.getElementById('subjectiveAnswer').value=renderedQuestion.answer;
-subjectiveDocument.getElementById('subjectiveRevealBtn').click();
-assert(!subjectiveDocument.getElementById('subjectiveGuide').hidden,'short-answer guide must reveal after an answer');
-assert(subjectiveDocument.getElementById('subjectiveStatus').textContent==='정답입니다.','canonical technical term must be accepted');
-assert(subjectiveDocument.getElementById('subjectiveExplanation').textContent.includes(renderedQuestion.answer),'short-answer guide must provide the answer and explanation');
+assert(subjectiveDocument.getElementById('navInterviewBtn').hidden,'subjective navigation must remain hidden while the bank is under review');
+assert(!subjectiveDocument.getElementById('subjectiveView').classList.contains('active'),'direct subjective routes must not activate the under-review view');
+assert(subjectiveDocument.getElementById('homeView').classList.contains('active'),'direct subjective routes must fall back to home');
 
 const directArchitectureBackDom=await boot('https://runtime.local/learn/#architecture');
 directArchitectureBackDom.window.document.getElementById('architectureBackBtn').click();
