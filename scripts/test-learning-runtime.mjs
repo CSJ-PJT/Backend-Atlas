@@ -4,7 +4,7 @@ import {JSDOM} from 'jsdom';
 
 const root=resolve(import.meta.dirname,'..');
 const html=await readFile(resolve(root,'index.html'),'utf8');
-const scripts=['questions.js','question-expander.js','ax-question-extension.js','learning-os-data.js','atlas-content.js','curriculum-data.js','developer-guide-data.js','learning-visuals.js','app.js','learning-os.js'];
+const scripts=['questions.js','question-expander.js','ax-question-extension.js','learning-os-data.js','atlas-content.js','curriculum-data.js','developer-guide-data.js','learning-visuals.js','subjective-questions.js','app.js','learning-os.js'];
 const assert=(condition,message)=>{if(!condition)throw new Error(message);};
 
 async function boot(url='https://runtime.local/learn/#home',beforeScripts=()=>{}){
@@ -72,6 +72,16 @@ const directSearchBackDom=await boot('https://runtime.local/learn/#search/B-Tree
 directSearchBackDom.window.document.getElementById('knowledgeBackBtn').click();
 assert(directSearchBackDom.window.document.getElementById('homeView').classList.contains('active'),'direct search back must fall back to home when there is no previous SPA route');
 assert(directSearchBackDom.window.location.hash==='#home','direct search back fallback must restore the canonical home URL');
+
+const subjectiveDom=await boot('https://runtime.local/learn/#home');
+const subjectiveDocument=subjectiveDom.window.document;
+subjectiveDocument.getElementById('navInterviewBtn').click();
+assert(subjectiveDocument.getElementById('subjectiveView').classList.contains('active'),'subjective navigation must open the anonymous writing practice');
+assert(subjectiveDocument.getElementById('subjectiveQuestion').textContent.trim().length>10,'subjective practice must render a reviewed question');
+subjectiveDocument.getElementById('subjectiveAnswer').value='핵심 원리와 선택 기준, 실패 조건을 순서대로 설명합니다.';
+subjectiveDocument.getElementById('subjectiveRevealBtn').click();
+assert(!subjectiveDocument.getElementById('subjectiveGuide').hidden,'subjective guide must require and then reveal after an original response');
+assert(subjectiveDocument.querySelectorAll('#subjectiveOutline li').length>=2,'subjective guide must provide a useful answer outline');
 
 const directArchitectureBackDom=await boot('https://runtime.local/learn/#architecture');
 directArchitectureBackDom.window.document.getElementById('architectureBackBtn').click();

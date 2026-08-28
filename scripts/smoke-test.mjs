@@ -7,7 +7,7 @@ const html=await readFile(resolve(root,'index.html'),'utf8');
 const dom=new JSDOM(html,{url:'https://tech-review.local/learn/?job=qa-job-42&topic=LocalStorage',runScripts:'outside-only'});
 dom.window.scrollTo=()=>{};
 dom.window.HTMLElement.prototype.scrollIntoView=()=>{};
-for(const file of ['questions.js','question-expander.js','ax-question-extension.js','learning-os-data.js','atlas-content.js','curriculum-data.js','developer-guide-data.js','learning-visuals.js','app.js','learning-os.js']) dom.window.eval(await readFile(resolve(root,file),'utf8'));
+for(const file of ['questions.js','question-expander.js','ax-question-extension.js','learning-os-data.js','atlas-content.js','curriculum-data.js','developer-guide-data.js','learning-visuals.js','subjective-questions.js','app.js','learning-os.js']) dom.window.eval(await readFile(resolve(root,file),'utf8'));
 const assert=(condition,message)=>{if(!condition)throw new Error(message)};
 const versionedAssets=[...dom.window.document.querySelectorAll('script[src],link[href],img[src]')]
   .map(node=>node.getAttribute('src')||node.getAttribute('href'))

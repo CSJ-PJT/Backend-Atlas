@@ -11,7 +11,7 @@ const out = resolve(root, 'www');
 const releaseMode = process.argv.slice(2).includes('--release');
 const baseAssets = [
   'index.html', 'styles.css', 'learning-os.css', 'questions.js', 'question-expander.js',
-  'ax-question-extension.js', 'learning-os-data.js', 'atlas-content.js', 'curriculum-data.js', 'developer-guide-data.js', 'learning-visuals.js', 'app.js', 'learning-os.js',
+  'ax-question-extension.js', 'learning-os-data.js', 'atlas-content.js', 'curriculum-data.js', 'developer-guide-data.js', 'learning-visuals.js', 'subjective-questions.js', 'app.js', 'learning-os.js',
   'manifest.webmanifest', 'sw.js', 'assets/backend-atlas-icon.png',
   'docs/backend-study/Backend-Atlas-Backend-Practice-32-Day.pdf'
 ];
@@ -26,8 +26,6 @@ const listFiles = async directory => {
 };
 const assets = [
   ...baseAssets,
-  ...(await listFiles('interview')),
-  ...(await listFiles('data/interview')),
   ...(await listFiles('backend-study')),
   ...(await listFiles('data/backend-study'))
 ]

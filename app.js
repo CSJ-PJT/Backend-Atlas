@@ -24,6 +24,9 @@ const educationContractValid = Boolean(
 if(!educationContractValid) window.QUESTION_BANK=[];
 window.EDUCATION_RELEASE_VALID=educationContractValid;
 const bank = window.QUESTION_BANK;
+const subjectiveBank = Array.isArray(window.ATLAS_SUBJECTIVE_QUESTIONS?.questions) ? window.ATLAS_SUBJECTIVE_QUESTIONS.questions : [];
+let subjectivePool = [];
+let subjectiveIndex = 0;
 const knownQuestionIds=new Set(bank.map(question=>question.id));
 const knownCategories=new Set(bank.map(question=>question.category));
 const state = { session: [], index: 0, score: 0, answers: [], mode: 'all', count: 10 };
@@ -237,7 +240,7 @@ function show(name, record=true){
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   $(name).classList.add('active');
   document.querySelectorAll('.bottom-nav-item').forEach(b => {b.classList.remove('active');b.removeAttribute('aria-current');});
-  const navMap = { homeView:'navHomeBtn', studyView:'navStudyBtn', quizView:'navQuizBtn', knowledgeView:'navSearchBtn', architectureView:'navArchitectureBtn' };
+  const navMap = { homeView:'navHomeBtn', studyView:'navStudyBtn', subjectiveView:'navInterviewBtn', quizView:'navQuizBtn', knowledgeView:'navSearchBtn', architectureView:'navArchitectureBtn' };
   const navId = navMap[name];
   if (navId && $(navId)){ $(navId).classList.add('active');$(navId).setAttribute('aria-current','page'); }
   if(record) pushNavigation({route:'view',name});
@@ -442,6 +445,55 @@ function renderConceptDetail(category,sectionIndex,conceptIndex,record=true){
   return true;
 }
 
+function resetSubjectivePool(){
+  const category=$('subjectiveCategory').value;
+  const candidates=category?subjectiveBank.filter(question=>question.category===category):subjectiveBank;
+  subjectivePool=shuffle(candidates);
+  subjectiveIndex=0;
+}
+function renderSubjectiveQuestion(){
+  const question=subjectivePool[subjectiveIndex];
+  if(!question){
+    $('subjectiveQuestion').textContent='공개 가능한 주관식 문제를 준비 중입니다.';
+    $('subjectiveRevealBtn').disabled=true;
+    $('subjectiveNextBtn').disabled=true;
+    return;
+  }
+  $('subjectiveCategoryLabel').textContent=question.category||'공통 백엔드';
+  $('subjectiveDifficulty').textContent=question.difficulty||'reviewed';
+  $('subjectiveQuestion').textContent=question.question;
+  $('subjectiveAnswer').value='';
+  $('subjectiveStatus').textContent=`${subjectiveIndex+1} / ${subjectivePool.length} · 답변은 서버로 전송하거나 저장하지 않습니다.`;
+  $('subjectiveGuide').hidden=true;
+  $('subjectiveOutline').replaceChildren();
+  $('subjectiveFollowUps').replaceChildren();
+  $('subjectiveRevealBtn').disabled=false;
+  $('subjectiveNextBtn').disabled=false;
+  $('subjectiveAnswer').focus();
+}
+function openSubjectivePractice(record=true){
+  show('subjectiveView',false);
+  if(record)pushNavigation({route:'subjective'});
+  if($('subjectiveCategory').options.length===1){
+    [...new Set(subjectiveBank.map(question=>question.category).filter(Boolean))].sort().forEach(category=>{
+      const option=document.createElement('option');option.value=category;option.textContent=category;$('subjectiveCategory').append(option);
+    });
+  }
+  if(!subjectivePool.length)resetSubjectivePool();
+  renderSubjectiveQuestion();
+}
+function revealSubjectiveGuide(){
+  const answer=$('subjectiveAnswer').value.trim();
+  if(answer.length<20){$('subjectiveStatus').textContent='먼저 20자 이상으로 직접 설명해 보세요.';$('subjectiveAnswer').focus();return;}
+  const question=subjectivePool[subjectiveIndex];if(!question)return;
+  for(const text of question.answerOutline||[]){const item=document.createElement('li');item.textContent=text;$('subjectiveOutline').append(item);}
+  for(const text of question.followUps||[]){const item=document.createElement('li');item.textContent=text;$('subjectiveFollowUps').append(item);}
+  $('subjectiveGuide').hidden=false;
+  $('subjectiveGuide').focus();
+  $('subjectiveStatus').textContent='내 답변과 핵심 항목을 비교해 보세요.';
+}
+window.openSubjectivePractice=openSubjectivePractice;
+
 function renderArchitectureHome(record=false){
   show('architectureView',false); if(record) pushNavigation({route:'architecture'});
   $('architectureContent').innerHTML=`<div class="project-guide-grid">${Object.entries(window.ATLAS_PROJECTS||{}).map(([name,p])=>`<button class="project-guide-card" data-project="${name}"><small>${p.badge}</small><strong>${name}</strong><span>${p.purpose}</span><em>${p.stack.slice(0,4).join(' · ')}</em><b>구조 살펴보기 →</b></button>`).join('')}</div>`;
@@ -468,6 +520,7 @@ window.addEventListener('popstate',event=>{
     if(renderConceptDetail(state.category,state.sectionIndex,state.conceptIndex,false))return restoreUi(state.ui);
     return fallbackToHome();
   }
+  if(state.route==='subjective'){openSubjectivePractice(false);return restoreUi(state.ui);}
   if(state.route==='architecture'){renderArchitectureHome(false);return restoreUi(state.ui);}
   if(state.route==='project'){
     if(window.ATLAS_PROJECTS?.[state.project]){renderProjectGuide(state.project,false);return restoreUi(state.ui);}
@@ -683,7 +736,7 @@ $('allBtn').onclick = () => start();
 $('wrongBtn').onclick = () => start(null, true);
 $('reviewTodayBtn').onclick = startTodayReview;
 $('weakTopicBtn').onclick = startWeakReview;
-$('interviewModeBtn').onclick = () => window.openInterviewLab?.();
+$('interviewModeBtn').onclick = () => openSubjectivePractice();
 $('backendStudyBtn').onclick = () => { location.href = './backend-study/'; };
 $('axModeBtn').onclick = openAxMode;
 $('quitBtn').onclick = () => {persistQuizSession();safeBack(()=>show('homeView'));};
@@ -696,10 +749,14 @@ $('knowledgeBackBtn').onclick = window.safeAtlasBack;
 $('navHomeBtn').onclick = () => show('homeView');
 $('navStudyBtn').onclick = () => { show('studyView'); renderAtlasStudy(); };
 $('navQuizBtn').onclick = () => start();
-$('navInterviewBtn').onclick = () => window.openInterviewLab?.();
+$('navInterviewBtn').onclick = () => openSubjectivePractice();
 $('navSearchBtn').onclick = () => show('knowledgeView');
 $('navArchitectureBtn').onclick = () => { show('architectureView'); renderArchitectureHome(false); };
 $('architectureBackBtn').onclick = window.safeAtlasBack;
+$('subjectiveBackBtn').onclick = window.safeAtlasBack;
+$('subjectiveCategory').onchange = () => {resetSubjectivePool();renderSubjectiveQuestion();};
+$('subjectiveRevealBtn').onclick = revealSubjectiveGuide;
+$('subjectiveNextBtn').onclick = () => {if(!subjectivePool.length)return;subjectiveIndex=(subjectiveIndex+1)%subjectivePool.length;renderSubjectiveQuestion();};
 $('retryWrongBtn').onclick = () => {
   const wrong = state.answers.filter(a => !a.correct).map(a => a.q);
   if (!wrong.length) return;
@@ -741,6 +798,7 @@ function restoreInitialRoute(){
     }
   }
   if(route==='search'){const query=parts.join('/');const initial={route,query,atlasDepth:0};history.replaceState(initial,'',stateHash(initial));show('knowledgeView',false);$('knowledgeSearchInput').value=query;setTimeout(()=>window.renderKnowledgeSearch?.(query),0);return;}
+  if(route==='subjective'){const initial={route,atlasDepth:0};history.replaceState(initial,'',stateHash(initial));openSubjectivePractice(false);return;}
   if(route==='architecture'){const initial={route,atlasDepth:0};history.replaceState(initial,'',stateHash(initial));show('architectureView',false);renderArchitectureHome(false);return;}
   if(route==='project'&&parts[0]&&window.ATLAS_PROJECTS?.[parts[0]]){const initial={route,project:parts[0],atlasDepth:0};history.replaceState(initial,'',stateHash(initial));renderProjectGuide(parts[0],false);return;}
   if(route==='view'&&$(parts[0])?.classList.contains('view')){const initial={route,name:parts[0],atlasDepth:0};history.replaceState(initial,'',stateHash(initial));show(initial.name,false);return;}
